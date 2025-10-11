@@ -1,0 +1,30 @@
+﻿  DummyPlayer.cpp
+C:\Users\jonat\source\repos\final year solitare project\Deck.h(22,3): warning C4154: deletion of an array expression; conversion to pointer supplied
+  (compiling source file 'DummyPlayer.cpp')
+  
+C:\Users\jonat\source\repos\final year solitare project\CardColumnCollection.h(18,3): warning C4154: deletion of an array expression; conversion to pointer supplied
+  (compiling source file 'DummyPlayer.cpp')
+  
+C:\Users\jonat\source\repos\final year solitare project\CardColumnCollection.h(30,9): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'DummyPlayer.cpp')
+  
+C:\Users\jonat\source\repos\final year solitare project\CardColumnCollection.h(35,9): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'DummyPlayer.cpp')
+  
+C:\Users\jonat\source\repos\final year solitare project\DummyPlayer.cpp(45,12): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+  final year solitare project.cpp
+C:\Users\jonat\source\repos\final year solitare project\Deck.h(22,3): warning C4154: deletion of an array expression; conversion to pointer supplied
+  (compiling source file 'final%20year%20solitare%20project.cpp')
+  
+C:\Users\jonat\source\repos\final year solitare project\CardColumnCollection.h(18,3): warning C4154: deletion of an array expression; conversion to pointer supplied
+  (compiling source file 'final%20year%20solitare%20project.cpp')
+  
+C:\Users\jonat\source\repos\final year solitare project\CardColumnCollection.h(30,9): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'final%20year%20solitare%20project.cpp')
+  
+C:\Users\jonat\source\repos\final year solitare project\CardColumnCollection.h(35,9): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'final%20year%20solitare%20project.cpp')
+  
+C:\Users\jonat\source\repos\final year solitare project\final year solitare project.cpp(14,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  Generating Code...
+  final year solitare project.vcxproj -> C:\Users\jonat\source\repos\final year solitare project\x64\Debug\final year solitare project.exe
