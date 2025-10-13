@@ -1,0 +1,209 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\C\u002B\u002B Solitaire Code.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|solutionrelative:C\u002B\u002B Solitaire Code.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\KlondikeGameController.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|solutionrelative:KlondikeGameController.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\KlondikeGameController.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|solutionrelative:KlondikeGameController.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\Deck.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|solutionrelative:Deck.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\Deck.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|solutionrelative:Deck.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\KlondikeBoard.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|solutionrelative:KlondikeBoard.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\CardColumn.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|solutionrelative:CardColumn.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\CardColumn.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|solutionrelative:CardColumn.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\CardColumnCollection.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|solutionrelative:CardColumnCollection.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\DummyPlayer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|solutionrelative:DummyPlayer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\DummyPlayer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|solutionrelative:DummyPlayer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 188,
+          "SelectedChildIndex": 11,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{778b5376-ad77-4751-acdc-f3d18343f8dd}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "KlondikeGameController.cpp",
+              "DocumentMoniker": "C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\KlondikeGameController.cpp",
+              "RelativeDocumentMoniker": "KlondikeGameController.cpp",
+              "ToolTip": "C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\KlondikeGameController.cpp",
+              "RelativeToolTip": "KlondikeGameController.cpp",
+              "ViewState": "AgIAAE0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-10-12T16:58:31.678Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "KlondikeGameController.h",
+              "DocumentMoniker": "C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\KlondikeGameController.h",
+              "RelativeDocumentMoniker": "KlondikeGameController.h",
+              "ToolTip": "C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\KlondikeGameController.h",
+              "RelativeToolTip": "KlondikeGameController.h",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAADgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-10-12T16:54:12.576Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Deck.h",
+              "DocumentMoniker": "C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\Deck.h",
+              "RelativeDocumentMoniker": "Deck.h",
+              "ToolTip": "C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\Deck.h",
+              "RelativeToolTip": "Deck.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-10-12T16:02:13.465Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Deck.cpp",
+              "DocumentMoniker": "C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\Deck.cpp",
+              "RelativeDocumentMoniker": "Deck.cpp",
+              "ToolTip": "C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\Deck.cpp",
+              "RelativeToolTip": "Deck.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-10-12T16:02:07.38Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "KlondikeBoard.cpp",
+              "DocumentMoniker": "C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\KlondikeBoard.cpp",
+              "RelativeDocumentMoniker": "KlondikeBoard.cpp",
+              "ToolTip": "C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\KlondikeBoard.cpp",
+              "RelativeToolTip": "KlondikeBoard.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAHAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-10-12T15:55:08.39Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "CardColumn.h",
+              "DocumentMoniker": "C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\CardColumn.h",
+              "RelativeDocumentMoniker": "CardColumn.h",
+              "ToolTip": "C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\CardColumn.h",
+              "RelativeToolTip": "CardColumn.h",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-10-12T14:29:33.236Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "CardColumn.cpp",
+              "DocumentMoniker": "C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\CardColumn.cpp",
+              "RelativeDocumentMoniker": "CardColumn.cpp",
+              "ToolTip": "C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\CardColumn.cpp",
+              "RelativeToolTip": "CardColumn.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-10-12T14:28:20.394Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "CardColumnCollection.cpp",
+              "DocumentMoniker": "C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\CardColumnCollection.cpp",
+              "RelativeDocumentMoniker": "CardColumnCollection.cpp",
+              "ToolTip": "C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\CardColumnCollection.cpp",
+              "RelativeToolTip": "CardColumnCollection.cpp",
+              "ViewState": "AgIAACQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-10-12T14:25:49.471Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "C\u002B\u002B Solitaire Code.cpp",
+              "DocumentMoniker": "C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\C\u002B\u002B Solitaire Code.cpp",
+              "RelativeDocumentMoniker": "C\u002B\u002B Solitaire Code.cpp",
+              "ToolTip": "C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\C\u002B\u002B Solitaire Code.cpp",
+              "RelativeToolTip": "C\u002B\u002B Solitaire Code.cpp",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAAA0AAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-10-12T14:11:46.579Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "DummyPlayer.h",
+              "DocumentMoniker": "C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\DummyPlayer.h",
+              "RelativeDocumentMoniker": "DummyPlayer.h",
+              "ToolTip": "C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\DummyPlayer.h",
+              "RelativeToolTip": "DummyPlayer.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-10-12T13:55:38.428Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "DummyPlayer.cpp",
+              "DocumentMoniker": "C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\DummyPlayer.cpp",
+              "RelativeDocumentMoniker": "DummyPlayer.cpp",
+              "ToolTip": "C:\\Users\\jonat\\source\\repos\\C\u002B\u002BSolitareCode\\DummyPlayer.cpp",
+              "RelativeToolTip": "DummyPlayer.cpp",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAACQAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-10-12T13:47:37.844Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
