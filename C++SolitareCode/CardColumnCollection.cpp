@@ -1,21 +1,21 @@
 #include "CardColumnCollection.h"
 #include <iostream>
 
-bool CardColumnCollection::moveCardsFromColtoCol(unsigned int fromCol, unsigned int fromRow, unsigned int toCol) {
+bool CardColumnCollection::moveCardsFromColtoCol(unsigned int fromCol, unsigned int fromRow, unsigned int toCol,bool allowAnyToEmpty) {
 	if (fromCol >= 7 || fromRow < this->columns[fromCol].getPosOfFirstVis() || toCol >= 7) return false;
 	int count = abs((int)fromRow - (int)this->columns[fromCol].getLength());
 	if (count > 1) {
 		Card topOfStack = this->columns[fromCol].get(fromRow);
-		if (this->columns[toCol].isEmpty()) {
-			if (topOfStack.getRank() == 13) {
-				this->columns[toCol].push(this->columns[fromCol].popGroupFrom(fromRow), count);
+		if (this->columns[toCol].isEmpty() || this->columns[toCol].getPosOfFirstVis() == -1) {
+			if (topOfStack.getRank() == 13||allowAnyToEmpty) {
+				this->columns[toCol].push(this->columns[fromCol].popGroupFrom(fromRow,allowAnyToEmpty), count);
 				return true;
 			}
 
 		}
 		else {
 			if (this->columns[toCol].getTail()->value->doesStack(topOfStack)) {
-				this->columns[toCol].push(this->columns[fromCol].popGroupFrom(fromRow), count);
+				this->columns[toCol].push(this->columns[fromCol].popGroupFrom(fromRow,allowAnyToEmpty), count);
 				return true;
 			}
 		}
@@ -23,14 +23,15 @@ bool CardColumnCollection::moveCardsFromColtoCol(unsigned int fromCol, unsigned 
 	else {
 		Card* card = this->columns[fromCol].getTail()->value;
 		if (card == nullptr) return false;
-		if (this->columns[toCol].isEmpty()) {
-			if (card->getRank() == 13); {
+		if (this->columns[toCol].isEmpty()||this->columns[toCol].getPosOfFirstVis() == -1) {
+			if (card->getRank() == 13 || allowAnyToEmpty); {
 				this->columns[toCol].push(card);
-				this->columns[fromCol].pop();
+				this->columns[fromCol].pop(allowAnyToEmpty);
 				return true;
 			}
 		}
 		else {
+			
 			if (this->columns[toCol].getTail()->value->doesStack(*card)) {
 				this->columns[toCol].push(card);
 				this->columns[fromCol].pop();
@@ -59,21 +60,26 @@ void CardColumnCollection::pushCardToColumn(unsigned int column,Card* card) {
 	this->columns[column].push(card);
 }
 
-Card* CardColumnCollection::popFromColumn(unsigned int column) {
+Card* CardColumnCollection::popFromColumn(unsigned int column, bool dontReveal) {
 	if (column > this->size) return nullptr;
 	if (this->columns[column].getLength() == 0) return new Card();
-	return this->columns[column].pop();
+	return this->columns[column].pop(dontReveal);
 }
 
-Card* CardColumnCollection::popCollectionFromColumn(unsigned int column, unsigned int row) {
+Card* CardColumnCollection::popCollectionFromColumn(unsigned int column, unsigned int row, bool dontReveal) {
 	if (column > this->size) return nullptr;
 	if (this->columns[column].getLength() == 0) return new Card();
-	return this->columns[column].popGroupFrom(row)->value;
+	return this->columns[column].popGroupFrom(row,dontReveal)->value;
 }
 
 bool CardColumnCollection::isColEmpty(unsigned int col) {
 	if (col > this->size) return true;
 	return this->columns[col].isEmpty();
+}
+
+void CardColumnCollection::hideFirstVisOfCol(unsigned int col) {
+	if (col > this->size) return;
+	this->columns[col].hideTopCard();
 }
 
 string CardColumnCollection::toString() {

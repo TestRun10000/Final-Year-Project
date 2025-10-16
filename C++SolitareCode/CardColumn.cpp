@@ -1,4 +1,5 @@
 #include "CardColumn.h"
+#include<iostream>
 
 CardColumn::CardColumn() {
 	this->head = nullptr;
@@ -49,21 +50,27 @@ void CardColumn::push(Node* n,int numOfCard) {
 			this->firstVisable = n;
 			this->posOfFistVis = 0;
 		}
+		else if (this->posOfFistVis == -1) {
+			this->firstVisable = n;
+			this->posOfFistVis = this->length;
+			this->tail->next = n;
+		}
 		else {
 			this->tail->next = n;
 		}
 		Node* cur = n;
 		while (cur != nullptr) {
+			this->length++;
 			if (cur->next == nullptr)
 				this->tail = cur;
 			cur = cur->next;
 		}
-		this->length += numOfCard;
+		//this->length += numOfCard;
 	}
 	
 }
 
-Card* CardColumn::pop() {
+Card* CardColumn::pop(bool dontReveal) {
 	if (isEmpty()) {
 		return nullptr;
 	}
@@ -76,21 +83,25 @@ Card* CardColumn::pop() {
 	}
 	if (isEmpty()) {
 		this->head = nullptr;
+		this->posOfFistVis = -1;
+		this->firstVisable = nullptr;
 		return c;
 	}
 
 	
 	this->tail->next = nullptr;
-	this->tail->value->reveal();
-	if (this->length <= this->posOfFistVis) {
-		this->posOfFistVis = this->length-1;
-		this->firstVisable = this->tail;
+	if (!dontReveal) {
+		this->tail->value->reveal();
 	}
-
+	if (this->length <= this->posOfFistVis) {
+	
+		this->posOfFistVis = this->tail->value->isShown() ? this->length - 1: -1;
+		this->firstVisable = this->posOfFistVis==-1? nullptr:this->tail;
+	}
 	return c;
 }
 
-CardColumn::Node* CardColumn::popGroupFrom(int n) {
+CardColumn::Node* CardColumn::popGroupFrom(int n, bool dontReveal) {
 	if (n < this->posOfFistVis) {
 		return nullptr;
 	}
@@ -103,10 +114,12 @@ CardColumn::Node* CardColumn::popGroupFrom(int n) {
 				length -= abs(length - pos);
 				if (this->tail != nullptr) {
 					this->tail->next = nullptr;
-					this->tail->value->reveal();
+					if (!dontReveal) {
+						this->tail->value->reveal();
+					}
 					if (this->length <= this->posOfFistVis) {
-						this->posOfFistVis = this->length-1;
-						this->firstVisable = this->tail;
+						this->posOfFistVis = this->tail->value->isShown() ? this->length - 1 : -1;
+						this->firstVisable = this->posOfFistVis == -1 ? nullptr : this->tail;
 					}
 				}
 				if (this->isEmpty()) {
@@ -168,6 +181,19 @@ bool CardColumn::isValidStack(int start) {
 		pos++;
 	}
 	return true;
+}
+
+//list only allows visable cards to be place ontop of other visable cards
+void CardColumn::hideTopCard() {
+	Card* c=this->firstVisable->value;
+	c->hide();
+	this->firstVisable = this->firstVisable->next;
+	if (this->firstVisable == nullptr) {
+		this->posOfFistVis = -1;
+	}
+	else {
+		this->posOfFistVis++;
+	}
 }
 
 string CardColumn::toString() {

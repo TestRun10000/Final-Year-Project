@@ -13,6 +13,23 @@ class GameBoard
 		Deck* drawnCards;
 		CardColumnCollection* columns;
 		int score = 0;
+
+	protected:
+		enum MoveType
+		{
+			draw,
+			colToCol,
+			colToFoundation,
+			drawToFoundation,
+			foundationToCol,
+			drawToCol,
+			hideCard
+		};
+
+		typedef struct Move {
+			MoveType moveType;
+			unsigned int fromCol, toCol, row;
+		}Move;
 	
 	
 	public:
@@ -30,6 +47,17 @@ class GameBoard
 				this->foundation[i] = foundation[i];
 			}
 		}
+
+		static Move generateMove(int m, int toCol = 0, int fromCol = 0, int row = 0) {
+			Move newMove = Move();
+			newMove.moveType = (MoveType)m;
+			newMove.fromCol = fromCol;
+			newMove.toCol = toCol;
+			newMove.row = row;
+			return newMove;
+		}
+
+
 	//does not work
 		//~GameBoard() {
 		//	delete stockPile;
@@ -39,6 +67,8 @@ class GameBoard
 		//}
 	
 		void randomDeal();
+
+		void winableDeal();
 	
 		void drawCardsFromStockPile(unsigned int count);
 	
@@ -50,7 +80,7 @@ class GameBoard
 	
 		bool moveCardsFromColtoCol(unsigned int fromCol, unsigned int fromRow, unsigned int toCol);
 	
-		void removeFromFoundation(unsigned int to, unsigned int from);
+		void removeFromFoundation(unsigned int to, unsigned int from, bool allowAnyEmpty=false);
 	
 		string toString();
 	
@@ -58,6 +88,12 @@ class GameBoard
 	
 		int boardScore();
 
+	private:
+		void createWinStateBoard();
 
+		list<Move> getReverseMoves(); 
 
+		void doReverseMove(Move m);
+
+		bool allOpeningCardsDelt(bool hiddenOnly);
 };

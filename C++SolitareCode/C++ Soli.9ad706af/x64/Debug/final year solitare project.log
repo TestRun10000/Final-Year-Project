@@ -1,0 +1,52 @@
+﻿  C++ Solitaire Code.cpp
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\Deck.h(22,3): warning C4154: deletion of an array expression; conversion to pointer supplied
+  (compiling source file 'C++%20Solitaire%20Code.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(18,3): warning C4154: deletion of an array expression; conversion to pointer supplied
+  (compiling source file 'C++%20Solitaire%20Code.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(30,9): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'C++%20Solitaire%20Code.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(35,9): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'C++%20Solitaire%20Code.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(40,9): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'C++%20Solitaire%20Code.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\C++ Solitaire Code.cpp(88,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  DummyPlayer.cpp
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\Deck.h(22,3): warning C4154: deletion of an array expression; conversion to pointer supplied
+  (compiling source file 'DummyPlayer.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(18,3): warning C4154: deletion of an array expression; conversion to pointer supplied
+  (compiling source file 'DummyPlayer.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(30,9): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'DummyPlayer.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(35,9): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'DummyPlayer.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(40,9): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'DummyPlayer.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\DummyPlayer.cpp(45,12): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+  KlondikeGameController.cpp
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\Deck.h(22,3): warning C4154: deletion of an array expression; conversion to pointer supplied
+  (compiling source file 'KlondikeGameController.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(18,3): warning C4154: deletion of an array expression; conversion to pointer supplied
+  (compiling source file 'KlondikeGameController.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(30,9): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'KlondikeGameController.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(35,9): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'KlondikeGameController.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(40,9): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'KlondikeGameController.cpp')
+  
+  Generating Code...
+  final year solitare project.vcxproj -> C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\x64\Debug\C++ Solitaire Code.exe

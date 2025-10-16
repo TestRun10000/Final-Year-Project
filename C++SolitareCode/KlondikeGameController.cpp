@@ -44,6 +44,7 @@ list <KlondikeGameController::Move> KlondikeGameController::getAvailableMoves()
 		int numOfCardStacked = this->columns->getLengthOfCol(i)-topPos;
 		for (int j = 0; j < 7; j++) {
 			if (j == i) continue;
+			//if (this->columns->getPosOfFistVisOfCol(j) != -1)continue;
 			if (this->columns->isColEmpty(j)) {
 				if(top.getRank() == 13) {
 					possibleMoves.push_back(generateMove(MoveType::colToCol, j, i, topPos));
@@ -72,8 +73,6 @@ list <KlondikeGameController::Move> KlondikeGameController::getAvailableMoves()
 		else if (!this->foundation[bottom.getSuit()].empty() && this->foundation[bottom.getSuit()].top()->getRank() == bottom.getRank() - 1) {
 			possibleMoves.push_back(generateMove(MoveType::colToFoundation,0,i));
 		}
-		
-
 	}
 	//from foundation
 	for (int i = 0; i < 4; i++) {
@@ -82,7 +81,7 @@ list <KlondikeGameController::Move> KlondikeGameController::getAvailableMoves()
 		}
 		Card card = *this->foundation[i].top();
 		for (int j = 0; j < 7; j++) {
-			if (this->columns->isColEmpty(j)) continue;
+			if (this->columns->isColEmpty(j)||this->columns->getPosOfFistVisOfCol(j) == -1) continue;
 			if (this->columns->getBottomCardFromColumn(j).doesStack(card)) {
 				possibleMoves.push_back(generateMove(MoveType::foundationToCol, j, i));
 			}
@@ -156,6 +155,7 @@ bool KlondikeGameController::gameWon() {
 bool KlondikeGameController::isGameOver() {
 	if (gameWon()) return true;
 	int currentScore = this->boardScore();
+	if (this->getAvailableMoves().size() == 0) return true;
 	if (currentScore <= this->LastTopScore) {
 		this->movesSinceLastScoreChange++;
 	}

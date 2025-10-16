@@ -6,7 +6,7 @@ Deck::Deck(int numSuits=4) {
 
 	numSuits = min(4, numSuits);
 	for (int i = 0; i < numSuits; i++) {
-		for (int j = 1; j < 14; j++) {
+		for (int j = 13; j >0; j--) {
 			push(new Card((Card::Suits)i, j));
 		}
 	}

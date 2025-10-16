@@ -21,7 +21,8 @@ class DummyPlayer : public KlondikeGameController
 	};
 
 	public: 
-		DummyPlayer() {};
+		DummyPlayer():KlondikeGameController(0) {};
+		DummyPlayer(int i) :KlondikeGameController(i) {};
 
 		void makeBestMove();
 		void makeRandomMove();

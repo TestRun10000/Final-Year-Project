@@ -6,34 +6,23 @@ class KlondikeGameController : protected GameBoard
 {
 
 
-protected:
 
-	enum MoveType
-	{
-		draw,
-		colToCol,
-		colToFoundation,
-		drawToFoundation,
-		foundationToCol,
-		drawToCol
-	};
-
-	typedef struct Move{
-		MoveType moveType;
-		unsigned int fromCol,toCol,row;
-	}Move;
 
 private:
 	int LastTopScore = 0;
 	int LastNumberOfMove = 1;
 	int movesSinceLastScoreChange = 0;
-	int presNumberOfMoves;
-	Move lastMove;
+	int presNumberOfMoves=0;
+	Move lastMove=Move();
 
 
 public:
-	KlondikeGameController() { 
-	randomDeal(); }
+	KlondikeGameController(int i=1) {
+		if (i == 0)
+			randomDeal();
+		else
+			winableDeal();
+	}
 
 	list<Move> getAvailableMoves();
 
@@ -44,20 +33,15 @@ public:
 		std::cout << this->toString()<<endl;
 	};
 
-	Move generateMove(int m,int toCol=0,int fromCol=0,int row=0) {
-		Move newMove = Move();
-		newMove.moveType = (MoveType)m;
-		newMove.fromCol = fromCol;
-		newMove.toCol = toCol;
-		newMove.row = row;
-		return newMove;
+	Move generateMove(int m, int toCol = 0, int fromCol = 0, int row = 0) {
+		return GameBoard::generateMove(m, toCol, fromCol, row);
 	}
 	
-	 std::string moveToString(Move m);
-
-	 bool gameWon();
-
-	 bool isGameOver();
+	std::string moveToString(Move m);
+	
+	bool gameWon();
+	
+	bool isGameOver();
 };
 
 

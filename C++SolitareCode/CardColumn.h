@@ -47,10 +47,10 @@ public:
 	void push(Node* n,int numOfCards);
 
 	//removes the tail from list and returns it
-	Card* pop();
+	Card* pop(bool dontReveal=false);
 
 	//removes a valid stack starting at n from colums and returns the first item of the stack returns null if no valid stack
-	Node* popGroupFrom(int n);
+	Node* popGroupFrom(int n, bool dontReveal = false);
 
 	//get visable card from column
 	Card get(int n);
@@ -67,6 +67,7 @@ public:
 	//returns coloumn as a list seperated by columns.
 	string toString();
 
+	void hideTopCard();
 
 	CardColumn(const CardColumn& other)
 	{
