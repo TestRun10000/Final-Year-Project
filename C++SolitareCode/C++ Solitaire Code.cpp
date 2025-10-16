@@ -7,7 +7,6 @@
 void AIPlay(int numGames,int dealType) {
 
 	int winCount = 0;
-	int numGames = x;
 
 	for (int i = 0; i < numGames; i++) {
 		DummyPlayer game;
@@ -86,9 +85,9 @@ void player() {
 int main()
 {
 	srand(time(0));
-	std:cout << "Random Deals" << endl;
+	std::cout << "Random Deals" << endl;
 	AIPlay(4000, 0);
-	std:cout << "Winable Deals" << endl;
+	std::cout << "\nWinable Deals" << endl;
 	AIPlay(4000,1);
 	//KlondikeGameController game = KlondikeGameController(1);
 	//game.showScoreAndBoard();
