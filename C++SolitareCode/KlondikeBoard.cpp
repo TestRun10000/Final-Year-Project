@@ -1,5 +1,6 @@
 #include "KlondikeBoard.h"
 #include<iostream>
+#include<random>
 
 void GameBoard::randomDeal() {
 	this->stockPile->shuffle();
@@ -16,7 +17,7 @@ void GameBoard::randomDeal() {
 
 void GameBoard::winableDeal() {
 
-	this->createWinStateBoard();
+	this->createWinStartBoard();
 	list<GameBoard::Move> moves = getReverseMoves();
 
 	//if count exceeds x or end but not in final state start again
@@ -35,8 +36,31 @@ void GameBoard::winableDeal() {
 		moves = getReverseMoves();
 	} while (!moves.empty());
 	moves = getReverseMoves();
-
+	ShuffleTopCards();
 }
+
+void GameBoard::ShuffleTopCards() {
+	this->stockPile->shuffle();
+	int colPos[7] = { 0,1,2,3,4,5,6 };
+	int temp = 0;
+	for (int i = 6; i > 0; i--) {
+		int j = (rand() % i) + 1;
+		temp = colPos[i];
+		colPos[i] = colPos[j];
+		colPos[j] = temp;
+
+	}
+	for (int i = 0; i < 7; i++) {
+		Card* c = this->stockPile->draw();
+		int col = colPos[i];
+		Card* x = this->columns->popFromColumn(col, true);
+		this->columns->pushCardToColumn(col, c);
+		this->drawnCards->push(x);
+	}
+	for (int i = 0; i < this->drawnCards->numInDeck(); i++)
+		this->stockPile->push(this->drawnCards->draw());
+}
+
 list<GameBoard::Move> GameBoard::getReverseMoves() {
 	list<GameBoard::Move> moves = list<GameBoard::Move>();
 	//from column
@@ -134,7 +158,7 @@ void  GameBoard::doReverseMove(Move m){
 	}
 }
 
-void GameBoard::createWinStateBoard() {
+void GameBoard::createWinStartBoard() {
 	this->stockPile = new Deck();//replaces a full deck with a empty one 
 	for (int i = 0; i < 4; i++) {
 		Card* c = new Card((Card::Suits)i, 13);
@@ -215,6 +239,7 @@ void GameBoard::drawCardsFromStockPile(unsigned int count) {
 
 void GameBoard::moveCardFromDrawn(unsigned int col) {
 	Card* card = this->drawnCards->draw();
+	card->reveal();
 	if (card == nullptr) return;
 	if (col >= 7) return;
 	if (this->columns->isColEmpty(col)) {
@@ -315,7 +340,7 @@ int GameBoard::boardScore() {
 		}
 		else if (this->columns->getPosOfFistVisOfCol(i) == -1) continue;
 		else {
-			if (this->columns->getFirstVisFromCol(i).getRank() == 13) {
+			if (this->columns->getFirstVisFromCol(i).getRank() == 13 && this->columns->getPosOfFistVisOfCol(i) == 0) {
 				score += 10;
 			}
 			int numShown = i - this->columns->getPosOfFistVisOfCol(i);

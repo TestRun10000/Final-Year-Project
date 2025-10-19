@@ -17,7 +17,7 @@ private:
 
 
 public:
-	KlondikeGameController(int i=1) {
+	KlondikeGameController(int i=0) {
 		if (i == 0)
 			randomDeal();
 		else

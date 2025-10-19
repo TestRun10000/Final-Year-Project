@@ -1,14 +1,14 @@
 #pragma once
 #include "KlondikeGameController.h"
-
+#include"BoardScorer.h"
 class DummyPlayer : public KlondikeGameController
 {
 
 	struct ActionValue {
-		int score;
+		float score;
 		KlondikeGameController::Move move;
 
-		ActionValue(int p, KlondikeGameController::Move m) {
+		ActionValue(float p, KlondikeGameController::Move m) {
 			score = p;
 			move = m;
 		}
@@ -19,10 +19,25 @@ class DummyPlayer : public KlondikeGameController
 			return t1.score < t2.score;
 		}
 	};
+	private:
+		BoardScorer bso;
 
 	public: 
-		DummyPlayer():KlondikeGameController(0) {};
-		DummyPlayer(int i) :KlondikeGameController(i) {};
+		DummyPlayer() :KlondikeGameController(0) {
+			this->bso = BoardScorer();
+		}
+		DummyPlayer(int i) :KlondikeGameController(i) {
+			float s[5] = { 10.818811,1.636655,6.108121,0.444798,6.098790 };
+			this->bso = BoardScorer(s);
+		};
+
+		DummyPlayer(float weights[5],int i=0) :KlondikeGameController(i) {
+			this->bso = BoardScorer(weights);
+		}
+
+		DummyPlayer(BoardScorer b, int i = 0) :KlondikeGameController(i) {
+			this->bso = b;
+		}
 
 		void makeBestMove();
 		void makeRandomMove();

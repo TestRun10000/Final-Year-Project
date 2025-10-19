@@ -10,7 +10,7 @@ void DummyPlayer::makeBestMove() {
 	for (KlondikeGameController::Move m : moves) {
 		GameBoard copy = DummyPlayer::copyBoard();
 		DummyPlayer::doMove(m, &copy);
-		int score = copy.boardScore();
+		int score = this->bso.boardScore(copy);
 		task_queue.emplace(score, m);
 	}
 	KlondikeGameController::doMove(task_queue.top().move);
@@ -38,7 +38,7 @@ void DummyPlayer::suidRandomMove() {
 	for (KlondikeGameController::Move m : moves) {
 		GameBoard copy = DummyPlayer::copyBoard();
 		DummyPlayer::doMove(m, &copy);
-		int score = copy.boardScore();
+		int score = this->bso.boardScore(copy);
 		task_queue.emplace(score, m);
 		total += score;
 	}

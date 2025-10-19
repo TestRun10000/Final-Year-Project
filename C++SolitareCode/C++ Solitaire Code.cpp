@@ -1,16 +1,18 @@
 
 
 #include <iostream>
-#include "KlondikeGameController.h"
+#include<random>
 #include "DummyPlayer.h"
+#include"BoardScoreOptimiser.h"
 
 void AIPlay(int numGames,int dealType) {
 
 	int winCount = 0;
-
+	float s[5] = { 10.818811,1.636655,6.108121,0.444798,6.098790 };
+	BoardScorer bs = BoardScorer(s);
 	for (int i = 0; i < numGames; i++) {
-		DummyPlayer game;
-		game = *new DummyPlayer(dealType);
+		DummyPlayer game(bs, dealType);
+		//game = *new DummyPlayer(bs,dealType);
 		std::cout << i << "/" << numGames << " \r";
 		std::cout.flush();
 		while (!game.isGameOver()) {
@@ -27,8 +29,8 @@ void AIPlay(int numGames,int dealType) {
 	for (int i = 0; i < numGames; i++) {
 		std::cout << i << "/" << numGames << " \r";
 		std::cout.flush();
-		DummyPlayer game;
-		game = DummyPlayer(dealType);
+		DummyPlayer game(bs,dealType);
+		//game = DummyPlayer(dealType);
 		while (!game.isGameOver()) {
 			game.makeRandomMove();
 		}
@@ -45,7 +47,7 @@ void AIPlay(int numGames,int dealType) {
 		std::cout << i << "/" << numGames << " \r";
 		std::cout.flush();
 		DummyPlayer game;
-		game = DummyPlayer(dealType);
+		game = DummyPlayer(bs,dealType);
 		while (!game.isGameOver()) {
 			game.suidRandomMove();
 		}
@@ -90,6 +92,9 @@ int main()
 	std::cout << "\nWinable Deals" << endl;
 	AIPlay(4000,1);
 	//KlondikeGameController game = KlondikeGameController(1);
-	//game.showScoreAndBoard();
+	////game.showScoreAndBoard();
+	//BoardScoreOptimiser bso = BoardScoreOptimiser();
+	//bso.grow();
+
 }
 

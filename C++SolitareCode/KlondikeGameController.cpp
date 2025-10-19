@@ -93,6 +93,8 @@ list <KlondikeGameController::Move> KlondikeGameController::getAvailableMoves()
 void KlondikeGameController::doMove(KlondikeGameController::Move m)
 {
 	this->lastMove = m;
+	if (m.toCol == 0 && m.moveType==drawToCol)
+		int i = 0;
 	switch (m.moveType)
 	{
 	case draw:

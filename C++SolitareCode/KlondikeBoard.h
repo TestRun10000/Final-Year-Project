@@ -88,12 +88,57 @@ class GameBoard
 	
 		int boardScore();
 
+#pragma region TempFunctionForScoreOP
+
+
+		int numOfCardsInFoundation() {
+			int n = 0;
+			for (int i = 0; i < 4; i++) {
+				n += this->foundation[i].size();
+			}
+			return n;
+		}
+
+		int numCardInDeck() {
+			return this->stockPile->numInDeck() + this->drawnCards->numInDeck();
+		}
+
+		int numOfCardsRevealed() {
+			int numShown = 0;
+			for (int i = 0; i < 7; i++) {
+				if (this->columns->getPosOfFistVisOfCol(i) == -1) continue;
+				 numShown += i - this->columns->getPosOfFistVisOfCol(i);
+			}
+			return numShown;
+		}
+
+		int numOfEmptyCols() {
+			int n = 0;
+			for (int i = 0; i < 7; i++) 
+				if (this->columns->isColEmpty(i))
+					n++;
+			return n;
+		}
+
+		int numOfColsStartingWithKing() {
+			int n = 0;
+			for (int i = 0; i < 7; i++) {
+				if (this->columns->isColEmpty(i)) continue;
+				else if(this->columns->getFirstVisFromCol(i).getRank() == 13 && this->columns->getPosOfFistVisOfCol(i) == 0)
+					n++;
+			}
+			return n;
+		}
+
+#pragma endregion
 	private:
-		void createWinStateBoard();
+		void createWinStartBoard();
 
 		list<Move> getReverseMoves(); 
 
 		void doReverseMove(Move m);
 
 		bool allOpeningCardsDelt(bool hiddenOnly);
+
+		void ShuffleTopCards();
 };
