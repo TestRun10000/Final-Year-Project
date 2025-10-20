@@ -6,9 +6,9 @@ void GameBoard::randomDeal() {
 	this->stockPile->shuffle();
 	for (int i = 0; i < 7; i++) {
 		for (int j = i; j < 7; j++) {
-			Card* c = this->stockPile->draw();
+			Card c = this->stockPile->draw();
 			if (j == i) {
-				c->reveal();
+				c.reveal();
 			}
 			this->columns->pushCardToColumn(j,c);
 		}
@@ -51,13 +51,13 @@ void GameBoard::ShuffleTopCards() {
 
 	}
 	for (int i = 0; i < 7; i++) {
-		Card* c = this->stockPile->draw();
+		Card c = this->stockPile->draw();
 		int col = colPos[i];
-		Card* x = this->columns->popFromColumn(col, true);
+		Card x = this->columns->popFromColumn(col, true);
 		this->columns->pushCardToColumn(col, c);
 		this->drawnCards->push(x);
 	}
-	for (int i = 0; i < this->drawnCards->numInDeck(); i++)
+	for (int i = 0; i < 7; i++)
 		this->stockPile->push(this->drawnCards->draw());
 }
 
@@ -103,7 +103,7 @@ list<GameBoard::Move> GameBoard::getReverseMoves() {
 		if (bottom.getRank() == 1 &&!this->allOpeningCardsDelt(true)) {
 			moves.push_back(generateMove(MoveType::colToFoundation, 0, i));
 		}
-		else if (!this->foundation[bottom.getSuit()].empty() && this->foundation[bottom.getSuit()].top()->getRank() == bottom.getRank() - 1) {
+		else if (!this->foundation[bottom.getSuit()].empty() && this->foundation[bottom.getSuit()].top().getRank() == bottom.getRank() - 1) {
 			if(!this->allOpeningCardsDelt(true))
 				moves.push_back(generateMove(MoveType::colToFoundation, 0, i));
 		}
@@ -119,7 +119,7 @@ list<GameBoard::Move> GameBoard::getReverseMoves() {
 		if (this->stockPile->numInDeck() < 24) {
 			moves.push_back(generateMove(MoveType::drawToFoundation, 0, i));
 		}
-		Card card = *this->foundation[i].top();
+		Card card = this->foundation[i].top();
 		for (int j = 0; j < 7; j++) {
 			if (this->columns->isColEmpty(j) || this->columns->getPosOfFistVisOfCol(j) == -1) {
 				moves.push_back(generateMove(MoveType::foundationToCol, j, i));
@@ -161,8 +161,8 @@ void  GameBoard::doReverseMove(Move m){
 void GameBoard::createWinStartBoard() {
 	this->stockPile = new Deck();//replaces a full deck with a empty one 
 	for (int i = 0; i < 4; i++) {
-		Card* c = new Card((Card::Suits)i, 13);
-		c->reveal();
+		Card c =  Card((Card::Suits)i, 13);
+		c.reveal();
 		this->stockPile->push(c);
 	}
 	this->stockPile->shuffle();
@@ -175,8 +175,8 @@ void GameBoard::createWinStartBoard() {
 			int colour = this->columns->getBottomCardFromColumn(j).getColour();
 			int r = colour==1 ? (rand() % 2) + 2: (rand() % 2);
 			if (!suitUsed[r]) {
-				Card* c = new Card((Card::Suits)r, i);
-				c->reveal();
+				Card c =  Card((Card::Suits)r, i);
+				c.reveal();
 				this->columns->pushCardToColumn(j, c);
 				suitUsed[r] = true;
 			}
@@ -185,8 +185,8 @@ void GameBoard::createWinStartBoard() {
 					r = r == 2 ? 3 : 2;
 				else
 					r = r == 0 ? 1 : 0;
-				Card* c = new Card((Card::Suits)r, i);
-				c->reveal();
+				Card c =  Card((Card::Suits)r, i);
+				c.reveal();
 				this->columns->pushCardToColumn(j, c);
 				suitUsed[r] = true;
 			}
@@ -220,8 +220,8 @@ void GameBoard::drawCardsFromStockPile(unsigned int count) {
 		{
 			if (this->drawnCards->isEmpty())
 				break;
-			Card* drawn = this->drawnCards->draw();
-			drawn->hide();
+			Card drawn = this->drawnCards->draw();
+			drawn.hide();
 			this->stockPile->push(drawn);
 		}
 		this->score -= 50;
@@ -230,26 +230,26 @@ void GameBoard::drawCardsFromStockPile(unsigned int count) {
 	{
 		if (this->stockPile->isEmpty())
 			break;
-		Card* drawn = this->stockPile->draw();
-		drawn->reveal();
+		Card drawn = this->stockPile->draw();
+		drawn.reveal();
 		this->drawnCards->push(drawn);
 	}
 	
 }
 
 void GameBoard::moveCardFromDrawn(unsigned int col) {
-	Card* card = this->drawnCards->draw();
-	card->reveal();
-	if (card == nullptr) return;
+	Card card = this->drawnCards->draw();
+	card.reveal();
+	if (card.isBlank()) return;
 	if (col >= 7) return;
 	if (this->columns->isColEmpty(col)) {
-		if (card->getRank() == 13) {
+		if (card.getRank() == 13) {
 			this->columns->pushCardToColumn(col,card);
 			this->score += 5;
 		}
 		return;
 	}
-	if (this->columns->getBottomCardFromColumn(col).doesStack(*card)) {
+	if (this->columns->getBottomCardFromColumn(col).doesStack(card)) {
 		this->columns->pushCardToColumn(col,card);
 		this->score += 5;
 	}
@@ -261,14 +261,14 @@ void GameBoard::moveCardFromDrawn(unsigned int col) {
 void GameBoard::removeFromFoundation(unsigned int to, unsigned int from,bool allowAnyEmpty) {
 	if (from >= 4 || to>=7) return;
 	if (this->foundation[from].empty()) return;
-	Card* card = this->foundation[from].top();
+	Card card = this->foundation[from].top();
 	if (this->columns->isColEmpty(to)&&!allowAnyEmpty) return;
 	else if ((this->columns->isColEmpty(to)||this->columns->getPosOfFistVisOfCol(to)==-1) && allowAnyEmpty) {
 		this->columns->pushCardToColumn(to, card);
 		this->foundation[from].pop();
 		return;
 	}
-	if (this->columns->getBottomCardFromColumn(to).doesStack(*card)) {
+	if (this->columns->getBottomCardFromColumn(to).doesStack(card)) {
 		this->columns->pushCardToColumn(to,card);
 		this->foundation[from].pop();
 		this->score -= 10;
@@ -285,20 +285,20 @@ void GameBoard::placeInFoundationFromCol(unsigned int col) {
 		this->foundation[foundationId].push(this->columns->popFromColumn(col));
 		this->score += 10;
 	}
-	else if (this->foundation[foundationId].top()->doesStack(c, false, true)) {
+	else if (this->foundation[foundationId].top().doesStack(c, false, true)) {
 		this->foundation[foundationId].push(this->columns->popFromColumn(col));
 		this->score += 10;
 	}
 }
 
 void GameBoard::placeInFoundationFromDraw() {
-	Card* c = this->drawnCards->draw();
-	int foundationId = (int)c->getSuit();
-	if (c->getRank() == 1) {
+	Card c = this->drawnCards->draw();
+	int foundationId = (int)c.getSuit();
+	if (c.getRank() == 1) {
 		this->foundation[foundationId].push(c);
 		this->score += 10;
 	}
-	else if (this->foundation[foundationId].top()->getRank() == c->getRank() - 1) {
+	else if (this->foundation[foundationId].top().getRank() == c.getRank() - 1) {
 		this->foundation[foundationId].push(c);
 		this->score += 10;
 	}
@@ -318,7 +318,7 @@ std::string GameBoard::toString() {
 	string top = " " + deckValue + " : " + drawPile;
 	top += string(10,' ');
 	for (int i = 0; i < 4; i++) { 
-		top += !this->foundation[i].empty()? this->foundation[i].top()->toShortString():"[  ]";
+		top += !this->foundation[i].empty()? this->foundation[i].top().toShortString():"[  ]";
 		if (i < 3) {
 			top += " : ";
 		}
@@ -351,8 +351,8 @@ int GameBoard::boardScore() {
 	//how many cards have been added to the foundation
 	for (int i = 0; i < 4; i++) {
 		if (!this->foundation[i].empty()) {
-			if (this->foundation[i].top()->getRank() > 0) {
-				score += this->foundation[i].top()->getRank() * 30;
+			if (this->foundation[i].top().getRank() > 0) {
+				score += this->foundation[i].top().getRank() * 30;
 			}
 		}
 	}

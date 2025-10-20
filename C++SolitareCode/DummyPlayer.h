@@ -46,8 +46,8 @@ class DummyPlayer : public KlondikeGameController
 	private:
 
 		GameBoard copyBoard() {
-			GameBoard g = GameBoard(this->stockPile, this->drawnCards, this->columns, this->foundation);
-			return g;
+			/*GameBoard g =;*/
+			return GameBoard(*this->stockPile, *this->drawnCards, *this->columns, this->foundation);
 		}
 
 		void doMove(KlondikeGameController::Move m, GameBoard* board);

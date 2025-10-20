@@ -7,20 +7,20 @@ Deck::Deck(int numSuits=4) {
 	numSuits = min(4, numSuits);
 	for (int i = 0; i < numSuits; i++) {
 		for (int j = 13; j >0; j--) {
-			push(new Card((Card::Suits)i, j));
+			push(Card((Card::Suits)i, j));
 		}
 	}
 }
 
-Card* Deck::draw() {
+Card Deck::draw() {
 	if (isEmpty()) {
-		return new Card();
+		return Card();
 		//throw std::invalid_argument("Deck is Empty");
 	}
 	return this->deck[topOFDeck--];
 }
 
-void Deck::push(Card* c) {
+void Deck::push(Card c) {
 	if (this->topOFDeck < 51) {
 		this->deck[++this->topOFDeck] = c;
 		return;
@@ -30,7 +30,7 @@ void Deck::push(Card* c) {
 
 void Deck::shuffle() {
 	if(isEmpty()) throw std::invalid_argument("Deck is Empty");
-	Card* temp;
+	Card temp;
 	for (int i = this->topOFDeck; i > 0; i--) {
 		int j = (rand() % i) + 1;
 		temp = this->deck[i];
@@ -43,6 +43,6 @@ void Deck::printDeck() {
 	int count = numInDeck();
 	if (count == 0) std::cout << "Deck is Empty" << endl;
 	for (int i = 0; i < count; i++) {
-		std::cout << deck[i]->toString()<< endl;
+		std::cout << deck[i].toString()<< endl;
 	}
 }

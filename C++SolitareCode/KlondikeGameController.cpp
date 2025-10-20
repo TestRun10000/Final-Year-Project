@@ -15,7 +15,7 @@ list <KlondikeGameController::Move> KlondikeGameController::getAvailableMoves()
 		}
 		else {
 
-			if (!this->foundation[drawnCard.getSuit()].empty() && this->foundation[drawnCard.getSuit()].top()->getRank()==drawnCard.getRank()-1) {
+			if (!this->foundation[drawnCard.getSuit()].empty() && this->foundation[drawnCard.getSuit()].top().getRank()==drawnCard.getRank()-1) {
 				possibleMoves.push_back(generateMove(MoveType::drawToFoundation));
 			}
 			
@@ -70,7 +70,7 @@ list <KlondikeGameController::Move> KlondikeGameController::getAvailableMoves()
 		if (bottom.getRank() == 1) {
 			possibleMoves.push_back(generateMove(MoveType::colToFoundation, 0, i));
 		}
-		else if (!this->foundation[bottom.getSuit()].empty() && this->foundation[bottom.getSuit()].top()->getRank() == bottom.getRank() - 1) {
+		else if (!this->foundation[bottom.getSuit()].empty() && this->foundation[bottom.getSuit()].top().getRank() == bottom.getRank() - 1) {
 			possibleMoves.push_back(generateMove(MoveType::colToFoundation,0,i));
 		}
 	}
@@ -79,7 +79,7 @@ list <KlondikeGameController::Move> KlondikeGameController::getAvailableMoves()
 		if (this->foundation[i].empty()) {
 			continue;
 		}
-		Card card = *this->foundation[i].top();
+		Card card = this->foundation[i].top();
 		for (int j = 0; j < 7; j++) {
 			if (this->columns->isColEmpty(j)||this->columns->getPosOfFistVisOfCol(j) == -1) continue;
 			if (this->columns->getBottomCardFromColumn(j).doesStack(card)) {

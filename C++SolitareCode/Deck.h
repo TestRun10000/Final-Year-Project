@@ -6,7 +6,7 @@
 class Deck
 {
 private:
-	Card* deck[52];
+	Card deck[52];
 	int topOFDeck = -1;
 
 
@@ -18,9 +18,11 @@ public:
 		topOFDeck = d.topOFDeck;
 		std::copy(d.deck, d.deck + 52, deck);
 	}
-	~Deck() {
-		delete[] deck;
-	}
+	//~Deck() {
+	//	for (int i = 0; i < 52; i++) {
+	//		this->deck[i].~Card();
+	//	}
+	//}
 
 	bool isEmpty() { return this->topOFDeck == -1; }
 
@@ -28,11 +30,11 @@ public:
 
 	int numInDeck() { return this->topOFDeck+1; }
 
-	Card* draw();
+	Card draw();
 
-	Card peek() { return *deck[this->topOFDeck]; }
+	Card peek() { return deck[this->topOFDeck]; }
 
-	void push(Card* c);
+	void push(Card c);
 
 	//uses Fisher-Yates shuffle
 	void shuffle();

@@ -14,9 +14,11 @@ public:
 		//this->size = 7;
 	}
 
-	~CardColumnCollection() {
-		delete[] columns;
-	}
+	//~CardColumnCollection() {
+	//	for (int i = 0; i < 7; i++) {
+	//		this->columns[i].~CardColumn();
+	//	}
+	//}
 
 	//CardColumnCollection(int size,bool ascOrder,bool altColour) {
 	//	this->columns =(CardColumn**) calloc(size, sizeof(CardColumn*));
@@ -48,13 +50,13 @@ public:
 	Card getBottomCardFromColumn(unsigned int column);
 	
 	//add a card to a column
-	void pushCardToColumn(unsigned int column,Card* card);
+	void pushCardToColumn(unsigned int column,Card card);
 
 	//removes the last card from the column returns pointer to that card
-	Card* popFromColumn(unsigned int column,bool dontReveal = false);
+	Card popFromColumn(unsigned int column,bool dontReveal = false);
 
 	//removes a complete collection from a column starting at a set row. returns pointer to the top card of the collection. does not return collection.
-	Card* popCollectionFromColumn(unsigned int column, unsigned int row, bool dontReveal = false);
+	Card popCollectionFromColumn(unsigned int column, unsigned int row, bool dontReveal = false);
 
 	//get first visable from column 
 	Card getFirstVisFromCol(unsigned int col);

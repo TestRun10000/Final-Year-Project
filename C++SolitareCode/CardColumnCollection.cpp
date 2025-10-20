@@ -14,17 +14,17 @@ bool CardColumnCollection::moveCardsFromColtoCol(unsigned int fromCol, unsigned 
 
 		}
 		else {
-			if (this->columns[toCol].getTail()->value->doesStack(topOfStack)) {
+			if (this->columns[toCol].getTail()->value.doesStack(topOfStack)) {
 				this->columns[toCol].push(this->columns[fromCol].popGroupFrom(fromRow,allowAnyToEmpty), count);
 				return true;
 			}
 		}
 	}
 	else {
-		Card* card = this->columns[fromCol].getTail()->value;
-		if (card == nullptr) return false;
+		Card card = this->columns[fromCol].getTail()->value;
+		if (card.isBlank()) return false;
 		if (this->columns[toCol].isEmpty()||this->columns[toCol].getPosOfFirstVis() == -1) {
-			if (card->getRank() == 13 || allowAnyToEmpty); {
+			if (card.getRank() == 13 || allowAnyToEmpty); {
 				this->columns[toCol].push(card);
 				this->columns[fromCol].pop(allowAnyToEmpty);
 				return true;
@@ -32,7 +32,7 @@ bool CardColumnCollection::moveCardsFromColtoCol(unsigned int fromCol, unsigned 
 		}
 		else {
 			
-			if (this->columns[toCol].getTail()->value->doesStack(*card)) {
+			if (this->columns[toCol].getTail()->value.doesStack(card)) {
 				this->columns[toCol].push(card);
 				this->columns[fromCol].pop();
 				return true;
@@ -47,7 +47,7 @@ bool CardColumnCollection::moveCardsFromColtoCol(unsigned int fromCol, unsigned 
  
 Card CardColumnCollection::getBottomCardFromColumn(unsigned int col) {
 	if(col>this->size) return Card();
-	return *this->columns[col].getTail()->value;
+	return this->columns[col].getTail()->value;
 }
 
 Card CardColumnCollection::getFirstVisFromCol(unsigned int col) {
@@ -55,20 +55,20 @@ Card CardColumnCollection::getFirstVisFromCol(unsigned int col) {
 	return this->columns[col].peek();
 }
 
-void CardColumnCollection::pushCardToColumn(unsigned int column,Card* card) {
+void CardColumnCollection::pushCardToColumn(unsigned int column,Card card) {
 	if (column > this->size) return;
 	this->columns[column].push(card);
 }
 
-Card* CardColumnCollection::popFromColumn(unsigned int column, bool dontReveal) {
-	if (column > this->size) return nullptr;
-	if (this->columns[column].getLength() == 0) return new Card();
+Card CardColumnCollection::popFromColumn(unsigned int column, bool dontReveal) {
+	if (column > this->size) return Card();
+	if (this->columns[column].getLength() == 0) return Card();
 	return this->columns[column].pop(dontReveal);
 }
 
-Card* CardColumnCollection::popCollectionFromColumn(unsigned int column, unsigned int row, bool dontReveal) {
-	if (column > this->size) return nullptr;
-	if (this->columns[column].getLength() == 0) return new Card();
+Card CardColumnCollection::popCollectionFromColumn(unsigned int column, unsigned int row, bool dontReveal) {
+	if (column > this->size) return Card();
+	if (this->columns[column].getLength() == 0) return  Card();
 	return this->columns[column].popGroupFrom(row,dontReveal)->value;
 }
 

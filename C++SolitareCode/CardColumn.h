@@ -8,7 +8,7 @@ private:
 	typedef struct Node {
 		struct Node* prev;
 		struct Node* next;
-		Card* value;
+		Card value;
 	} Node;
 
 	Node* head;
@@ -25,9 +25,16 @@ public:
 	CardColumn(bool asc, bool altColour);
 
 	~CardColumn() {
-		delete head;
-		delete tail;
-		delete firstVisable;
+		Node* cur = this->head;
+		if (cur == nullptr) return;
+		while (cur->next!=nullptr)
+		{
+			cur = cur->next;
+			if(cur!=nullptr)
+				delete cur->prev;
+		}
+		if(cur!=nullptr)
+			delete cur;
 	}
 
 	Node* getHead() { return this->head; }
@@ -41,13 +48,13 @@ public:
 	bool isEmpty() { return this->length == 0; }
 
 	//append a single card
-	void push(Card* c);
+	void push(Card c);
 
 	//append a stack of cards
 	void push(Node* n,int numOfCards);
 
 	//removes the tail from list and returns it
-	Card* pop(bool dontReveal=false);
+	Card pop(bool dontReveal=false);
 
 	//removes a valid stack starting at n from colums and returns the first item of the stack returns null if no valid stack
 	Node* popGroupFrom(int n, bool dontReveal = false);

@@ -8,7 +8,7 @@
 class GameBoard
 {
 	protected:
-		stack<Card*> foundation[4];
+		stack<Card> foundation[4];
 		Deck* stockPile;
 		Deck* drawnCards;
 		CardColumnCollection* columns;
@@ -39,10 +39,10 @@ class GameBoard
 			this->columns = new CardColumnCollection();
 		}
 	
-		GameBoard(Deck* stockpile, Deck* drawnCards, CardColumnCollection* tabula, stack<Card*> foundation[4]) {
-			this->stockPile = new Deck(*stockpile);
-			this->drawnCards = new  Deck(*drawnCards);
-			this->columns = new CardColumnCollection(*tabula);
+		GameBoard(Deck stockpile, Deck drawnCards, CardColumnCollection tabula, stack<Card> foundation[4]) {
+			this->stockPile = new Deck(stockpile);
+			this->drawnCards = new  Deck(drawnCards);
+			this->columns = new CardColumnCollection(tabula);
 			for (int i = 0; i < 4; i++) {
 				this->foundation[i] = foundation[i];
 			}
@@ -57,14 +57,12 @@ class GameBoard
 			return newMove;
 		}
 
-
-	//does not work
-		//~GameBoard() {
-		//	delete stockPile;
-		//	delete drawnCards;
-		//	delete columns;
-		//	delete[] foundation;
-		//}
+		
+		~GameBoard() {
+			delete this->stockPile;
+			delete this->drawnCards;
+			delete this->columns;
+		}
 	
 		void randomDeal();
 
@@ -88,7 +86,7 @@ class GameBoard
 	
 		int boardScore();
 
-#pragma region TempFunctionForScoreOP
+#pragma region forScoring
 
 
 		int numOfCardsInFoundation() {
@@ -131,7 +129,69 @@ class GameBoard
 		}
 
 #pragma endregion
-	private:
+	
+		
+		GameBoard(const GameBoard& base) {
+			this->stockPile = new Deck(*base.stockPile);
+			this->drawnCards = new Deck(*base.drawnCards);
+			this->columns = new CardColumnCollection(*base.columns);
+			for (int i = 0; i < 4; ++i) {
+				this->foundation[i] = base.foundation[i];
+			}
+		}
+
+		
+		GameBoard& operator=(const GameBoard& base) {
+			if (this != &base) {
+				delete stockPile;
+				delete drawnCards;
+				delete columns;
+				this->stockPile = new Deck(*base.stockPile);
+				this->drawnCards = new Deck(*base.drawnCards);
+				this->columns = new CardColumnCollection(*base.columns);
+				for (int i = 0; i < 4; ++i) {
+					this->foundation[i] = base.foundation[i];
+				}
+			}
+			return *this;
+		}
+
+	
+		GameBoard(GameBoard&& base) noexcept {
+			this->stockPile = base.stockPile;
+			this->drawnCards = base.drawnCards;
+			this->columns = base.columns;
+			for (int i = 0; i < 4; ++i) {
+				this->foundation[i] = std::move(base.foundation[i]);
+			}
+
+			base.stockPile = nullptr;
+			base.drawnCards = nullptr;
+			base.columns = nullptr;
+		}
+
+		
+		GameBoard& operator=(GameBoard&& base) noexcept {
+			if (this != &base) {
+				delete stockPile;
+				delete drawnCards;
+				delete columns;
+
+				this->stockPile = base.stockPile;
+				this->drawnCards = base.drawnCards;
+				this->columns = base.columns;
+				for (int i = 0; i < 4; ++i) {
+					this->foundation[i] = std::move(base.foundation[i]);
+				}
+
+				base.stockPile = nullptr;
+				base.drawnCards = nullptr;
+				base.columns = nullptr;
+			}
+			return *this;
+		}
+
+private:
 		void createWinStartBoard();
 
 		list<Move> getReverseMoves(); 
