@@ -1,20 +1,51 @@
-﻿  C++ Solitaire Code.cpp
-C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\Deck.h(22,3): warning C4154: deletion of an array expression; conversion to pointer supplied
+﻿  BoardScoreOptimiser.cpp
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(32,9): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'BoardScoreOptimiser.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(37,9): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'BoardScoreOptimiser.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(42,9): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'BoardScoreOptimiser.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\KlondikeBoard.h(99,34): warning C4267: '+=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'BoardScoreOptimiser.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\DummyPlayer.h(30,19): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'BoardScoreOptimiser.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\DummyPlayer.h(30,29): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'BoardScoreOptimiser.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\DummyPlayer.h(30,38): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'BoardScoreOptimiser.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\DummyPlayer.h(30,47): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'BoardScoreOptimiser.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\DummyPlayer.h(30,56): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'BoardScoreOptimiser.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\BoardScoreOptimiser.h(14,23): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'BoardScoreOptimiser.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\BoardScoreOptimiser.cpp(8,46): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\BoardScoreOptimiser.cpp(37,44): warning C4244: 'argument': conversion from 'double' to '_Ty', possible loss of data
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\BoardScoreOptimiser.cpp(37,44): warning C4244:         with
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\BoardScoreOptimiser.cpp(37,44): warning C4244:         [
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\BoardScoreOptimiser.cpp(37,44): warning C4244:             _Ty=int
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\BoardScoreOptimiser.cpp(37,44): warning C4244:         ]
+  C++ Solitaire Code.cpp
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(32,9): warning C4018: '>': signed/unsigned mismatch
   (compiling source file 'C++%20Solitaire%20Code.cpp')
   
-C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(18,3): warning C4154: deletion of an array expression; conversion to pointer supplied
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(37,9): warning C4018: '>': signed/unsigned mismatch
   (compiling source file 'C++%20Solitaire%20Code.cpp')
   
-C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(30,9): warning C4018: '>': signed/unsigned mismatch
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(42,9): warning C4018: '>': signed/unsigned mismatch
   (compiling source file 'C++%20Solitaire%20Code.cpp')
   
-C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(35,9): warning C4018: '>': signed/unsigned mismatch
-  (compiling source file 'C++%20Solitaire%20Code.cpp')
-  
-C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(40,9): warning C4018: '>': signed/unsigned mismatch
-  (compiling source file 'C++%20Solitaire%20Code.cpp')
-  
-C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\KlondikeBoard.h(97,34): warning C4267: '+=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\KlondikeBoard.h(99,34): warning C4267: '+=': conversion from 'size_t' to 'int', possible loss of data
   (compiling source file 'C++%20Solitaire%20Code.cpp')
   
 C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\DummyPlayer.h(30,19): warning C4305: 'initializing': truncation from 'double' to 'float'
@@ -41,4 +72,94 @@ C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++So
 C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\C++ Solitaire Code.cpp(11,45): warning C4305: 'initializing': truncation from 'double' to 'float'
 C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\C++ Solitaire Code.cpp(11,54): warning C4305: 'initializing': truncation from 'double' to 'float'
 C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\C++ Solitaire Code.cpp(89,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  DummyPlayer.cpp
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(32,9): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'DummyPlayer.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(37,9): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'DummyPlayer.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(42,9): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'DummyPlayer.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\KlondikeBoard.h(99,34): warning C4267: '+=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'DummyPlayer.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\DummyPlayer.h(30,19): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'DummyPlayer.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\DummyPlayer.h(30,29): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'DummyPlayer.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\DummyPlayer.h(30,38): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'DummyPlayer.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\DummyPlayer.h(30,47): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'DummyPlayer.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\DummyPlayer.h(30,56): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'DummyPlayer.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\DummyPlayer.cpp(13,13): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\DummyPlayer.cpp(41,13): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\DummyPlayer.cpp(45,12): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xmemory(732,103): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'DummyPlayer.cpp')
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xmemory(732,103):
+      the template instantiation context (the oldest one first) is
+          C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\DummyPlayer.cpp(14,14):
+          see reference to function template instantiation 'void std::priority_queue<DummyPlayer::ActionValue,std::vector<DummyPlayer::ActionValue,std::allocator<DummyPlayer::ActionValue>>,DummyPlayer::CompareTask>::emplace<int&,GameBoard::Move&>(int &,GameBoard::Move &)' being compiled
+              C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\DummyPlayer.cpp(14,21):
+              see the first reference to 'std::priority_queue<DummyPlayer::ActionValue,std::vector<DummyPlayer::ActionValue,std::allocator<DummyPlayer::ActionValue>>,DummyPlayer::CompareTask>::emplace' in 'DummyPlayer::makeBestMove'
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\queue(419,11):
+          see reference to function template instantiation 'void std::vector<DummyPlayer::ActionValue,std::allocator<DummyPlayer::ActionValue>>::emplace_back<int&,GameBoard::Move&>(int &,GameBoard::Move &)' being compiled
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\vector(924,24):
+          see reference to function template instantiation '_Ty &std::vector<_Ty,std::allocator<_Ty>>::_Emplace_one_at_back<int&,GameBoard::Move&>(int &,GameBoard::Move &)' being compiled
+          with
+          [
+              _Ty=DummyPlayer::ActionValue
+          ]
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\vector(845,20):
+          see reference to function template instantiation '_Ty &std::vector<_Ty,std::allocator<_Ty>>::_Emplace_back_with_unused_capacity<int&,GameBoard::Move&>(int &,GameBoard::Move &)' being compiled
+          with
+          [
+              _Ty=DummyPlayer::ActionValue
+          ]
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\vector(863,27):
+          see reference to function template instantiation 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,int&,GameBoard::Move&>(_Alloc &,_Objty *const ,int &,GameBoard::Move &)' being compiled
+          with
+          [
+              _Alloc=std::allocator<DummyPlayer::ActionValue>,
+              _Ty=DummyPlayer::ActionValue,
+              _Objty=DummyPlayer::ActionValue
+          ]
+  
+  KlondikeBoard.cpp
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(32,9): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'KlondikeBoard.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(37,9): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'KlondikeBoard.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(42,9): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'KlondikeBoard.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\KlondikeBoard.h(99,34): warning C4267: '+=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'KlondikeBoard.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\KlondikeBoard.cpp(219,30): warning C4018: '<': signed/unsigned mismatch
+  KlondikeGameController.cpp
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(32,9): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'KlondikeGameController.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(37,9): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'KlondikeGameController.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(42,9): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'KlondikeGameController.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\KlondikeBoard.h(99,34): warning C4267: '+=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'KlondikeGameController.cpp')
+  
+  Generating Code...
   final year solitare project.vcxproj -> C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\x64\Debug\C++ Solitaire Code.exe

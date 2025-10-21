@@ -25,39 +25,39 @@ void AIPlay(int numGames,int dealType) {
 	std::cout << "Playing the immediate Best Move resulsts in" << endl;
 	std::cout << "Games Won: " << winCount << endl;
 	std::cout << "This is a Win rate of:" << (winCount / (float)numGames) * 100 << "%" << endl << endl;
-	//winCount = 0;
-	//for (int i = 0; i < numGames; i++) {
-	//	std::cout << i << "/" << numGames << " \r";
-	//	std::cout.flush();
-	//	DummyPlayer game(bs,dealType);
-	//	//game = DummyPlayer(dealType);
-	//	while (!game.isGameOver()) {
-	//		game.makeRandomMove();
-	//	}
-	//	if (game.gameWon()) {
-	//		winCount++;
-	//	}
-	//}
-	//std::cout << "Playing the Random Moves resulsts in" << endl;
-	//std::cout << "Games Won: " << winCount << endl;
-	//std::cout << "This is a Win rate of:" << (winCount / (float)numGames) * 100 << "%" << endl << endl;
+	winCount = 0;
+	for (int i = 0; i < numGames; i++) {
+		std::cout << i << "/" << numGames << " \r";
+		std::cout.flush();
+		DummyPlayer game(bs,dealType);
+		//game = DummyPlayer(dealType);
+		while (!game.isGameOver()) {
+			game.makeRandomMove();
+		}
+		if (game.gameWon()) {
+			winCount++;
+		}
+	}
+	std::cout << "Playing the Random Moves resulsts in" << endl;
+	std::cout << "Games Won: " << winCount << endl;
+	std::cout << "This is a Win rate of:" << (winCount / (float)numGames) * 100 << "%" << endl << endl;
 
-	//winCount = 0;
-	//for (int i = 0; i < numGames; i++) {
-	//	std::cout << i << "/" << numGames << " \r";
-	//	std::cout.flush();
-	//	DummyPlayer game;
-	//	game = DummyPlayer(bs,dealType);
-	//	while (!game.isGameOver()) {
-	//		game.suidRandomMove();
-	//	}
-	//	if (game.gameWon()) {
-	//		winCount++;
-	//	}
-	//}
-	//std::cout << "Playing the Suid Random Moves resulsts in" << endl;
-	//std::cout << "Games Won: " << winCount << endl;
-	//std::cout << "This is a Win rate of:" << (winCount / (float)numGames) * 100 << "%" << endl;
+	winCount = 0;
+	for (int i = 0; i < numGames; i++) {
+		std::cout << i << "/" << numGames << " \r";
+		std::cout.flush();
+		DummyPlayer game;
+		game = DummyPlayer(bs,dealType);
+		while (!game.isGameOver()) {
+			game.suidRandomMove();
+		}
+		if (game.gameWon()) {
+			winCount++;
+		}
+	}
+	std::cout << "Playing the Suid Random Moves resulsts in" << endl;
+	std::cout << "Games Won: " << winCount << endl;
+	std::cout << "This is a Win rate of:" << (winCount / (float)numGames) * 100 << "%" << endl;
 }
 
 
@@ -87,10 +87,10 @@ void player() {
 int main()
 {
 	srand(time(0));
-	//AIPlay(100, 0);
-	//std::cout << "\nWinable Deals" << endl;
 	std::cout << "Random Deals" << endl;
-	AIPlay(57000,1);
+	AIPlay(2000, 0);
+	std::cout << "\nWinable Deals" << endl;
+	AIPlay(2000,1);
 	//KlondikeGameController game = KlondikeGameController(1);
 	////game.showScoreAndBoard();
 	//BoardScoreOptimiser bso = BoardScoreOptimiser();
