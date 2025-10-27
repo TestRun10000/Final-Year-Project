@@ -56,7 +56,7 @@ MCTS::MCTS(GameBoard board, set<Card> seen,GameBoard::Move lastMove) {
 	this->root->setLastMove(lastMove);
 	this->current = root;
 	this->currentActionSet = this->current->actionSet();
-	this->veriance = std::exp(-(double)seen.size()) * 100;
+	this->veriance = ceil(std::exp(( - (double)seen.size() / 20.0) + (7.0 / 20.0)) * 100);
 }
 
 BoardNode* MCTS::selection(BoardNode* base) {
@@ -70,6 +70,9 @@ BoardNode* MCTS::selection(BoardNode* base) {
 			x = node;
 			bestVal = node->UCB(this->c);
 		}
+	}
+	if (x == base) {
+		return base;
 	}
 	return selection(x);
 }
@@ -88,14 +91,42 @@ BoardNode* MCTS::expand() {
 GameBoard::Move MCTS::getAction() {
 	BoardNode* selected = this->current;
 	for (int i = 0; i < this->iterations; i++) {
+		vector<thread> threads;
+		std::vector<int> rewards(10, 0);
+		vector<BoardNode*> nodes;
 		if (this->current->getChildren().size() == this->currentActionSet.size() * this->veriance) {
 			this->current = selection(this->root);
 			this->currentActionSet = this->current->actionSet();
 		}
-		if (this->current->getDepth() < this->depthLimit) {
+		//expand()->Rollout();
+		for (int j = 0; j < 10; j++) {
+			if (this->current->getChildren().size() == this->currentActionSet.size() * this->veriance)
+				break;
+			BoardNode* n = expand();
+			try
+			{
+				n->getCurrentBoard();
+				nodes.push_back(n);
+				int idx = j;
+				threads.emplace_back([n, &rewards, j]() {
+					n->Rollout(&rewards.at(j));
+					});
+			}
+			catch (const std::exception&)
+			{
+				std::cout << "why!" << endl;
+			}
 		}
-		selected=expand();
-		selected->Rollout();
+		for (auto& t : threads)
+		{
+			t.join();
+			i++;
+		}
+		int x = 0;
+		if (nodes.empty()) continue;
+		for (BoardNode* j:nodes) {
+			j->Backpropergate(rewards.at(x++));
+		}
 	}
 	BoardNode* x = this->root;
 	int bestVal = -std::numeric_limits<int>::infinity();

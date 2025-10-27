@@ -84,24 +84,23 @@ public:
 		this->unseenCard = unseen;
 	}
 
-	void Rollout() {
-		int reward = 0;
+	void Rollout(int* reward) {
+		*reward = 0;
 		GameBoard rboard = GameBoard();
 		float baseScore = this->board.boardScore();
-		rboard.partailDeal(this->unseenCard, this->board.getBoard());
-		DummyPlayer player(rboard);
+		DummyPlayer player(this->board.getBoard());
 		while (!player.isGameOver()) {
 			player.makeBestMove();
 		}
 		if (player.gameWon()) {
-			reward=1;
+			*reward=1;
 		}
 		//else {
 		//	reward = this->board.boardScore() - baseScore <= 0 ? -10: this->board.boardScore() - baseScore;
 		//}
 	
 	
-		this->Backpropergate(reward);
+		//this->Backpropergate(reward);
 	}
 
 	void Backpropergate(int reward) {

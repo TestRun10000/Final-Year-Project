@@ -10,7 +10,7 @@ private:
 	std::mutex node_mutex;
 	BoardNode* root;
 	int depthLimit=3;
-	int iterations=500;
+	int iterations=1000;
 	int veriance=100;
 	float c = 1.414213562;//root 2
 	BoardNode* current;
