@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -138,10 +138,8 @@
     <ClCompile Include="C++ Solitaire Code.cpp" />
     <ClCompile Include="KlondikeBoard.cpp" />
     <ClCompile Include="KlondikeGameController.cpp" />
-    <ClCompile Include="MCTS.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BoardNode.h" />
     <ClInclude Include="BoardScoreOptimiser.h" />
     <ClInclude Include="BoardScorer.h" />
     <ClInclude Include="Card.h" />
@@ -151,7 +149,6 @@
     <ClInclude Include="DummyPlayer.h" />
     <ClInclude Include="KlondikeBoard.h" />
     <ClInclude Include="KlondikeGameController.h" />
-    <ClInclude Include="MCTS.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

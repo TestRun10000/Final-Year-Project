@@ -3,8 +3,7 @@
 #include <iostream>
 #include<random>
 #include "DummyPlayer.h"
-#include"MCTS.h"
-#include<thread>
+
 //note to self boardScore optimsation needs re doing as it is should of impacted end state. End game scoreing was left as static and did not update with weights 
 //this does not seem to have impacted training but would be better for consistancey 
 void AIPlay(int numGames,int dealType) {
@@ -86,32 +85,7 @@ void player() {
 		std::cout << "Game Over" << endl;
 }
 
-void MCTSPlay(int games) {
-	int winCount = 0;
-	for (int i = 0; i < games; i++) {
-		std::cout << i+1 << "/" << games << " \r";
-		std::cout.flush();
 
-		KlondikeGameController game(0);
-		//game.showScoreAndBoard();
-		set<Card> seen = game.visableCards();
-		while (!game.isGameOver())
-		{
-			MCTS mcts(game.getBoard(), seen, game.getLastMove());
-			game.doMove(mcts.getAction());
-			//game.showScoreAndBoard();
-			for (auto c : game.visableCards())
-				seen.insert(c);
-		}
-		if (game.gameWon()) {
-			//std::cout << "Winner!" << endl;
-			winCount++;
-		}
-		else {
-		}
-	}
-	std::cout << winCount;
-}
 
 int main()
 {
@@ -124,7 +98,7 @@ int main()
 	////game.showScoreAndBoard();
 	//BoardScoreOptimiser bso = BoardScoreOptimiser();
 	//bso.grow();
-	MCTSPlay(1);
+
 	//std::cout <<(long) std::thread::hardware_concurrency();
 
 }
