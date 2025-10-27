@@ -53,6 +53,11 @@ public:
 	bool isBlank();
 
 	~Card();
+
+	bool operator<(const Card& rhs) const
+	{
+		return this->rank+this->suit*13 < rhs.rank + rhs.suit * 13;
+	}
 };
 
 

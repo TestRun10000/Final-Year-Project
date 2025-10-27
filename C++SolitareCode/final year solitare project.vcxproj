@@ -138,8 +138,10 @@
     <ClCompile Include="C++ Solitaire Code.cpp" />
     <ClCompile Include="KlondikeBoard.cpp" />
     <ClCompile Include="KlondikeGameController.cpp" />
+    <ClCompile Include="MCTS.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BoardNode.h" />
     <ClInclude Include="BoardScoreOptimiser.h" />
     <ClInclude Include="BoardScorer.h" />
     <ClInclude Include="Card.h" />
@@ -149,6 +151,7 @@
     <ClInclude Include="DummyPlayer.h" />
     <ClInclude Include="KlondikeBoard.h" />
     <ClInclude Include="KlondikeGameController.h" />
+    <ClInclude Include="MCTS.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

@@ -22,8 +22,7 @@ public:
 		this->populationSize = 30;
 		this->mutationRate = mutationRate;
 		this->population = vector<BoardScorer>();
-		//this->population = new BoardScorer[30];//(BoardScorer*) calloc(populationSize, sizeof(BoardScorer));
-		this->fitnessValues = vector<float>();; //(float*)calloc(populationSize, sizeof(float));
+		this->fitnessValues = vector<float>();; 
 	}
 
 	void grow();

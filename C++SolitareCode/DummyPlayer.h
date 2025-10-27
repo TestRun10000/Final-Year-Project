@@ -1,6 +1,7 @@
 #pragma once
 #include "KlondikeGameController.h"
 #include"BoardScorer.h"
+
 class DummyPlayer : public KlondikeGameController
 {
 
@@ -27,8 +28,7 @@ class DummyPlayer : public KlondikeGameController
 			this->bso = BoardScorer();
 		}
 		DummyPlayer(int i) :KlondikeGameController(i) {
-			float s[5] = { 10.818811,1.636655,6.108121,0.444798,6.098790 };
-			this->bso = BoardScorer(s);
+			this->bso = BoardScorer();
 		};
 
 		DummyPlayer(float weights[5],int i=0) :KlondikeGameController(i) {
@@ -38,10 +38,18 @@ class DummyPlayer : public KlondikeGameController
 		DummyPlayer(BoardScorer b, int i = 0) :KlondikeGameController(i) {
 			this->bso = b;
 		}
+	
+		DummyPlayer(GameBoard b) :KlondikeGameController(b) {
+			this->bso = BoardScorer();
+		}
 
 		void makeBestMove();
 		void makeRandomMove();
 		void suidRandomMove();
+
+		void doMove(GameBoard::Move m);
+
+		
 
 	private:
 
@@ -50,6 +58,7 @@ class DummyPlayer : public KlondikeGameController
 			return GameBoard(*this->stockPile, *this->drawnCards, *this->columns, this->foundation);
 		}
 
-		void doMove(KlondikeGameController::Move m, GameBoard* board);
+
+		void doMove(GameBoard::Move m, GameBoard* board);
 };
 

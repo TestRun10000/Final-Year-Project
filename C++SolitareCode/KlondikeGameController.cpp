@@ -1,8 +1,8 @@
 #include "KlondikeGameController.h"
 
-list <KlondikeGameController::Move> KlondikeGameController::getAvailableMoves()
+vector<KlondikeGameController::Move> KlondikeGameController::getAvailableMoves()
 {
-	list<KlondikeGameController::Move> possibleMoves = list<KlondikeGameController::Move>();
+	vector<KlondikeGameController::Move> possibleMoves = vector<KlondikeGameController::Move>();
 	if (!this->drawnCards->isEmpty() || !this->stockPile->isEmpty()) {
 		possibleMoves.push_back(generateMove(MoveType::draw));
 	}
@@ -46,8 +46,9 @@ list <KlondikeGameController::Move> KlondikeGameController::getAvailableMoves()
 			if (j == i) continue;
 			//if (this->columns->getPosOfFistVisOfCol(j) != -1)continue;
 			if (this->columns->isColEmpty(j)) {
-				if(top.getRank() == 13) {
-					possibleMoves.push_back(generateMove(MoveType::colToCol, j, i, topPos));
+				if(top.getRank() == 13 && topPos!=-1) {
+					if(!isReverseMove(generateMove(MoveType::colToCol, j, i, topPos)))
+						possibleMoves.push_back(generateMove(MoveType::colToCol, j, i, topPos));
 				}
 				continue;
 			}
@@ -55,23 +56,29 @@ list <KlondikeGameController::Move> KlondikeGameController::getAvailableMoves()
 			Card bottom = this->columns->getBottomCardFromColumn(j);
 			int diffInRank =top.getRank()-bottom.getRank();
 			if (bottom.getColour() != top.getColour()) {
-				if(diffInRank==-1)
-					possibleMoves.push_back(generateMove(MoveType::colToCol, j, i, topPos));
+				if (diffInRank == -1) {
+					if (!isReverseMove(generateMove(MoveType::colToCol, j, i, topPos)))
+						possibleMoves.push_back(generateMove(MoveType::colToCol, j, i, topPos));
+				}
 				//if diff in rank +1 is less than numof card stack the stack contains a card that could be placed in that column
 				else if (numOfCardStacked > diffInRank+1 && diffInRank > 1 && diffInRank%2==1) {
-					possibleMoves.push_back(generateMove(MoveType::colToCol, j, i, topPos+diffInRank+1));
+					if (!isReverseMove(generateMove(MoveType::colToCol, j, i, topPos+diffInRank+1)))
+						possibleMoves.push_back(generateMove(MoveType::colToCol, j, i, topPos+diffInRank+1));
 				}
 			}
 			else if (numOfCardStacked > diffInRank+1 && diffInRank>0 && diffInRank % 2 == 0) {
-				possibleMoves.push_back(generateMove(MoveType::colToCol, j, i, topPos + diffInRank+1));
+				if (!isReverseMove(generateMove(MoveType::colToCol, j, i, topPos+diffInRank+1)))
+					possibleMoves.push_back(generateMove(MoveType::colToCol, j, i, topPos + diffInRank+1));
 			}
 		}
 		Card bottom = this->columns->getBottomCardFromColumn(i);
 		if (bottom.getRank() == 1) {
-			possibleMoves.push_back(generateMove(MoveType::colToFoundation, 0, i));
+			if (!isReverseMove(generateMove(MoveType::colToFoundation, bottom.getSuit(), i)))
+			possibleMoves.push_back(generateMove(MoveType::colToFoundation, bottom.getSuit(), i));
 		}
 		else if (!this->foundation[bottom.getSuit()].empty() && this->foundation[bottom.getSuit()].top().getRank() == bottom.getRank() - 1) {
-			possibleMoves.push_back(generateMove(MoveType::colToFoundation,0,i));
+			if(!isReverseMove(generateMove(MoveType::colToFoundation, bottom.getSuit(), i)))
+				possibleMoves.push_back(generateMove(MoveType::colToFoundation, bottom.getSuit(),i));
 		}
 	}
 	//from foundation
@@ -83,7 +90,8 @@ list <KlondikeGameController::Move> KlondikeGameController::getAvailableMoves()
 		for (int j = 0; j < 7; j++) {
 			if (this->columns->isColEmpty(j)||this->columns->getPosOfFistVisOfCol(j) == -1) continue;
 			if (this->columns->getBottomCardFromColumn(j).doesStack(card)) {
-				possibleMoves.push_back(generateMove(MoveType::foundationToCol, j, i));
+				if(!isReverseMove(generateMove(MoveType::foundationToCol, j, i)))
+					possibleMoves.push_back(generateMove(MoveType::foundationToCol, j, i));
 			}
 		}
 	}
@@ -168,6 +176,13 @@ bool KlondikeGameController::isGameOver() {
 	if (this->movesSinceLastScoreChange >= 28) {
 		//std::cout << "GameOver";
 		return true;
+	}
+	return false;
+}
+
+bool KlondikeGameController::isReverseMove(Move m) {
+	if (m.moveType == MoveType::colToCol || m.moveType == MoveType::foundationToCol || m.moveType == MoveType::colToFoundation) {
+		return m.fromCol == this->lastMove.toCol && m.toCol == this->lastMove.fromCol;
 	}
 	return false;
 }

@@ -5,7 +5,7 @@
 
 
 void DummyPlayer::makeBestMove() {
-	list<KlondikeGameController::Move> moves = getAvailableMoves();
+	vector<KlondikeGameController::Move> moves = getAvailableMoves();
 	std::priority_queue<ActionValue, std::vector<ActionValue>, CompareTask> task_queue;
 	for (KlondikeGameController::Move m : moves) {
 		GameBoard copy = DummyPlayer::copyBoard();
@@ -17,22 +17,22 @@ void DummyPlayer::makeBestMove() {
 }
 
 void DummyPlayer::makeRandomMove() {
-	list<KlondikeGameController::Move> moves = getAvailableMoves();
+	vector<KlondikeGameController::Move> moves = getAvailableMoves();
 	int j = (rand() % moves.size());
 	KlondikeGameController::Move m = generateMove(0, 0, 0, 0);
-	int x = 0;
-	for (const auto& mov : moves) {
-		if (x == j) {
-			m = mov;
-			break;
-		}
-		x++;
-	}
-	KlondikeGameController::doMove(m);
+	//int x = 0;
+	//for (const auto& mov : moves) {
+	//	if (x == j) {
+	//		m = mov;
+	//		break;
+	//	}
+	//	x++;
+	//}
+	KlondikeGameController::doMove(moves.at(j));
 }
 
 void DummyPlayer::suidRandomMove() {
-	list<KlondikeGameController::Move> moves = getAvailableMoves();
+	vector<KlondikeGameController::Move> moves = getAvailableMoves();
 	std::priority_queue<ActionValue, std::vector<ActionValue>, CompareTask> task_queue;
 	float total = 0;
 	for (KlondikeGameController::Move m : moves) {
@@ -61,7 +61,34 @@ void DummyPlayer::suidRandomMove() {
 }
 
 
-void DummyPlayer ::doMove(KlondikeGameController::Move m, GameBoard* board) {
+
+void DummyPlayer::doMove(GameBoard::Move m) {
+	switch (m.moveType)
+	{
+	case draw:
+		this->drawCardsFromStockPile(1);
+		break;
+	case colToCol:
+		if (!this->moveCardsFromColtoCol(m.fromCol, m.row, m.toCol)) {
+			getAvailableMoves();
+		}
+		break;
+	case colToFoundation:
+		this->placeInFoundationFromCol(m.fromCol);
+		break;
+	case drawToFoundation:
+		this->placeInFoundationFromDraw();
+		break;
+	case foundationToCol:
+		this->removeFromFoundation(m.toCol, m.fromCol);
+		break;
+	case drawToCol:
+		this->moveCardFromDrawn(m.toCol);
+		break;
+	}
+}
+
+void DummyPlayer ::doMove(GameBoard::Move m, GameBoard* board) {
 	switch (m.moveType)
 	{
 	case draw:

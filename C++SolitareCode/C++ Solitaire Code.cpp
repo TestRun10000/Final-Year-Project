@@ -3,8 +3,9 @@
 #include <iostream>
 #include<random>
 #include "DummyPlayer.h"
-#include"BoardScoreOptimiser.h"
-
+#include"MCTS.h"
+//note to self boardScore optimsation needs re doing as it is should of impacted end state. End game scoreing was left as static and did not update with weights 
+//this does not seem to have impacted training but would be better for consistancey 
 void AIPlay(int numGames,int dealType) {
 
 	int winCount = 0;
@@ -87,14 +88,37 @@ void player() {
 int main()
 {
 	srand(time(0));
-	std::cout << "Random Deals" << endl;
-	AIPlay(2000, 0);
-	std::cout << "\nWinable Deals" << endl;
-	AIPlay(2000,1);
+	//std::cout << "Random Deals" << endl;
+	//AIPlay(2000, 0);
+	//std::cout << "\nWinable Deals" << endl;
+	//AIPlay(2000,1);
 	//KlondikeGameController game = KlondikeGameController(1);
 	////game.showScoreAndBoard();
 	//BoardScoreOptimiser bso = BoardScoreOptimiser();
 	//bso.grow();
+	int winCount = 0;
+	for (int i = 0; i < 100; i++) {
+		std::cout << i << "/" << 100 << " \r";
+		std::cout.flush();
 
+		KlondikeGameController game = KlondikeGameController(1);
+		//game.showScoreAndBoard();
+		set<Card> seen = game.visableCards();
+		while (!game.isGameOver())
+		{
+			MCTS mcts(game.getBoard(),seen,game.getLastMove());
+			game.doMove(mcts.getAction());
+			//game.showScoreAndBoard();
+			for (auto c : game.visableCards())
+				seen.insert(c);
+		}
+		if (game.gameWon()) {
+			std::cout << "Winner!"<<endl;
+			winCount++;
+		}
+		else {
+		}
+	}
+	std::cout << winCount;
 }
 

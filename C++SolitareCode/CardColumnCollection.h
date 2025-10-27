@@ -63,6 +63,11 @@ public:
 
 	void hideFirstVisOfCol(unsigned int col);
 
+	Card getCard(unsigned int col,unsigned int row) {
+		if (col > this->size ||row>this->getLengthOfCol(col)) return Card() ;
+		return this->columns[col].get(row);
+	}
+
 	std::string toString();
 
 	bool isColEmpty(unsigned int col);

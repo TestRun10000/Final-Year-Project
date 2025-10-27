@@ -2,6 +2,9 @@
 #include<iostream>
 #include<random>
 
+
+
+#pragma region  Deal
 void GameBoard::randomDeal() {
 	this->stockPile->shuffle();
 	for (int i = 0; i < 7; i++) {
@@ -159,6 +162,7 @@ void  GameBoard::doReverseMove(Move m){
 }
 
 void GameBoard::createWinStartBoard() {
+	delete this->stockPile;
 	this->stockPile = new Deck();//replaces a full deck with a empty one 
 	for (int i = 0; i < 4; i++) {
 		Card c =  Card((Card::Suits)i, 13);
@@ -166,7 +170,6 @@ void GameBoard::createWinStartBoard() {
 		this->stockPile->push(c);
 	}
 	this->stockPile->shuffle();
-	this->columns = new CardColumnCollection();
 	for (int i = 0; i < 4; i++) 
 		this->columns->pushCardToColumn(i, this->stockPile->draw());
 	for (int i = 12; i > 0; i--) {
@@ -213,6 +216,39 @@ bool GameBoard::allOpeningCardsDelt(bool hiddenOnly) {
 	return true;
 }
 
+void GameBoard::partailDeal(set<Card> cardPool, const GameBoard& base) {
+	delete this->stockPile;
+	delete this->drawnCards;
+	this->stockPile = new Deck();
+	this->drawnCards =new Deck(*base.drawnCards);
+	for (auto card : cardPool) {
+		this->stockPile->push(card);
+	}
+	if (!this->stockPile->isEmpty()) {
+		this->stockPile->shuffle();
+	}
+	for (int i = 0; i < 4; i++) {
+		this->foundation[i] = base.foundation[i];
+	}
+	for (int i = 0; i < 7; i++) {
+		for (int j = 0; j < base.columns->getLengthOfCol(i); j++) {
+			if (j < base.columns->getPosOfFistVisOfCol(i)) {
+				this->columns->pushCardToColumn(i,this->stockPile->draw());
+			}
+			else {
+				this->columns->pushCardToColumn(i, base.columns->getCard(i, j));
+			}
+		}
+	}
+	if (this->stockPile->numInDeck() == 0) {
+		delete this->stockPile;
+		this->stockPile = new Deck(*base.stockPile);
+	}
+}
+
+#pragma endregion
+
+#pragma region CardMovement
 void GameBoard::drawCardsFromStockPile(unsigned int count) {
 	if (this->stockPile->isEmpty()) {
 		int reStockCount = this->drawnCards->numInDeck();
@@ -311,6 +347,7 @@ bool GameBoard::moveCardsFromColtoCol(unsigned int fromCol, unsigned int fromRow
 	return this->columns->moveCardsFromColtoCol(fromCol, fromRow, toCol);
 
 }
+#pragma endregion
 
 std::string GameBoard::toString() {
 	string deckValue = this->stockPile->isEmpty() ? "[  ]" : "####";
@@ -331,34 +368,31 @@ std::string GameBoard::toString() {
 	return out;
 }
 
+
 int GameBoard::boardScore() {
-	int score = 0;
-	//empty colums, and how many cards have been revealed 
-	for (int i = 0; i < 7; i++) {
-		if (this->columns->isColEmpty(i)) {
-			score += 9;
-		}
-		else if (this->columns->getPosOfFistVisOfCol(i) == -1) continue;
-		else {
-			if (this->columns->getFirstVisFromCol(i).getRank() == 13 && this->columns->getPosOfFistVisOfCol(i) == 0) {
-				score += 10;
-			}
-			int numShown = i - this->columns->getPosOfFistVisOfCol(i);
-			score += numShown * 10;
-		}
-
-	}
-	//how many cards have been added to the foundation
-	for (int i = 0; i < 4; i++) {
-		if (!this->foundation[i].empty()) {
-			if (this->foundation[i].top().getRank() > 0) {
-				score += this->foundation[i].top().getRank() * 30;
-			}
-		}
-	}
-	//how many cards taken from the deck
-	score += 8 * (24 - (this->stockPile->numInDeck() + this->drawnCards->numInDeck()));
-
+	float score = 0;
+	score += 10.818811 * numOfCardsInFoundation();
+	score += 1.636655f * numOfCardsRevealed();
+	score += 6.108121f * (24 - numCardInDeck());
+	score += 0.444798f * numOfEmptyCols();
+	score += 6.098790f * numOfColsStartingWithKing();
 	return score;
 }
 
+set<Card> GameBoard::visableCards() {
+	set<Card> seen = set<Card>();
+	for (int i = 0; i < 4; i++) {
+		if (!this->foundation[i].empty()) {
+			for (int j = 1; j <= this->foundation[i].top().getRank(); j++)
+				seen.insert(Card((Card::Suits)i, j));
+		}
+	}
+	if (!this->drawnCards->isEmpty())
+		seen.insert(this->drawnCards->peek());
+	for (int i = 0; i < 7; i++) {
+		if (this->columns->isColEmpty(i)) continue;
+		for (int j = this->columns->getPosOfFistVisOfCol(i); j < this->columns->getLengthOfCol(i); j++)
+			seen.insert(this->columns->getCard(i, j));
+	}
+	return seen;
+}

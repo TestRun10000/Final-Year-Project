@@ -6,11 +6,11 @@ private:
 	float scoreWeights[5];
 public:
 	BoardScorer() {
-		this->scoreWeights[0] = 30.0f;
-		this->scoreWeights[1] = 10.0f;
-		this->scoreWeights[2] = 8.0f;
-		this->scoreWeights[3] = 9.0f;
-		this->scoreWeights[4] = 10.0f;
+		this->scoreWeights[0] = 10.818811f;
+		this->scoreWeights[1] = 1.636655f;
+		this->scoreWeights[2] = 6.108121f;
+		this->scoreWeights[3] = 0.444798f;
+		this->scoreWeights[4] = 6.098790f;
 	}
 
 	BoardScorer(float weights[5]) {

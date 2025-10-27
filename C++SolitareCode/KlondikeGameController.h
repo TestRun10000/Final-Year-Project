@@ -1,8 +1,8 @@
 #pragma once
 #include "KlondikeBoard.h"
-#include <list>
+#include <vector>
 #include<iostream>
-class KlondikeGameController : protected GameBoard
+class KlondikeGameController : public GameBoard
 {
 
 
@@ -18,18 +18,20 @@ private:
 
 public:
 	KlondikeGameController(int i=0) {
+
 		if (i == 0)
 			randomDeal();
 		else
 			winableDeal();
 	}
 
-	list<Move> getAvailableMoves();
+	KlondikeGameController(GameBoard b) :GameBoard(b) {}
+
+	vector<Move> getAvailableMoves();
 
 	void doMove(Move m);
 
 	void showScoreAndBoard() {
-		std::cout << "Score:" << this->boardScore() << endl;
 		std::cout << this->toString()<<endl;
 	};
 
@@ -42,6 +44,16 @@ public:
 	bool gameWon();
 	
 	bool isGameOver();
+
+	GameBoard getBoard() {
+		return GameBoard(*this->stockPile, *this->drawnCards, *this->columns, this->foundation);
+	}
+
+	bool isReverseMove(Move m);
+
+	void setLastMove(Move m) { this->lastMove = m; }
+
+	Move getLastMove() { return this->lastMove; }
 };
 
 

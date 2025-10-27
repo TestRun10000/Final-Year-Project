@@ -1,6 +1,7 @@
 #pragma once
 #include <stack>
 #include <list>
+#include <set>
 #include "Deck.h"
 #include "CardColumnCollection.h"
 #include "Card.h"
@@ -14,7 +15,7 @@ class GameBoard
 		CardColumnCollection* columns;
 		int score = 0;
 
-	protected:
+	public:
 		enum MoveType
 		{
 			draw,
@@ -67,7 +68,12 @@ class GameBoard
 		void randomDeal();
 
 		void winableDeal();
-	
+
+		void partailDeal(set<Card> cardPool, const GameBoard& base);
+
+		set<Card> visableCards();
+
+#pragma region CardMovement
 		void drawCardsFromStockPile(unsigned int count);
 	
 		void placeInFoundationFromCol(unsigned int col);
@@ -85,6 +91,7 @@ class GameBoard
 		int getScore() { return this->score; }
 	
 		int boardScore();
+#pragma endregion
 
 #pragma region forScoring
 
