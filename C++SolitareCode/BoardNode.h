@@ -1,8 +1,9 @@
 #pragma once
 #include"DummyPlayer.h"
 #include<vector>
-#include<math.h>
+#include<cmath>
 #include<set>
+#include<algorithm>
 
 class BoardNode
 {
@@ -52,7 +53,7 @@ public:
 
 	GameBoard::Move getAction() { return this->action; }
 
-	int getReward() { return this->reward/this->numOfVists; }
+	int getReward() { return (this->reward/this->numOfVists)+this->board.boardScore(); }
 	float getMoveScore() { return this->board.boardScore(); }
 
 	int getNumOfVisits() { return this->numOfVists; }
@@ -69,7 +70,7 @@ public:
 		this->children.push_back(child);
 		child->board.doMove(child->action);
 		set<Card> seen = child->board.visableCards();
-		child->reward += child->board.boardScore();
+		//child->reward += child->board.boardScore();
 		std::set<Card> newUnseeen;
 
 		std::set_difference(
@@ -90,14 +91,17 @@ public:
 		float baseScore = this->board.boardScore();
 		DummyPlayer player(this->board.getBoard());
 		while (!player.isGameOver()) {
-			player.makeBestMove();
+			player.bestMoveRandom();
 		}
 		if (player.gameWon()) {
-			*reward=1;
+			*reward = 1000;
 		}
-		//else {
-		//	reward = this->board.boardScore() - baseScore <= 0 ? -10: this->board.boardScore() - baseScore;
-		//}
+		else {
+			*reward= (int)(player.boardScore()-baseScore);
+
+
+		}
+
 	
 	
 		//this->Backpropergate(reward);
@@ -114,6 +118,10 @@ public:
 
 	void setLastMove(GameBoard::Move m) {
 		this->board.setLastMove(m);
+	}
+
+	~BoardNode() {
+		delete parent;
 	}
 };
 

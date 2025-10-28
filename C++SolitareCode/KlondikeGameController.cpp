@@ -46,7 +46,7 @@ vector<KlondikeGameController::Move> KlondikeGameController::getAvailableMoves()
 			if (j == i) continue;
 			//if (this->columns->getPosOfFistVisOfCol(j) != -1)continue;
 			if (this->columns->isColEmpty(j)) {
-				if(top.getRank() == 13 && topPos!=-1) {
+				if(top.getRank() == 13 && topPos!=0) {
 					if(!isReverseMove(generateMove(MoveType::colToCol, j, i, topPos)))
 						possibleMoves.push_back(generateMove(MoveType::colToCol, j, i, topPos));
 				}

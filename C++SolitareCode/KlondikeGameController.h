@@ -54,6 +54,7 @@ public:
 	void setLastMove(Move m) { this->lastMove = m; }
 
 	Move getLastMove() { return this->lastMove; }
+
 };
 
 

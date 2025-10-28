@@ -1,7 +1,7 @@
 #include "DummyPlayer.h"
 #include <queue>
 #include<vector>
-
+#include<random>
 
 
 void DummyPlayer::makeBestMove() {
@@ -58,6 +58,18 @@ void DummyPlayer::suidRandomMove() {
 		}
 		lastPair = cur;
 	}	
+}
+
+void DummyPlayer::bestMoveRandom(float s) {
+	std::uniform_real_distribution<> chance(0, 1);
+
+	float ran = chance(this->gen);
+	if (ran <= s) {
+		makeRandomMove();
+	}
+	else {
+		makeBestMove();
+	}
 }
 
 

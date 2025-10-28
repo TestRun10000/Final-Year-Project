@@ -62,17 +62,25 @@ MCTS::MCTS(GameBoard board, set<Card> seen,GameBoard::Move lastMove) {
 BoardNode* MCTS::selection(BoardNode* base) {
 	BoardNode* x = base;
 	float bestVal = -std::numeric_limits<float>::infinity();
+	if (x->getChildren().size() < x->actionSet().size() * this->veriance) {
+		bestVal = x->UCB(this->c);
+	}
 	if (base->getChildren().empty()) {
 		return base;
 	}
 	for (auto node : base->getChildren()) {
 		if (node->UCB(this->c) > bestVal) {
-			x = node;
-			bestVal = node->UCB(this->c);
+			
+				x = node;	
+				bestVal = node->UCB(this->c);
+			
 		}
 	}
 	if (x == base) {
 		return base;
+	}
+	if (x->getChildren().size() < x->actionSet().size() * this->veriance) {
+		return x;
 	}
 	return selection(x);
 }
@@ -89,44 +97,18 @@ BoardNode* MCTS::expand() {
 }
 
 GameBoard::Move MCTS::getAction() {
-	BoardNode* selected = this->current;
 	for (int i = 0; i < this->iterations; i++) {
-		vector<thread> threads;
-		std::vector<int> rewards(10, 0);
-		vector<BoardNode*> nodes;
-		if (this->current->getChildren().size() == this->currentActionSet.size() * this->veriance) {
+		//vector<thread> threads;
+		//std::vector<int> rewards(10, 0);
+		//vector<BoardNode*> nodes;
+		if (!(this->current->getChildren().size() < this->current->actionSet().size() * (this->veriance/(this->current->getDepth()+1)))) {
 			this->current = selection(this->root);
 			this->currentActionSet = this->current->actionSet();
 		}
-		//expand()->Rollout();
-		for (int j = 0; j < 10; j++) {
-			if (this->current->getChildren().size() == this->currentActionSet.size() * this->veriance)
-				break;
-			BoardNode* n = expand();
-			try
-			{
-				n->getCurrentBoard();
-				nodes.push_back(n);
-				int idx = j;
-				threads.emplace_back([n, &rewards, j]() {
-					n->Rollout(&rewards.at(j));
-					});
-			}
-			catch (const std::exception&)
-			{
-				std::cout << "why!" << endl;
-			}
-		}
-		for (auto& t : threads)
-		{
-			t.join();
-			i++;
-		}
-		int x = 0;
-		if (nodes.empty()) continue;
-		for (BoardNode* j:nodes) {
-			j->Backpropergate(rewards.at(x++));
-		}
+		BoardNode* n = expand();
+		int r = 0;
+		n->Rollout(&r);
+		n->Backpropergate(r);
 	}
 	BoardNode* x = this->root;
 	int bestVal = -std::numeric_limits<int>::infinity();
@@ -139,5 +121,6 @@ GameBoard::Move MCTS::getAction() {
 	//if (this->root->getMoveScore()==x->getMoveScore()) {
 	//	return GameBoard::generateMove(0,0,0,0);
 	//}
+	//cout << this->root->getChildren().size()<<"," << this->root->actionSet().size() << endl;
 	return x->getAction();
 }
