@@ -5,16 +5,17 @@
 #include<random>
 #include "DummyPlayer.h"
 #include"MCTS.h"
-#define _CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
-#ifdef _DEBUG
-#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
-// Replace _NORMAL_BLOCK with _CLIENT_BLOCK if you want the
-// allocations to be of _CLIENT_BLOCK type
-#else
-#define DBG_NEW new
-#endif
+#include<thread>
+//#define _CRTDBG_MAP_ALLOC
+//#include <stdlib.h>
+//#include <crtdbg.h>
+//#ifdef _DEBUG
+//#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+//// Replace _NORMAL_BLOCK with _CLIENT_BLOCK if you want the
+//// allocations to be of _CLIENT_BLOCK type
+//#else
+//#define DBG_NEW new
+//#endif
 //note to self boardScore optimsation needs re doing as it is should of impacted end state. End game scoreing was left as static and did not update with weights 
 //this does not seem to have impacted training but would be better for consistancey 
 void AIPlay(int numGames,int dealType) {
@@ -22,10 +23,6 @@ void AIPlay(int numGames,int dealType) {
 	int winCount = 0;
 	float s[5] = { 10.818811,1.636655,6.108121,0.444798,6.098790 };
 	BoardScorer bs = BoardScorer(s);
-	_CrtMemState s1;
-	_CrtMemState s2;
-	_CrtMemState s3;
-	_CrtMemCheckpoint(&s1);
 	for (int i = 0; i < numGames; i++) {
 		DummyPlayer game(bs, dealType);
 		//game = *new DummyPlayer(bs,dealType);
@@ -38,9 +35,6 @@ void AIPlay(int numGames,int dealType) {
 			winCount++;
 		}
 	}
-	_CrtMemCheckpoint(&s2);
-	if (_CrtMemDifference(&s3, &s1, &s2))
-		_CrtMemDumpStatistics(&s3);
 	std::cout << "Playing the immediate Best Move resulsts in" << endl;
 	std::cout << "Games Won: " << winCount << endl;
 	std::cout << "This is a Win rate of:" << (winCount / (float)numGames) * 100 << "%" << endl << endl;
@@ -122,38 +116,63 @@ void player() {
 		std::cout << "Game Over" << endl;
 }
 
+void runSingleMCTS(int* win, int mode) {
+	KlondikeGameController game(mode);
+	set<Card> seen = game.visableCards();
+	int moves = 0;
+	while (!game.isGameOver())
+	{
+		if (moves > 140) {
+			break;
+		}
+		MCTS mcts(game.getBoard(), seen, game.getLastMove());
+		game.doMove(mcts.getAction());
+		//game.showScoreAndBoard();
+		for (auto c : game.visableCards())
+			seen.insert(c);
+		moves++;
+	}
+	if (game.gameWon()) {
+		//std::cout << "Winner!" << endl;
+		*win = 1;
+	}
+	else {
+		*win = 0;
+	}
+}
+
 void MCTSPlay(int games,int mode) {
 	int winCount = 0;
-	for (int i = 0; i < games; i++) {
-
-
-		KlondikeGameController game(mode);
-		//game.showScoreAndBoard();
-		int move = 0;
-		set<Card> seen = game.visableCards();
-		while (!game.isGameOver())
-		{
-			std::cout << i + 1 << "/" << games << " move: " << move++ << " \r";
-			std::cout.flush();
-			if (move > 135) {
+	for (int i = 0; i < games;) {
+		std::cout << i  << "/" << games << " \r";
+		std::cout.flush();
+		vector<thread> threads;
+		std::vector<int> rewards(10 , 0);
+		for (int j = 0; j < 10; j++) {
+			if (i + j > games) {
 				break;
 			}
-			MCTS mcts(game.getBoard(), seen, game.getLastMove());
-			game.doMove(mcts.getAction());
-			//game.showScoreAndBoard();
-			for (auto c : game.visableCards())
-				seen.insert(c);
+			int idx = j;
+			threads.emplace_back([&rewards, j,mode]() {
+				runSingleMCTS(&rewards.at(j),mode);});
+
 		}
-		if (game.gameWon()) {
-			//std::cout << "Winner!" << endl;
-			winCount++;
+		for (auto& t : threads)
+		{
+			t.join();
+			i++;
 		}
-		else {
+		for (int w : rewards) {
+			winCount += w;
 		}
+		//game.showScoreAndBoard();
+
+		
 	}
 	std::cout << "Games Won: " << winCount << endl;
 	std::cout << "This is a Win rate of:" << (winCount / (float)games) * 100 << "%" << endl<<endl<<endl;
 }
+
 
 
 int temp(float c) {
@@ -226,16 +245,18 @@ int main()
 	//std::cout << "Random Deals" << endl;
 	//AIPlay(2000, 0);
 	//std::cout << "\nWinable Deals" << endl;
-	//AIPlay(100,1);
+	//AIPlay(2000,1);
 	//KlondikeGameController game = KlondikeGameController(1);
 	////game.showScoreAndBoard();
 	//BoardScoreOptimiser bso = BoardScoreOptimiser();
 	//bso.grow();
-	MCTSPlay(1, 0);
-	//MCTSPlay(10,1);
+	//int a = 0;
+	//runSingleMCTS(&a,1);
+	MCTSPlay(100, 0);
+	MCTSPlay(100,1);
 	//std::cout <<(long) std::thread::hardware_concurrency();
-	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
-	_CrtDumpMemoryLeaks();
+	//_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
+	//_CrtDumpMemoryLeaks();
 
 }
 
