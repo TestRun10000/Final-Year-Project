@@ -14,11 +14,7 @@ public:
 		//this->size = 7;
 	}
 
-	//~CardColumnCollection() {
-	//	for (int i = 0; i < 7; i++) {
-	//		this->columns[i].~CardColumn();
-	//	}
-	//}
+
 
 	//CardColumnCollection(int size,bool ascOrder,bool altColour) {
 	//	this->columns =(CardColumn**) calloc(size, sizeof(CardColumn*));

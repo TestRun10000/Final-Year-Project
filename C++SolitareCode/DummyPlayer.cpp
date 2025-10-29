@@ -125,3 +125,4 @@ void DummyPlayer ::doMove(GameBoard::Move m, GameBoard* board) {
 		break;
 	}
 }
+

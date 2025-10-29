@@ -5,6 +5,14 @@
 #include "Deck.h"
 #include "CardColumnCollection.h"
 #include "Card.h"
+#ifdef _DEBUG
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+// Replace _NORMAL_BLOCK with _CLIENT_BLOCK if you want the
+// allocations to be of _CLIENT_BLOCK type
+#else
+#define DBG_NEW new
+#endif
+
 
 class GameBoard
 {
@@ -35,15 +43,15 @@ class GameBoard
 	
 	public:
 		GameBoard() {
-			this->stockPile = new Deck(4);
-			this->drawnCards = new Deck();
-			this->columns = new CardColumnCollection();
+			this->stockPile = DBG_NEW Deck(4);
+			this->drawnCards = DBG_NEW Deck();
+			this->columns = DBG_NEW CardColumnCollection();
 		}
 	
 		GameBoard(Deck stockpile, Deck drawnCards, CardColumnCollection tabula, stack<Card> foundation[4]) {
-			this->stockPile = new Deck(stockpile);
-			this->drawnCards = new  Deck(drawnCards);
-			this->columns = new CardColumnCollection(tabula);
+			this->stockPile = DBG_NEW Deck(stockpile);
+			this->drawnCards = DBG_NEW  Deck(drawnCards);
+			this->columns = DBG_NEW CardColumnCollection(tabula);
 			for (int i = 0; i < 4; i++) {
 				this->foundation[i] = foundation[i];
 			}
@@ -139,9 +147,9 @@ class GameBoard
 	
 		
 		GameBoard(const GameBoard& base) {
-			this->stockPile = new Deck(*base.stockPile);
-			this->drawnCards = new Deck(*base.drawnCards);
-			this->columns = new CardColumnCollection(*base.columns);
+			this->stockPile = DBG_NEW Deck(*base.stockPile);
+			this->drawnCards = DBG_NEW Deck(*base.drawnCards);
+			this->columns = DBG_NEW CardColumnCollection(*base.columns);
 			for (int i = 0; i < 4; ++i) {
 				this->foundation[i] = base.foundation[i];
 			}
@@ -153,9 +161,9 @@ class GameBoard
 				delete stockPile;
 				delete drawnCards;
 				delete columns;
-				this->stockPile = new Deck(*base.stockPile);
-				this->drawnCards = new Deck(*base.drawnCards);
-				this->columns = new CardColumnCollection(*base.columns);
+				this->stockPile = DBG_NEW Deck(*base.stockPile);
+				this->drawnCards = DBG_NEW Deck(*base.drawnCards);
+				this->columns = DBG_NEW CardColumnCollection(*base.columns);
 				for (int i = 0; i < 4; ++i) {
 					this->foundation[i] = base.foundation[i];
 				}

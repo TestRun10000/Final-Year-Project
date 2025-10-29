@@ -47,5 +47,6 @@ public:
 			s += std::to_string(var)+",";
 		return s;
 	}
+
 };
 

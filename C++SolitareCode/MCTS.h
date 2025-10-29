@@ -8,11 +8,11 @@ class MCTS
 {
 private:
 	std::mutex node_mutex;
-	BoardNode* root;
+	shared_ptr<BoardNode> root;
 	int iterations=2000;
 	int veriance=100;
 	float c = 1.414213562;//root 2
-	BoardNode* current;
+	shared_ptr<BoardNode> current;
 	vector <GameBoard::Move> currentActionSet;
 public:
 	MCTS();
@@ -20,13 +20,10 @@ public:
 	MCTS(GameBoard board);
 	MCTS(GameBoard board,set<Card> seen, GameBoard::Move lastMove);
 
-	~MCTS() {
-		delete root;
-	}
 
 private:
-	BoardNode* selection(BoardNode* base);
-	BoardNode *expand();
+	shared_ptr<BoardNode> selection(shared_ptr<BoardNode> base);
+	shared_ptr<BoardNode> expand();
 public:
 	GameBoard::Move getAction();
 

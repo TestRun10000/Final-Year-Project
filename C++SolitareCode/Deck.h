@@ -18,11 +18,6 @@ public:
 		topOFDeck = d.topOFDeck;
 		std::copy(d.deck, d.deck + 52, deck);
 	}
-	//~Deck() {
-	//	for (int i = 0; i < 52; i++) {
-	//		this->deck[i].~Card();
-	//	}
-	//}
 
 	bool isEmpty() { return this->topOFDeck == -1; }
 

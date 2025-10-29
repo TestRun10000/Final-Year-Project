@@ -5,6 +5,16 @@
 #include<random>
 #include "DummyPlayer.h"
 #include"MCTS.h"
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#ifdef _DEBUG
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+// Replace _NORMAL_BLOCK with _CLIENT_BLOCK if you want the
+// allocations to be of _CLIENT_BLOCK type
+#else
+#define DBG_NEW new
+#endif
 //note to self boardScore optimsation needs re doing as it is should of impacted end state. End game scoreing was left as static and did not update with weights 
 //this does not seem to have impacted training but would be better for consistancey 
 void AIPlay(int numGames,int dealType) {
@@ -12,6 +22,10 @@ void AIPlay(int numGames,int dealType) {
 	int winCount = 0;
 	float s[5] = { 10.818811,1.636655,6.108121,0.444798,6.098790 };
 	BoardScorer bs = BoardScorer(s);
+	_CrtMemState s1;
+	_CrtMemState s2;
+	_CrtMemState s3;
+	_CrtMemCheckpoint(&s1);
 	for (int i = 0; i < numGames; i++) {
 		DummyPlayer game(bs, dealType);
 		//game = *new DummyPlayer(bs,dealType);
@@ -24,6 +38,9 @@ void AIPlay(int numGames,int dealType) {
 			winCount++;
 		}
 	}
+	_CrtMemCheckpoint(&s2);
+	if (_CrtMemDifference(&s3, &s1, &s2))
+		_CrtMemDumpStatistics(&s3);
 	std::cout << "Playing the immediate Best Move resulsts in" << endl;
 	std::cout << "Games Won: " << winCount << endl;
 	std::cout << "This is a Win rate of:" << (winCount / (float)numGames) * 100 << "%" << endl << endl;
@@ -59,8 +76,8 @@ void AIPlay(int numGames,int dealType) {
 	}
 	std::cout << "Playing the Suid Random Moves resulsts in" << endl;
 	std::cout << "Games Won: " << winCount << endl;
-	std::cout << "This is a Win rate of:" << (winCount / (float)numGames) * 100 << "%" << endl;
-	int moves;
+	std::cout << "This is a Win rate of:" << (winCount / (float)numGames) * 100 << "%" << endl<<endl;
+	int moves=0;
 	winCount = 0;
 	for (int i = 0; i < numGames; i++) {
 		std::cout << i << "/" << numGames << " \r";
@@ -78,7 +95,7 @@ void AIPlay(int numGames,int dealType) {
 	std::cout << "Playing the Best Moves most of the time resulsts in" << endl;
 	std::cout << "Games Won: " << winCount << endl;
 	std::cout << "This is a Win rate of:" << (winCount / (float)numGames) * 100 << "%" << endl;
-	std::cout << "average number of moves" << (moves / (float)numGames) * 100 << "%" << endl;
+	std::cout << "average number of moves: " << (moves / numGames) << endl;
 }
 
 
@@ -118,6 +135,9 @@ void MCTSPlay(int games,int mode) {
 		{
 			std::cout << i + 1 << "/" << games << " move: " << move++ << " \r";
 			std::cout.flush();
+			if (move > 135) {
+				break;
+			}
 			MCTS mcts(game.getBoard(), seen, game.getLastMove());
 			game.doMove(mcts.getAction());
 			//game.showScoreAndBoard();
@@ -206,14 +226,16 @@ int main()
 	//std::cout << "Random Deals" << endl;
 	//AIPlay(2000, 0);
 	//std::cout << "\nWinable Deals" << endl;
-	//AIPlay(2000,1);
+	//AIPlay(100,1);
 	//KlondikeGameController game = KlondikeGameController(1);
 	////game.showScoreAndBoard();
 	//BoardScoreOptimiser bso = BoardScoreOptimiser();
 	//bso.grow();
-	MCTSPlay(100, 0);
-	MCTSPlay(100,1);
+	MCTSPlay(1, 0);
+	//MCTSPlay(10,1);
 	//std::cout <<(long) std::thread::hardware_concurrency();
+	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
+	_CrtDumpMemoryLeaks();
 
 }
 

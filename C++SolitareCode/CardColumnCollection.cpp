@@ -105,5 +105,6 @@ string CardColumnCollection::toString() {
 		}
 		out = out + "\n ";
 	}
+	free(colsStrings);
 	return out;
 }

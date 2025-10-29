@@ -15,7 +15,7 @@ MCTS::MCTS() {
 		seen.begin(), seen.end(),
 		std::inserter(newUnseeen, newUnseeen.begin())
 	);
-	this->root =new BoardNode(nullptr, board, newUnseeen, GameBoard::Move(),0);
+	this->root = make_shared<BoardNode>(nullptr, board, newUnseeen, GameBoard::Move(),0);
 	this->current = root;
 	this->currentActionSet = this->current->actionSet();
 }
@@ -34,7 +34,7 @@ MCTS::MCTS(GameBoard board) {
 		seen.begin(), seen.end(),
 		std::inserter(newUnseeen, newUnseeen.begin())
 	);
-	this->root =new BoardNode(nullptr, board, newUnseeen, GameBoard::Move(),0);
+	this->root =make_shared<BoardNode>(nullptr, board, newUnseeen, GameBoard::Move(),0);
 	this->current = root;
 	this->currentActionSet = this->current->actionSet();
 }
@@ -52,15 +52,15 @@ MCTS::MCTS(GameBoard board, set<Card> seen,GameBoard::Move lastMove) {
 		seen.begin(), seen.end(),
 		std::inserter(newUnseeen, newUnseeen.begin())
 	);
-	this->root = new BoardNode(nullptr, board, newUnseeen, GameBoard::Move(), 0);
+	this->root = make_shared<BoardNode>(nullptr, board, newUnseeen, GameBoard::Move(), 0);
 	this->root->setLastMove(lastMove);
 	this->current = root;
 	this->currentActionSet = this->current->actionSet();
 	this->veriance = ceil(std::exp(( - (double)seen.size() / 20.0) + (7.0 / 20.0)) * 100);
 }
 
-BoardNode* MCTS::selection(BoardNode* base) {
-	BoardNode* x = base;
+shared_ptr<BoardNode> MCTS::selection(shared_ptr<BoardNode> base) {
+	shared_ptr<BoardNode> x = base;
 	float bestVal = -std::numeric_limits<float>::infinity();
 	if (x->getChildren().size() < x->actionSet().size() * this->veriance) {
 		bestVal = x->UCB(this->c);
@@ -86,12 +86,12 @@ BoardNode* MCTS::selection(BoardNode* base) {
 }
 
 
-BoardNode* MCTS::expand() {
+shared_ptr<BoardNode> MCTS::expand() {
 	int actionsIndex=this->current->getChildren().size();
 	actionsIndex = actionsIndex >= this->currentActionSet.size() ? actionsIndex % this->currentActionSet.size() : actionsIndex;
 	GameBoard newBoard = GameBoard();
 	newBoard.partailDeal(this->current->getUnseenCard(), this->current->getCurrentBoard());
-	BoardNode* newNode=new BoardNode(this->current, newBoard, this->current->getUnseenCard(), this->currentActionSet.at(actionsIndex),this->current->getDepth() + 1);
+	shared_ptr<BoardNode> newNode=make_shared<BoardNode>(this->current, newBoard, this->current->getUnseenCard(), this->currentActionSet.at(actionsIndex),this->current->getDepth() + 1);
 	this->current->expand(newNode);
 	return newNode;
 }
@@ -105,12 +105,12 @@ GameBoard::Move MCTS::getAction() {
 			this->current = selection(this->root);
 			this->currentActionSet = this->current->actionSet();
 		}
-		BoardNode* n = expand();
+		shared_ptr<BoardNode> n = expand();
 		int r = 0;
 		n->Rollout(&r);
 		n->Backpropergate(r);
 	}
-	BoardNode* x = this->root;
+	shared_ptr<BoardNode> x = this->root;
 	int bestVal = -std::numeric_limits<int>::infinity();
 	for (auto node : this->root->getChildren()) {
 		if (node->getReward() > bestVal) {

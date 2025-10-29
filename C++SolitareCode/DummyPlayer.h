@@ -45,6 +45,8 @@ class DummyPlayer : public KlondikeGameController
 			this->bso = BoardScorer();
 		}
 
+		~DummyPlayer() = default;
+
 		void makeBestMove();
 		void makeRandomMove();
 		void suidRandomMove();
