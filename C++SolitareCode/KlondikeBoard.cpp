@@ -3,7 +3,6 @@
 #include<random>
 
 
-
 #pragma region  Deal
 void GameBoard::randomDeal() {
 	this->stockPile->shuffle();
@@ -25,7 +24,7 @@ void GameBoard::winableDeal() {
 
 	//if count exceeds x or end but not in final state start again
 	do{
-		int j = (rand() % moves.size());
+		int j = this->rand.intRand(0,moves.size()-1);
 		Move m = generateMove(0, 0, 0, 0);
 		int x = 0;
 		for (const auto& mov : moves) {
@@ -47,7 +46,7 @@ void GameBoard::ShuffleTopCards() {
 	int colPos[7] = { 0,1,2,3,4,5,6 };
 	int temp = 0;
 	for (int i = 6; i > 0; i--) {
-		int j = (rand() % i) + 1;
+		int j = this->rand.intRand(0, i-1);
 		temp = colPos[i];
 		colPos[i] = colPos[j];
 		colPos[j] = temp;
@@ -176,7 +175,8 @@ void GameBoard::createWinStartBoard() {
 		bool suitUsed[4] = { false, false, false, false };
 		for (int j = 0; j < 4; j++) {
 			int colour = this->columns->getBottomCardFromColumn(j).getColour();
-			int r = colour==1 ? (rand() % 2) + 2: (rand() % 2);
+			int rand = this->rand.intRand(0, 1);
+			int r = colour==1 ? rand + 2: rand;
 			if (!suitUsed[r]) {
 				Card c =  Card((Card::Suits)r, i);
 				c.reveal();

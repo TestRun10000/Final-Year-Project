@@ -154,6 +154,7 @@
     <ClInclude Include="KlondikeBoard.h" />
     <ClInclude Include="KlondikeGameController.h" />
     <ClInclude Include="MCTS.h" />
+    <ClInclude Include="RandomNumberGenThread.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

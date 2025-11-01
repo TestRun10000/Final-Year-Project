@@ -5,6 +5,7 @@
 #include "Deck.h"
 #include "CardColumnCollection.h"
 #include "Card.h"
+#include"RandomNumberGenThread.h"
 #ifdef _DEBUG
 #define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
 // Replace _NORMAL_BLOCK with _CLIENT_BLOCK if you want the
@@ -22,6 +23,7 @@ class GameBoard
 		Deck* drawnCards;
 		CardColumnCollection* columns;
 		int score = 0;
+		RandomNumberGenThread rand = RandomNumberGenThread();
 
 	public:
 		enum MoveType

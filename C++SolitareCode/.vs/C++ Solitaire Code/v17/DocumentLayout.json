@@ -3,8 +3,36 @@
   "WorkspaceRootPath": "C:\\Users\\jonat\\Desktop\\uni\\essex\\Y3\\project\\Main\\25-26_CE301_sale_jonathan\\C\u002B\u002BSolitareCode\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|C:\\Users\\jonat\\Desktop\\uni\\essex\\Y3\\project\\Main\\25-26_CE301_sale_jonathan\\C\u002B\u002BSolitareCode\\MCTS.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|solutionrelative:MCTS.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|C:\\Users\\jonat\\Desktop\\uni\\essex\\Y3\\project\\Main\\25-26_CE301_sale_jonathan\\C\u002B\u002BSolitareCode\\C\u002B\u002B Solitaire Code.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|solutionrelative:C\u002B\u002B Solitaire Code.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|C:\\Users\\jonat\\Desktop\\uni\\essex\\Y3\\project\\Main\\25-26_CE301_sale_jonathan\\C\u002B\u002BSolitareCode\\BoardNode.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|solutionrelative:BoardNode.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|C:\\Users\\jonat\\Desktop\\uni\\essex\\Y3\\project\\Main\\25-26_CE301_sale_jonathan\\C\u002B\u002BSolitareCode\\KlondikeBoard.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|solutionrelative:KlondikeBoard.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|C:\\Users\\jonat\\Desktop\\uni\\essex\\Y3\\project\\Main\\25-26_CE301_sale_jonathan\\C\u002B\u002BSolitareCode\\KlondikeBoard.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|solutionrelative:KlondikeBoard.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|C:\\Users\\jonat\\Desktop\\uni\\essex\\Y3\\project\\Main\\25-26_CE301_sale_jonathan\\C\u002B\u002BSolitareCode\\KlondikeGameController.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|solutionrelative:KlondikeGameController.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|C:\\Users\\jonat\\Desktop\\uni\\essex\\Y3\\project\\Main\\25-26_CE301_sale_jonathan\\C\u002B\u002BSolitareCode\\DummyPlayer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|solutionrelative:DummyPlayer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|C:\\Users\\jonat\\Desktop\\uni\\essex\\Y3\\project\\Main\\25-26_CE301_sale_jonathan\\C\u002B\u002BSolitareCode\\RandomNumberGenThread.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{9AD706AF-9536-4AB7-ABE6-459C0689947B}|final year solitare project.vcxproj|solutionrelative:RandomNumberGenThread.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,17 +42,17 @@
       "DocumentGroups": [
         {
           "DockedWidth": 188,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "C\u002B\u002B Solitaire Code.cpp",
               "DocumentMoniker": "C:\\Users\\jonat\\Desktop\\uni\\essex\\Y3\\project\\Main\\25-26_CE301_sale_jonathan\\C\u002B\u002BSolitareCode\\C\u002B\u002B Solitaire Code.cpp",
               "RelativeDocumentMoniker": "C\u002B\u002B Solitaire Code.cpp",
               "ToolTip": "C:\\Users\\jonat\\Desktop\\uni\\essex\\Y3\\project\\Main\\25-26_CE301_sale_jonathan\\C\u002B\u002BSolitareCode\\C\u002B\u002B Solitaire Code.cpp",
               "RelativeToolTip": "C\u002B\u002B Solitaire Code.cpp",
-              "ViewState": "AgIAAFQAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAKUAAAAAAAAAAAAwwIAAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-10-19T20:50:05.512Z",
               "IsPinned": true,
@@ -45,6 +73,92 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MCTS.cpp",
+              "DocumentMoniker": "C:\\Users\\jonat\\Desktop\\uni\\essex\\Y3\\project\\Main\\25-26_CE301_sale_jonathan\\C\u002B\u002BSolitareCode\\MCTS.cpp",
+              "RelativeDocumentMoniker": "MCTS.cpp",
+              "ToolTip": "C:\\Users\\jonat\\Desktop\\uni\\essex\\Y3\\project\\Main\\25-26_CE301_sale_jonathan\\C\u002B\u002BSolitareCode\\MCTS.cpp",
+              "RelativeToolTip": "MCTS.cpp",
+              "ViewState": "AgIAAG8AAAAAAAAAAAAAAE4AAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-10-31T16:31:20.693Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "KlondikeGameController.cpp",
+              "DocumentMoniker": "C:\\Users\\jonat\\Desktop\\uni\\essex\\Y3\\project\\Main\\25-26_CE301_sale_jonathan\\C\u002B\u002BSolitareCode\\KlondikeGameController.cpp",
+              "RelativeDocumentMoniker": "KlondikeGameController.cpp",
+              "ToolTip": "C:\\Users\\jonat\\Desktop\\uni\\essex\\Y3\\project\\Main\\25-26_CE301_sale_jonathan\\C\u002B\u002BSolitareCode\\KlondikeGameController.cpp",
+              "RelativeToolTip": "KlondikeGameController.cpp",
+              "ViewState": "AgIAAJwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-10-31T16:34:40.97Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "BoardNode.h",
+              "DocumentMoniker": "C:\\Users\\jonat\\Desktop\\uni\\essex\\Y3\\project\\Main\\25-26_CE301_sale_jonathan\\C\u002B\u002BSolitareCode\\BoardNode.h",
+              "RelativeDocumentMoniker": "BoardNode.h",
+              "ToolTip": "C:\\Users\\jonat\\Desktop\\uni\\essex\\Y3\\project\\Main\\25-26_CE301_sale_jonathan\\C\u002B\u002BSolitareCode\\BoardNode.h",
+              "RelativeToolTip": "BoardNode.h",
+              "ViewState": "AgIAAE0AAAAAAAAAAAAwwIMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-10-31T16:33:33.413Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "KlondikeBoard.h",
+              "DocumentMoniker": "C:\\Users\\jonat\\Desktop\\uni\\essex\\Y3\\project\\Main\\25-26_CE301_sale_jonathan\\C\u002B\u002BSolitareCode\\KlondikeBoard.h",
+              "RelativeDocumentMoniker": "KlondikeBoard.h",
+              "ToolTip": "C:\\Users\\jonat\\Desktop\\uni\\essex\\Y3\\project\\Main\\25-26_CE301_sale_jonathan\\C\u002B\u002BSolitareCode\\KlondikeBoard.h",
+              "RelativeToolTip": "KlondikeBoard.h",
+              "ViewState": "AgIAAFoAAAAAAAAAAAAAABkAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-10-30T18:14:59.088Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "KlondikeBoard.cpp",
+              "DocumentMoniker": "C:\\Users\\jonat\\Desktop\\uni\\essex\\Y3\\project\\Main\\25-26_CE301_sale_jonathan\\C\u002B\u002BSolitareCode\\KlondikeBoard.cpp",
+              "RelativeDocumentMoniker": "KlondikeBoard.cpp",
+              "ToolTip": "C:\\Users\\jonat\\Desktop\\uni\\essex\\Y3\\project\\Main\\25-26_CE301_sale_jonathan\\C\u002B\u002BSolitareCode\\KlondikeBoard.cpp",
+              "RelativeToolTip": "KlondikeBoard.cpp",
+              "ViewState": "AgIAADAAAAAAAAAAAAAAAAIAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-10-30T17:44:36.792Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "DummyPlayer.cpp",
+              "DocumentMoniker": "C:\\Users\\jonat\\Desktop\\uni\\essex\\Y3\\project\\Main\\25-26_CE301_sale_jonathan\\C\u002B\u002BSolitareCode\\DummyPlayer.cpp",
+              "RelativeDocumentMoniker": "DummyPlayer.cpp",
+              "ToolTip": "C:\\Users\\jonat\\Desktop\\uni\\essex\\Y3\\project\\Main\\25-26_CE301_sale_jonathan\\C\u002B\u002BSolitareCode\\DummyPlayer.cpp",
+              "RelativeToolTip": "DummyPlayer.cpp",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAAAEEAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-10-30T17:44:32.037Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "RandomNumberGenThread.h",
+              "DocumentMoniker": "C:\\Users\\jonat\\Desktop\\uni\\essex\\Y3\\project\\Main\\25-26_CE301_sale_jonathan\\C\u002B\u002BSolitareCode\\RandomNumberGenThread.h",
+              "RelativeDocumentMoniker": "RandomNumberGenThread.h",
+              "ToolTip": "C:\\Users\\jonat\\Desktop\\uni\\essex\\Y3\\project\\Main\\25-26_CE301_sale_jonathan\\C\u002B\u002BSolitareCode\\RandomNumberGenThread.h",
+              "RelativeToolTip": "RandomNumberGenThread.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAByAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-10-30T17:41:12.89Z"
             }
           ]
         }

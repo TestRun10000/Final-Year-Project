@@ -1,43 +1,45 @@
-﻿  C++ Solitaire Code.cpp
-C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(32,9): warning C4018: '>': signed/unsigned mismatch
-  (compiling source file 'C++%20Solitaire%20Code.cpp')
+﻿  MCTS.cpp
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\RandomNumberGenThread.h(13,105): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
+  (compiling source file 'MCTS.cpp')
   
-C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(37,9): warning C4018: '>': signed/unsigned mismatch
-  (compiling source file 'C++%20Solitaire%20Code.cpp')
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\RandomNumberGenThread.h(20,107): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
+  (compiling source file 'MCTS.cpp')
   
-C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(42,9): warning C4018: '>': signed/unsigned mismatch
-  (compiling source file 'C++%20Solitaire%20Code.cpp')
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(28,9): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'MCTS.cpp')
   
-C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\KlondikeBoard.h(95,34): warning C4267: '+=': conversion from 'size_t' to 'int', possible loss of data
-  (compiling source file 'C++%20Solitaire%20Code.cpp')
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(33,9): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'MCTS.cpp')
   
-C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\DummyPlayer.h(30,19): warning C4305: 'initializing': truncation from 'double' to 'float'
-  (compiling source file 'C++%20Solitaire%20Code.cpp')
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(38,9): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'MCTS.cpp')
   
-C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\DummyPlayer.h(30,29): warning C4305: 'initializing': truncation from 'double' to 'float'
-  (compiling source file 'C++%20Solitaire%20Code.cpp')
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(63,11): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'MCTS.cpp')
   
-C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\DummyPlayer.h(30,38): warning C4305: 'initializing': truncation from 'double' to 'float'
-  (compiling source file 'C++%20Solitaire%20Code.cpp')
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\CardColumnCollection.h(63,29): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'MCTS.cpp')
   
-C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\DummyPlayer.h(30,47): warning C4305: 'initializing': truncation from 'double' to 'float'
-  (compiling source file 'C++%20Solitaire%20Code.cpp')
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\KlondikeBoard.h(112,34): warning C4267: '+=': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'MCTS.cpp')
   
-C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\DummyPlayer.h(30,56): warning C4305: 'initializing': truncation from 'double' to 'float'
-  (compiling source file 'C++%20Solitaire%20Code.cpp')
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\BoardNode.h(48,46): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'MCTS.cpp')
   
-C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\BoardScoreOptimiser.h(14,23): warning C4305: 'initializing': truncation from 'double' to 'float'
-  (compiling source file 'C++%20Solitaire%20Code.cpp')
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\BoardNode.h(59,54): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'MCTS.cpp')
   
-C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\C++ Solitaire Code.cpp(11,17): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\C++ Solitaire Code.cpp(11,27): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\C++ Solitaire Code.cpp(11,36): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\C++ Solitaire Code.cpp(11,45): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\C++ Solitaire Code.cpp(11,54): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\C++ Solitaire Code.cpp(89,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\BoardNode.h(97,19): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'MCTS.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\MCTS.h(14,12): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'MCTS.cpp')
+  
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\MCTS.cpp(69,31): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\MCTS.cpp(111,22): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
   Generating code
-  54 of 566 functions ( 9.5%) were compiled, the rest were copied from previous compilation.
-    13 functions were new in current compilation
-    23 functions had inline decision re-evaluated but remain unchanged
+  47 of 1143 functions ( 4.1%) were compiled, the rest were copied from previous compilation.
+    21 functions were new in current compilation
+    24 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   final year solitare project.vcxproj -> C:\Users\jonat\Desktop\uni\essex\Y3\project\Main\25-26_CE301_sale_jonathan\C++SolitareCode\x64\Release\C++ Solitaire Code.exe

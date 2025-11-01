@@ -32,7 +32,7 @@ void Deck::shuffle() {
 	if(isEmpty()) throw std::invalid_argument("Deck is Empty");
 	Card temp;
 	for (int i = this->topOFDeck; i > 0; i--) {
-		int j = (rand() % i) + 1;
+		int j = this->randGen.intRand(0,i);
 		temp = this->deck[i];
 		this->deck[i] = this->deck[j];
 		this->deck[j] = temp;

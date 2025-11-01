@@ -2,13 +2,14 @@
 #include<stack>
 #include"Card.h"
 #include<memory>
+#include"RandomNumberGenThread.h"
 
 class Deck
 {
 private:
 	Card deck[52];
 	int topOFDeck = -1;
-
+	RandomNumberGenThread randGen = RandomNumberGenThread();
 
 public:
 

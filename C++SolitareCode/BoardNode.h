@@ -68,6 +68,10 @@ public:
 	
 	int getDepth() { return this->depth; }
 
+	bool isTerminal() {
+		 return board.isGameOver();
+	}
+
 	void expand(shared_ptr<BoardNode> child) {
 		this->children.push_back(child);
 		child->board.doMove(child->action);

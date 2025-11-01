@@ -59,8 +59,7 @@ void AIPlay(int numGames,int dealType) {
 	for (int i = 0; i < numGames; i++) {
 		std::cout << i << "/" << numGames << " \r";
 		std::cout.flush();
-		DummyPlayer game;
-		game = DummyPlayer(bs,dealType);
+		DummyPlayer game(bs, dealType);
 		while (!game.isGameOver()) {
 			game.suidRandomMove();
 		}
@@ -76,8 +75,7 @@ void AIPlay(int numGames,int dealType) {
 	for (int i = 0; i < numGames; i++) {
 		std::cout << i << "/" << numGames << " \r";
 		std::cout.flush();
-		DummyPlayer game;
-		game = DummyPlayer(bs, dealType);
+		DummyPlayer game(bs, dealType);
 		while (!game.isGameOver()) {
 			moves++;
 			game.bestMoveRandom();
@@ -118,6 +116,7 @@ void player() {
 
 void runSingleMCTS(int* win, int mode) {
 	KlondikeGameController game(mode);
+	//DummyPlayer game(mode);
 	set<Card> seen = game.visableCards();
 	int moves = 0;
 	while (!game.isGameOver())
@@ -127,7 +126,7 @@ void runSingleMCTS(int* win, int mode) {
 		}
 		MCTS mcts(game.getBoard(), seen, game.getLastMove());
 		game.doMove(mcts.getAction());
-		//game.showScoreAndBoard();
+		game.showScoreAndBoard();
 		for (auto c : game.visableCards())
 			seen.insert(c);
 		moves++;
@@ -154,7 +153,10 @@ void MCTSPlay(int games,int mode) {
 			}
 			int idx = j;
 			threads.emplace_back([&rewards, j,mode]() {
-				runSingleMCTS(&rewards.at(j),mode);});
+				int result = 0;
+				runSingleMCTS(&result, mode);
+				rewards.at(j) = result;
+				});
 
 		}
 		for (auto& t : threads)
@@ -241,7 +243,7 @@ void aneal() {
 
 int main()
 {
-	srand(time(0));
+
 	//std::cout << "Random Deals" << endl;
 	//AIPlay(2000, 0);
 	//std::cout << "\nWinable Deals" << endl;
@@ -250,10 +252,11 @@ int main()
 	////game.showScoreAndBoard();
 	//BoardScoreOptimiser bso = BoardScoreOptimiser();
 	//bso.grow();
-	//int a = 0;
-	//runSingleMCTS(&a,1);
-	MCTSPlay(100, 0);
-	MCTSPlay(100,1);
+	int a = 0;
+	runSingleMCTS(&a,0);
+	std::cout << a << endl;
+	//MCTSPlay(100, 0);
+	//MCTSPlay(100,1);
 	//std::cout <<(long) std::thread::hardware_concurrency();
 	//_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
 	//_CrtDumpMemoryLeaks();

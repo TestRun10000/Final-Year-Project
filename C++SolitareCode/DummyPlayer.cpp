@@ -2,7 +2,7 @@
 #include <queue>
 #include<vector>
 #include<random>
-
+#include"RandomNumberGenThread.h"
 
 void DummyPlayer::makeBestMove() {
 	vector<KlondikeGameController::Move> moves = getAvailableMoves();
@@ -18,7 +18,7 @@ void DummyPlayer::makeBestMove() {
 
 void DummyPlayer::makeRandomMove() {
 	vector<KlondikeGameController::Move> moves = getAvailableMoves();
-	int j = (rand() % moves.size());
+	int j = this->rand.intRand(0, moves.size()-1);
 	KlondikeGameController::Move m = generateMove(0, 0, 0, 0);
 	//int x = 0;
 	//for (const auto& mov : moves) {
@@ -42,7 +42,7 @@ void DummyPlayer::suidRandomMove() {
 		task_queue.emplace(score, m);
 		total += score;
 	}
-	float ran = (rand() % 76);//represents 75% or if that is how mouch stronger the best move is 
+	float ran = this->rand.intRand(0, 75);//represents 75% or if that is how mouch stronger the best move is 
 	ActionValue lastPair = task_queue.top();
 	task_queue.pop();
 	if (ran>(lastPair.score * 100) / total ){
@@ -63,7 +63,7 @@ void DummyPlayer::suidRandomMove() {
 void DummyPlayer::bestMoveRandom(float s) {
 	std::uniform_real_distribution<> chance(0, 1);
 
-	float ran = chance(this->gen);
+	float ran = this->rand.floatRand(0,1);
 	if (ran <= s) {
 		makeRandomMove();
 	}

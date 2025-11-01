@@ -80,6 +80,9 @@
     <ClInclude Include="MCTS.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="RandomNumberGenThread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
