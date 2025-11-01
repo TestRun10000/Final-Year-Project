@@ -55,8 +55,7 @@
               "ViewState": "AgIAAKUAAAAAAAAAAAAwwIAAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-10-19T20:50:05.512Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Bookmark",
@@ -82,7 +81,7 @@
               "RelativeDocumentMoniker": "MCTS.cpp",
               "ToolTip": "C:\\Users\\jonat\\Desktop\\uni\\essex\\Y3\\project\\Main\\25-26_CE301_sale_jonathan\\C\u002B\u002BSolitareCode\\MCTS.cpp",
               "RelativeToolTip": "MCTS.cpp",
-              "ViewState": "AgIAAG8AAAAAAAAAAAAAAE4AAAAMAAAAAAAAAA==",
+              "ViewState": "AgIAADkAAAAAAAAAAAAwwFAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-10-31T16:31:20.693Z",
               "EditorCaption": ""
@@ -109,8 +108,7 @@
               "RelativeToolTip": "BoardNode.h",
               "ViewState": "AgIAAE0AAAAAAAAAAAAwwIMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-10-31T16:33:33.413Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-31T16:33:33.413Z"
             },
             {
               "$type": "Document",
