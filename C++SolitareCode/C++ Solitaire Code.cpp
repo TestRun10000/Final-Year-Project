@@ -126,7 +126,7 @@ void runSingleMCTS(int* win, int mode) {
 		}
 		MCTS mcts(game.getBoard(), seen, game.getLastMove());
 		game.doMove(mcts.getAction());
-		game.showScoreAndBoard();
+		//game.showScoreAndBoard();
 		for (auto c : game.visableCards())
 			seen.insert(c);
 		moves++;
@@ -252,9 +252,9 @@ int main()
 	////game.showScoreAndBoard();
 	//BoardScoreOptimiser bso = BoardScoreOptimiser();
 	//bso.grow();
-	int a = 0;
-	runSingleMCTS(&a,0);
-	std::cout << a << endl;
+	//int a = 0;
+	//runSingleMCTS(&a,0);
+	//std::cout << a << endl;
 	//MCTSPlay(100, 0);
 	//MCTSPlay(100,1);
 	//std::cout <<(long) std::thread::hardware_concurrency();
