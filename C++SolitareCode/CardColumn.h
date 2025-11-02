@@ -1,19 +1,34 @@
 #pragma once
 #include"Card.h"
 #include<memory>
+#ifdef _DEBUG
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+// Replace _NORMAL_BLOCK with _CLIENT_BLOCK if you want the
+// allocations to be of _CLIENT_BLOCK type
+#else
+#define DBG_NEW new
+#endif
+
+class Node {
+public:
+	weak_ptr<Node> prev;
+	shared_ptr<Node> next;
+	Card value;
+
+	Node(shared_ptr<Node> prev = nullptr, shared_ptr<Node> next = nullptr, Card c = Card()) {
+		this->prev = prev;
+		this->next = next;
+		this->value = c;
+	}
+};
+
 
 class CardColumn
 {
 private:
-	typedef struct Node {
-		struct Node* prev;
-		struct Node* next;
-		Card value;
-	} Node;
-
-	Node* head;
-	Node* tail;
-	Node* firstVisable;
+	shared_ptr<Node> head;
+	shared_ptr<Node> tail;
+	shared_ptr<Node> firstVisable;
 	int posOfFistVis;
 	int length;
 	bool ascendingOrder;
@@ -25,21 +40,17 @@ public:
 	CardColumn(bool asc, bool altColour);
 
 	~CardColumn() {
-		Node* cur = this->head;
-		if (cur == nullptr) return;
-		while (cur->next!=nullptr)
-		{
-			cur = cur->next;
-			if(cur!=nullptr)
-				delete cur->prev;
-		}
-		if(cur!=nullptr)
-			delete cur;
+		//Node* cur = this->head;
+		//while (cur != nullptr) {
+		//	Node* next = cur->next;
+		//	delete cur;
+		//	cur = next;
+		//}
 	}
 
-	Node* getHead() { return this->head; }
+	Node* getHead() { return this->head.get(); }
 
-	Node* getTail() { return this->tail; }
+	Node* getTail() { return this->tail.get(); }
 
 	int getLength() { return this->length; }
 
@@ -51,13 +62,13 @@ public:
 	void push(Card c);
 
 	//append a stack of cards
-	void push(Node* n,int numOfCards);
+	void push(shared_ptr<Node> n, int numOfCards);
 
 	//removes the tail from list and returns it
-	Card pop(bool dontReveal=false);
+	Card pop(bool dontReveal = false);
 
 	//removes a valid stack starting at n from colums and returns the first item of the stack returns null if no valid stack
-	Node* popGroupFrom(int n, bool dontReveal = false);
+	shared_ptr<Node> popGroupFrom(int n, bool dontReveal = false);
 
 	//get visable card from column
 	Card get(int n);
@@ -70,7 +81,7 @@ public:
 
 	//is group starting at n a valid stack for this column
 	bool isValidStack(int start);
-	
+
 	//returns coloumn as a list seperated by columns.
 	string toString();
 
@@ -86,13 +97,12 @@ public:
 		this->ascendingOrder = other.ascendingOrder;
 		this->altColour = other.altColour;
 
-		Node* current = other.head;
-		Node* prevNewNode = nullptr;
+		shared_ptr<Node> current = other.head;
+		shared_ptr<Node> prevNewNode = nullptr;
 
 		while (current != nullptr)
 		{
-			Node* newNode = new Node{ nullptr, nullptr, current->value };
-
+			shared_ptr<Node> newNode = make_shared<Node>(nullptr, nullptr, current->value);
 			if (!this->head)
 				this->head = newNode;
 

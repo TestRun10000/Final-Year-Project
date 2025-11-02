@@ -26,7 +26,7 @@ private:
 
 public:
 	Card();
-	Card(Suits suit,unsigned short rank);
+	Card(Suits suit, unsigned short rank);
 	Card(Card const&) = default;
 
 	Suits getSuit() { return suit; }
@@ -41,9 +41,9 @@ public:
 	bool isEqual(Card b);
 	//only compares rank ignores suit and colour 0 if equal 1 if b is greater
 	int compareRank(Card b);
-	
+
 	//can card b go ontop of this card is descending/ascending order of same suit or different colour
-	bool doesStack(Card b, bool altColour = true,bool asc=false);
+	bool doesStack(Card b, bool altColour = true, bool asc = false);
 
 	bool isShown() { return isVisable; }
 
@@ -56,7 +56,7 @@ public:
 
 	bool operator<(const Card& rhs) const
 	{
-		return this->rank+this->suit*13 < rhs.rank + rhs.suit * 13;
+		return this->rank + this->suit * 13 < rhs.rank + rhs.suit * 13;
 	}
 };
 

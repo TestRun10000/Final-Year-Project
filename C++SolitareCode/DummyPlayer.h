@@ -1,6 +1,8 @@
 #pragma once
 #include "KlondikeGameController.h"
 #include"BoardScorer.h"
+#include<random>
+#include<cmath>
 
 class DummyPlayer : public KlondikeGameController
 {
@@ -22,6 +24,7 @@ class DummyPlayer : public KlondikeGameController
 	};
 	private:
 		BoardScorer bso;
+		std::mt19937 gen;
 
 	public: 
 		DummyPlayer() :KlondikeGameController(0) {
@@ -46,6 +49,7 @@ class DummyPlayer : public KlondikeGameController
 		void makeBestMove();
 		void makeRandomMove();
 		void suidRandomMove();
+		void bestMoveRandom(float s = 0.359925);
 
 		void doMove(GameBoard::Move m);
 

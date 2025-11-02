@@ -8,14 +8,14 @@ Card::Card() {
 }
 
 Card::Card(Suits _suit, unsigned short _rank) {
-		
-		this->rank = _rank%14==0? 1:_rank;
-		this->suit = _suit;
-		if (suit < 2) 
-			this->colour = black;
-		else
-			this->colour = red;
-		
+
+	this->rank = _rank % 14 == 0 ? 1 : _rank;
+	this->suit = _suit;
+	if (suit < 2)
+		this->colour = black;
+	else
+		this->colour = red;
+
 }
 
 string Card::toString() {
@@ -29,16 +29,16 @@ string Card::toString() {
 		srank = "Joker";
 		break;
 	case 1:
-		srank="Ace";
+		srank = "Ace";
 		break;
 	case 11:
-		srank="Jack";
+		srank = "Jack";
 		break;
 	case 12:
-		srank="Queen";
+		srank = "Queen";
 		break;
 	case 13:
-		srank="King";
+		srank = "King";
 		break;
 	default:
 		srank = to_string(this->rank);
@@ -46,11 +46,11 @@ string Card::toString() {
 	switch (this->suit)
 	{
 	case Card::Clubs:
-		return srank+"-Clubs";
+		return srank + "-Clubs";
 	case Card::Spades:
-		return srank+"-Spades";
+		return srank + "-Spades";
 	case Card::Diamonds:
-		return srank+ "-Diamonds";
+		return srank + "-Diamonds";
 		break;
 	default:
 		return srank + "-Hearts";
@@ -84,7 +84,7 @@ string Card::toShortString() {
 		break;
 	default:
 		srank = " " + to_string(this->rank);
-		
+
 	}
 	switch (this->suit)
 	{
@@ -102,7 +102,7 @@ string Card::toShortString() {
 
 bool Card::isEqual(Card b) {
 	return b.getRank() == this->rank && b.getSuit() == this->suit && b.getColour() == this->colour;
- }
+}
 
 int Card::compareRank(Card b) {
 	if (b.getRank() == this->rank)
@@ -112,8 +112,8 @@ int Card::compareRank(Card b) {
 	return -1;
 }
 
-bool Card::doesStack(Card b, bool altColour,bool asc) {
-	if (this->rank-b.getRank() != 1+(asc*-2))//if asc is false, if becomes if(compareRank != -1)
+bool Card::doesStack(Card b, bool altColour, bool asc) {
+	if (this->rank - b.getRank() != 1 + (asc * -2))//if asc is false, if becomes if(compareRank != -1)
 		return false;
 	if (altColour && b.getColour() != this->colour)
 		return true;
@@ -126,4 +126,4 @@ bool Card::isBlank() {
 	return this->rank == -1;
 }
 
-Card::~Card(){}
+Card::~Card() {}

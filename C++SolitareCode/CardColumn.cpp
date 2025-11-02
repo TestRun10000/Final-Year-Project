@@ -11,40 +11,38 @@ CardColumn::CardColumn() {
 	this->ascendingOrder = false;
 }
 
-CardColumn::CardColumn(bool asc,bool altColour) {
-		this->head = nullptr;
-		this->tail = nullptr;
-		this->firstVisable = nullptr;
-		this->posOfFistVis = -1;
-		this->length = 0;
-		this->altColour = altColour;
-		this->ascendingOrder = asc;
+CardColumn::CardColumn(bool asc, bool altColour) {
+	this->head = nullptr;
+	this->tail = nullptr;
+	this->firstVisable = nullptr;
+	this->posOfFistVis = -1;
+	this->length = 0;
+	this->altColour = altColour;
+	this->ascendingOrder = asc;
 }
 
 void CardColumn::push(Card c) {
 	if (!c.isShown() && this->posOfFistVis != -1)
 		return;//all cards after a shown card have to be shown.
-	Node* newNode=new Node();
-	newNode->value = c;
-	newNode->next = nullptr;
-	newNode->prev = this->tail;
-	if (c.isShown()&&(this->length == 0 || this->posOfFistVis ==-1) ) {
+	shared_ptr<Node> shared = make_shared<Node>(this->tail, nullptr, c);
+	if (c.isShown() && (this->length == 0 || this->posOfFistVis == -1)) {
 		this->posOfFistVis = this->length;
-		this->firstVisable = newNode;
+		this->firstVisable = shared;
 	}
 	if (this->length == 0) {
-		this->head = newNode;
+		this->head = shared;
 	}
 	else {
-		this->tail->next = newNode;
+		this->tail->next = shared;
 	}
-	this->tail = newNode;
+	this->tail = shared;
 	this->length++;
 }
 
-void CardColumn::push(Node* n,int numOfCard) {
+void CardColumn::push(shared_ptr<Node> n, int numOfCard) {
 	if (n != nullptr) {
-		n->prev = this->tail;
+		shared_ptr<Node> lockedTail = this->tail;
+		n->prev = lockedTail;
 		if (isEmpty()) {
 			this->head = n;
 			this->firstVisable = n;
@@ -53,12 +51,12 @@ void CardColumn::push(Node* n,int numOfCard) {
 		else if (this->posOfFistVis == -1) {
 			this->firstVisable = n;
 			this->posOfFistVis = this->length;
-			this->tail->next = n;
+			lockedTail->next = n;
 		}
 		else {
-			this->tail->next = n;
+			lockedTail->next = n;
 		}
-		Node* cur = n;
+		shared_ptr<Node> cur = n;
 		while (cur != nullptr) {
 			this->length++;
 			if (cur->next == nullptr)
@@ -67,7 +65,7 @@ void CardColumn::push(Node* n,int numOfCard) {
 		}
 		//this->length += numOfCard;
 	}
-	
+
 }
 
 Card CardColumn::pop(bool dontReveal) {
@@ -76,7 +74,7 @@ Card CardColumn::pop(bool dontReveal) {
 	}
 	this->length--;
 	Card c = this->tail->value;
-	this->tail = this->tail->prev;
+	this->tail = this->tail->prev.lock();
 	if (this->length <= 1) {
 		this->head = this->tail;
 
@@ -88,29 +86,29 @@ Card CardColumn::pop(bool dontReveal) {
 		return c;
 	}
 
-	
+
 	this->tail->next = nullptr;
 	if (!dontReveal) {
 		this->tail->value.reveal();
 	}
 	if (this->length <= this->posOfFistVis) {
-	
-		this->posOfFistVis = this->tail->value.isShown() ? this->length - 1: -1;
-		this->firstVisable = this->posOfFistVis==-1? nullptr:this->tail;
+
+		this->posOfFistVis = this->tail->value.isShown() ? this->length - 1 : -1;
+		this->firstVisable = this->posOfFistVis == -1 ? nullptr : this->tail;
 	}
 	return c;
 }
 
-CardColumn::Node* CardColumn::popGroupFrom(int n, bool dontReveal) {
+shared_ptr<Node> CardColumn::popGroupFrom(int n, bool dontReveal) {
 	if (n < this->posOfFistVis) {
 		return nullptr;
 	}
 	if (isValidStack(n)) {
-		Node* cur = this->firstVisable;
+		shared_ptr<Node> cur = this->firstVisable;
 		int pos = this->posOfFistVis;
 		while (cur != nullptr) {
 			if (pos == n) {
-				this->tail = cur->prev;
+				this->tail = cur->prev.lock();
 				length -= abs(length - pos);
 				if (this->tail != nullptr) {
 					this->tail->next = nullptr;
@@ -137,8 +135,8 @@ CardColumn::Node* CardColumn::popGroupFrom(int n, bool dontReveal) {
 Card CardColumn::get(int n) {
 	if (n < this->posOfFistVis)
 		return Card();
-	int pos=this->posOfFistVis;
-	Node* cur = this->firstVisable;
+	int pos = this->posOfFistVis;
+	shared_ptr<Node> cur = this->firstVisable;
 	while (cur != nullptr)
 	{
 		if (pos++ == n) {
@@ -150,12 +148,15 @@ Card CardColumn::get(int n) {
 }
 
 Card CardColumn::peek() {
+	if (this->firstVisable == nullptr) {
+		return Card(); // return default card or throw
+	}
 	return this->firstVisable->value;
 }
 
 bool CardColumn::contains(Card card) {
-	Node* cur=this->firstVisable;
-	while (cur!=nullptr)
+	shared_ptr<Node> cur = this->firstVisable;
+	while (cur != nullptr)
 	{
 		if (cur->value.isEqual(card)) {
 			return true;
@@ -168,10 +169,10 @@ bool CardColumn::contains(Card card) {
 bool CardColumn::isValidStack(int start) {
 	if (start < this->posOfFistVis)
 		return false;//should throw error
-	Node* cur = this->firstVisable;
-	Node* prev = this->firstVisable;
+	shared_ptr<Node> cur = this->firstVisable;
+	shared_ptr<Node> prev = this->firstVisable;
 	int pos = this->posOfFistVis;
-	while (cur!=nullptr)
+	while (cur != nullptr)
 	{
 		if (pos > start && !prev->value.doesStack(cur->value, this->altColour, this->ascendingOrder)) {
 			return false;
@@ -196,9 +197,9 @@ void CardColumn::hideTopCard() {
 }
 
 string CardColumn::toString() {
-	string s= "";
-	Node* cur = this->head;
-	while (cur!=nullptr)
+	string s = "";
+	shared_ptr<Node> cur = this->head;
+	while (cur != nullptr)
 	{
 		if (cur->value.isShown()) {
 			s += cur->value.toShortString();
@@ -206,7 +207,7 @@ string CardColumn::toString() {
 		else {
 			s += "####";
 		}
-		if(cur->next!=nullptr)
+		if (cur->next != nullptr)
 			s += ",";
 		cur = cur->next;
 	}

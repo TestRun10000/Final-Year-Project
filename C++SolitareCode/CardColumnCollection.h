@@ -10,15 +10,11 @@ private:
 public:
 	CardColumnCollection() {
 		//this->columns =(CardColumn**) calloc(7, sizeof(CardColumn*));
-		for (int i = 0; i < 7; i++) { this->columns[i] =  CardColumn(); }
+		for (int i = 0; i < 7; i++) { this->columns[i] = CardColumn(); }
 		//this->size = 7;
 	}
 
-	//~CardColumnCollection() {
-	//	for (int i = 0; i < 7; i++) {
-	//		this->columns[i].~CardColumn();
-	//	}
-	//}
+
 
 	//CardColumnCollection(int size,bool ascOrder,bool altColour) {
 	//	this->columns =(CardColumn**) calloc(size, sizeof(CardColumn*));
@@ -45,15 +41,15 @@ public:
 
 	//moves cards or card stack between columns
 	bool moveCardsFromColtoCol(unsigned int fromCol, unsigned int fromRow, unsigned int toCol, bool allowAnyToEmpty = false);
-	
+
 	//returns card value at the bottom of a column
 	Card getBottomCardFromColumn(unsigned int column);
-	
+
 	//add a card to a column
-	void pushCardToColumn(unsigned int column,Card card);
+	void pushCardToColumn(unsigned int column, Card card);
 
 	//removes the last card from the column returns pointer to that card
-	Card popFromColumn(unsigned int column,bool dontReveal = false);
+	Card popFromColumn(unsigned int column, bool dontReveal = false);
 
 	//removes a complete collection from a column starting at a set row. returns pointer to the top card of the collection. does not return collection.
 	Card popCollectionFromColumn(unsigned int column, unsigned int row, bool dontReveal = false);
@@ -63,8 +59,8 @@ public:
 
 	void hideFirstVisOfCol(unsigned int col);
 
-	Card getCard(unsigned int col,unsigned int row) {
-		if (col > this->size ||row>this->getLengthOfCol(col)) return Card() ;
+	Card getCard(unsigned int col, unsigned int row) {
+		if (col > this->size || row > this->getLengthOfCol(col)) return Card();
 		return this->columns[col].get(row);
 	}
 

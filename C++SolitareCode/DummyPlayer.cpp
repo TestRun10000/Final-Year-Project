@@ -31,6 +31,19 @@ void DummyPlayer::makeRandomMove() {
 	KlondikeGameController::doMove(moves.at(j));
 }
 
+void DummyPlayer::bestMoveRandom(float s) {
+	std::uniform_real_distribution<> chance(0, 1);
+
+	float ran = chance(gen);
+	if (ran <= s) {
+		makeRandomMove();
+	}
+	else {
+		makeBestMove();
+	}
+}
+
+
 void DummyPlayer::suidRandomMove() {
 	vector<KlondikeGameController::Move> moves = getAvailableMoves();
 	std::priority_queue<ActionValue, std::vector<ActionValue>, CompareTask> task_queue;
