@@ -142,6 +142,7 @@ void runSingleMCTS(int* win, int mode) {
 
 void MCTSPlay(int games,int mode) {
 	int winCount = 0;
+	std::ofstream file("Last Run.txt", std::ios_base::app);
 	for (int i = 0; i < games;) {
 		std::cout << i  << "/" << games << " \r";
 		std::cout.flush();
@@ -172,7 +173,10 @@ void MCTSPlay(int games,int mode) {
 		
 	}
 	std::cout << "Games Won: " << winCount << endl;
-	std::cout << "This is a Win rate of:" << (winCount / (float)games) * 100 << "%" << endl<<endl<<endl;
+	file << "Games Won: " << winCount << endl;
+	std::cout << "This is a Win rate of:" << (winCount / (float)games) * 100 << "%" << endl << endl << endl;
+	file << "This is a Win rate of:" << (winCount / (float)games) * 100 << "%" << endl<<endl<<endl;
+	file.close();
 }
 
 
@@ -255,7 +259,7 @@ int main()
 	//int a = 0;
 	//runSingleMCTS(&a,0);
 	//std::cout << a << endl;
-	//MCTSPlay(100, 0);
+	MCTSPlay(100, 0);
 	//MCTSPlay(100,1);
 	//std::cout <<(long) std::thread::hardware_concurrency();
 	//_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);

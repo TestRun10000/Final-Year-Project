@@ -98,8 +98,8 @@ shared_ptr<BoardNode> MCTS::expand() {
 
 GameBoard::Move MCTS::getAction() {
 	int count = this->iterations;
-	//if (this->veriance < 80) { count = this->iterations / 2; }
-	//if (this->veriance < 50) { count = this->iterations / 3; }
+	if (this->veriance < 80) { count = this->iterations / 2; }
+	if (this->veriance < 50) { count = this->iterations / 3; }
 	for (int i = 0; i < count; i++) {
 		if (!(this->current->getChildren().size() < this->current->actionSet().size() * (this->veriance / (this->current->getDepth() + 1)))) {
 			this->current = selection(this->root);
