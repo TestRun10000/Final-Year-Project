@@ -67,7 +67,7 @@ private:
     int test = 0;
 	torch::optim::Adam actorOptim= torch::optim::Adam(this->actor.get()->parameters(), torch::optim::AdamOptions(this->Actlr));
 	torch::optim::Adam criticOptim= torch::optim::Adam(this->critic.get()->parameters(), torch::optim::AdamOptions(this->Crtlr));
-	std::ofstream logger= std::ofstream("C:/Users/jonat/source/repos/SolitairCPPCM/Resources/RLLogger.csv", std::ios_base::app);
+	std::ofstream logger= std::ofstream("C:/Users/jonat/source/25-26_CE301_sale_jonathan/SolitairCPPCM/Resources/RLLogger.csv", std::ios_base::app);
     torch::Device device = torch::kCPU;
     MeanStdFilter returns_normalizer=MeanStdFilter(1, this->device);
     MeanStdFilter obs_normalizer = MeanStdFilter(146, this->device);

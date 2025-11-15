@@ -294,8 +294,8 @@ void PPO::LogData(float totalReward, float Actorloss, float CriticLoss, float Ad
 
 void PPO::learn() {
 	srand(time(0));
-	LoadActor(this->actor,"C:/Users/jonat/source/repos/SolitairCPPCM/Resources/actor.pth");
-	LoadCritic(this->critic,"C:/Users/jonat/source/repos/SolitairCPPCM/Resources/critic.pth");
+	LoadActor(this->actor,"C:/Users/jonat/source/25-26_CE301_sale_jonathan/SolitairCPPCM/Resources/actor.pth");
+	LoadCritic(this->critic,"C:/Users/jonat/source/25-26_CE301_sale_jonathan/SolitairCPPCM/Resources/critic.pth");
 	trajectorie winTra;
 	std::cout<<"|reward|Actorloss|CriticLoss|AdvantageMean|MeanReward"<<endl;
 	long double avgSumReward = 0;
@@ -345,18 +345,18 @@ void PPO::learn() {
 		if (j % 100 == 0 && j!=0 ) {
 			LogData(torch::sum(rewards).item<float>()/this->batchSize, actorLoss.item<float>(), criticLoss.item<float>(), ak.mean().item<float>(), (avgSumReward/100)/this->batchSize);
 			avgSumReward = 0;
-			torch::save(this->actor, "C:/Users/jonat/source/repos/SolitairCPPCM/Resources/actor.pth");
-			torch::save(this->critic, "C:/Users/jonat/source/repos/SolitairCPPCM/Resources/critic.pth");
+			torch::save(this->actor, "C:/Users/jonat/source/25-26_CE301_sale_jonathan/SolitairCPPCM/Resources/actor.pth");
+			torch::save(this->critic, "C:/Users/jonat/source/25-26_CE301_sale_jonathan/SolitairCPPCM/Resources/critic.pth");
 		}
 	}
 	//std::cout << this->entropy_co<<std::endl;
-	torch::save(this->actor, "C:/Users/jonat/source/repos/SolitairCPPCM/Resources/actor.pth");
-	torch::save(this->critic, "C:/Users/jonat/source/repos/SolitairCPPCM/Resources/critic.pth");
+	torch::save(this->actor, "C:/Users/jonat/source/25-26_CE301_sale_jonathan/SolitairCPPCM/Resources/actor.pth");
+	torch::save(this->critic, "C:/Users/jonat/source/25-26_CE301_sale_jonathan/SolitairCPPCM/Resources/critic.pth");
 }
 
 void PPO::Test() {
-	LoadActor(this->actor, "C:/Users/jonat/source/repos/SolitairCPPCM/Resources/actor.pth");
-	LoadCritic(this->critic, "C:/Users/jonat/source/repos/SolitairCPPCM/Resources/critic.pth");
+	LoadActor(this->actor, "C:/Users/jonat/source/25-26_CE301_sale_jonathan/SolitairCPPCM/Resources/actor.pth");
+	LoadCritic(this->critic, "C:/Users/jonat/source/25-26_CE301_sale_jonathan/SolitairCPPCM/Resources/critic.pth");
 	int winCount=0;
 	for (int i = 0; i < 1000;i++) {
 		KlondikeGameController game(0);
