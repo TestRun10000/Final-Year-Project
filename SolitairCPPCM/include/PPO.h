@@ -6,6 +6,7 @@
 #include<torch/optim.h>
 #include<vector>
 #include<fstream>
+//Welford's algorithm
 class MeanStdFilter {
 private:
     // Tensors to store running mean, variance, and count
@@ -16,8 +17,8 @@ private:
 public:
     MeanStdFilter(int shape,torch::Device device) {
         M = torch::zeros({ shape }, torch::kFloat32).to(device);
-        S = torch::ones({ shape }, torch::kFloat32).to(device);
-        N = torch::ones({ 1 }, torch::kFloat32).to(device) * 1e-4; // Initialize N slightly above zero
+        S = torch::ones({ shape }, torch::kFloat32).to(device) * 1e-4;
+        N = torch::ones({ 1 }, torch::kFloat32).to(device) * 1e-4; 
     }
 
     void update(const torch::Tensor& x, torch::Device device) {
@@ -39,8 +40,9 @@ public:
         N = torch::tensor({ total_count }).to(device);
     }
 
+
+
     torch::Tensor mean() const { return M; }
-    // Add 1e-8 for numerical stability
     torch::Tensor std() const {
         torch::Tensor raw_std = torch::sqrt(S / N + 1e-8);
         return torch::clamp(raw_std, 0.1f, 1e9f);
@@ -56,24 +58,24 @@ private:
     NetDeep critic = NetDeep(146, 1, 512);
 	float gamma = 0.999;
     float lambda = 0.95;
-	int updatesPerLoop = 4;
+	int updatesPerLoop = 8;
 	int numberLoops = 1000;
 	float clip = 0.3;
-	float Actlr = 0.0005;
-	float Crtlr = 0.0005;
-    int batchSize = 100;
-    float entropy_co = 0.015;
+	float Actlr = 0.0003;
+	float Crtlr = 0.0003;
+    int batchSize = 64;
+    float entropy_co = 0.01;
     bool winFlag = false;
     int test = 0;
 	torch::optim::Adam actorOptim= torch::optim::Adam(this->actor.get()->parameters(), torch::optim::AdamOptions(this->Actlr));
 	torch::optim::Adam criticOptim= torch::optim::Adam(this->critic.get()->parameters(), torch::optim::AdamOptions(this->Crtlr));
 	std::ofstream logger= std::ofstream("C:/Users/jonat/source/25-26_CE301_sale_jonathan/SolitairCPPCM/Resources/RLLogger.csv", std::ios_base::app);
     torch::Device device = torch::kCPU;
-    MeanStdFilter returns_normalizer=MeanStdFilter(1, this->device);
     MeanStdFilter obs_normalizer = MeanStdFilter(146, this->device);
 
 	advantegeTrajectorie rollout(bool Dummy=false);
 
+    std::vector<std::vector<float>> computeRewardsToGo(std::vector<std::vector<float>> rewards); 
 	BatchActionProbPair getActionBatch(torch::Tensor state, std::vector<std::vector <GameBoard::Move>> moves);
     BatchActionProbPair getActionBatchDummy(std::vector<DummyPlayer> games,torch::Tensor states, std::vector<std::vector <GameBoard::Move>> moves);
     ActionProbPair getAction(torch::Tensor state, vector < GameBoard::Move> moves);
@@ -104,7 +106,6 @@ public:
         }
         this->actor->to(this->device);
         this->critic->to(this->device);
-        this->returns_normalizer = MeanStdFilter(1, this->device);
         this->obs_normalizer = MeanStdFilter(146, this->device);
     }
 };
