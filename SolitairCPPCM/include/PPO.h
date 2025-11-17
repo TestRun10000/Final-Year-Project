@@ -57,15 +57,16 @@ private:
     NetDeep actor = NetDeep(146, 904, 512);
     NetDeep critic = NetDeep(146, 1, 512);
 	float gamma = 0.999;
-    float lambda = 0.95;
+    float lambda = 0.90;
 	int updatesPerLoop = 8;
 	int numberLoops = 1000;
-	float clip = 0.3;
+	float clip = 0.2;
 	float Actlr = 0.0003;
 	float Crtlr = 0.0003;
     int batchSize = 64;
-    float entropy_co = 0.01;
+    float entropy_co = 0.001;
     bool winFlag = false;
+    int winCount = 0;
     int test = 0;
 	torch::optim::Adam actorOptim= torch::optim::Adam(this->actor.get()->parameters(), torch::optim::AdamOptions(this->Actlr));
 	torch::optim::Adam criticOptim= torch::optim::Adam(this->critic.get()->parameters(), torch::optim::AdamOptions(this->Crtlr));
@@ -80,7 +81,10 @@ private:
     BatchActionProbPair getActionBatchDummy(std::vector<DummyPlayer> games,torch::Tensor states, std::vector<std::vector <GameBoard::Move>> moves);
     ActionProbPair getAction(torch::Tensor state, vector < GameBoard::Move> moves);
 
-	std::vector<float> advantageGAE(std::vector<std::vector<float>>rewards, std::vector <std::vector<torch::Tensor>> states);
+	std::vector<float> advantageGAE(std::vector<std::vector<float>>rewards, std::vector <std::vector<torch::Tensor>> states,float rewardMean, float rewardVar);
+    //torch::Tensor GAES(torch::Tensor reward, torch::Tensor states, std::vector<int> batches);
+
+
 
     trajectorie flatten(std::vector <std::vector<torch::Tensor>> states, 
         std::vector <std::vector<int>> actions, std::vector<std::vector<float>> rewardsTwoD, std::vector <std::vector<float>> actionProb);
@@ -93,7 +97,7 @@ private:
     void LoadActor(NetDeep model, std::string path);
     void LoadCritic(NetDeep model,std::string path);
 
-	void LogData(float totalReward, float Actorloss,float CriticLoss,float AdvantageMean,float MeanReward);
+	void LogData(float totalReward, float Actorloss,float CriticLoss,float AdvantageMean,float MeanReward,float kl,float entropy,float explainedVar);
 
 public:
 	void learn();

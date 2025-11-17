@@ -1,2 +1,1 @@
-count,totalReward,Actorloss,CriticLoss,AdvantageMean,MeanReward,
-
+count,reward,Actorloss,CriticLoss,AdvantageMean,MeanReward,KL,EntropyMean,Explained Var
