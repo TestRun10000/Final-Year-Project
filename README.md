@@ -1,4 +1,4 @@
-#Solitaire
-##About
+# Solitaire
+## About
 
-##Usage
+## Usage
