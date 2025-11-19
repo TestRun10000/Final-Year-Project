@@ -13,26 +13,26 @@ endif()
 
 
 set(CUDAToolkit_ROOT "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v13.0")
-project ("SolitairCPPCM" LANGUAGES CXX CUDA)
+project ("SolitaireRL" LANGUAGES CXX CUDA)
 #set(CMAKE_INSTALL_RPATH "$ORIGIN;${TORCH_INSTALL_PREFIX}/lib")
-set(CMAKE_PREFIX_PATH "C:/Users/jonat/source/25-26_CE301_sale_jonathan/SolitairCPPCM/External/libtorch")
+set(CMAKE_PREFIX_PATH "C:/Users/jonat/source/25-26_CE301_sale_jonathan/MainProjectCode/External/libtorch")
 find_package(Torch REQUIRED)
-add_executable(SolitairCPPCM "${MY_SOURCES}")
+add_executable(SolitaireRL "${MY_SOURCES}")
 # Add source to this project's executable.
 target_link_libraries(${PROJECT_NAME} ${TORCH_LIBRARIES})
 target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC RESOURCES_PATH="./resources/")
-target_include_directories(SolitairCPPCM PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/")
+target_include_directories(SolitaireRL PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/")
 if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET SolitairCPPCM PROPERTY CXX_STANDARD 20)
+  set_property(TARGET SolitaireRL PROPERTY CXX_STANDARD 20)
 endif()
-set(TORCH_DLL_DIR "C:/Users/jonat/source/25-26_CE301_sale_jonathan/SolitairCPPCM/External/libtorch/lib")
+set(TORCH_DLL_DIR "C:/Users/jonat/source/25-26_CE301_sale_jonathan/MainProjectCode/External/libtorch/lib")
 file(GLOB TORCH_DLLS "${TORCH_DLL_DIR}/*.dll")
 message(STATUS "Found DLLs: ${TORCH_DLLS}")
 foreach(DLL ${TORCH_DLLS})
-    add_custom_command(TARGET SolitairCPPCM POST_BUILD
+    add_custom_command(TARGET SolitaireRL POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "${DLL}"
-        $<TARGET_FILE_DIR:SolitairCPPCM>
+        $<TARGET_FILE_DIR:SolitaireRL>
     )
 endforeach()
 # TODO: Add tests and install targets if needed.
