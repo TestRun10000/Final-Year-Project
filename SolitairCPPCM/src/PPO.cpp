@@ -81,21 +81,21 @@ BatchActionProbPair PPO::getActionBatchDummy(std::vector<DummyPlayer> games,torc
 	return BatchActionProbPair(tact, log_probs);
 }
 
-advantegeTrajectorie PPO::rollout(bool Dummy){
-	std::vector<std::vector<torch::Tensor>> states = std::vector <std::vector<torch::Tensor>>(this->batchSize);
-	std::vector<std::vector<int>> actions = std::vector <std::vector<int>>(this->batchSize);
-	std::vector<std::vector<float>> rewards = std::vector <std::vector<float>>(this->batchSize);
-	std::vector<std::vector<float>> actionsProb = std::vector <std::vector<float>>(this->batchSize);
-	std::vector<DummyPlayer> games= std::vector<DummyPlayer>(this->batchSize);
+advantegeTrajectorie PPO::rollout(bool Dummy,int batchSize){
+	std::vector<std::vector<torch::Tensor>> states = std::vector <std::vector<torch::Tensor>>(batchSize);
+	std::vector<std::vector<int>> actions = std::vector <std::vector<int>>(batchSize);
+	std::vector<std::vector<float>> rewards = std::vector <std::vector<float>>(batchSize);
+	std::vector<std::vector<float>> actionsProb = std::vector <std::vector<float>>(batchSize);
+	std::vector<DummyPlayer> games= std::vector<DummyPlayer>(batchSize);
 	float s[5] = { 10.818811,1.636655,6.108121,0.444798,6.098790 };
 	BoardScorer bs = BoardScorer(s);
-	for (int i = 0; i < this->batchSize; ++i) {
+	for (int i = 0; i < batchSize; ++i) {
 		games.at(i) = DummyPlayer(bs,0);
 	}
-	std::vector<float> prevRev=std::vector<float>(this->batchSize); 
-	std::vector<bool> dones= std::vector<bool>(this->batchSize, false); 
-	std::vector<int> movesTaken = std::vector<int>(this->batchSize, 0);
-	int active_envs = this->batchSize;
+	std::vector<float> prevRev=std::vector<float>(batchSize); 
+	std::vector<bool> dones= std::vector<bool>(batchSize, false); 
+	std::vector<int> movesTaken = std::vector<int>(batchSize, 0);
+	int active_envs = batchSize;
 	int movesMade = 0;
 	int finalVal = 0;
 	float rewardMean = 0.0;
@@ -108,7 +108,7 @@ advantegeTrajectorie PPO::rollout(bool Dummy){
 		std::vector<std::vector<int>> currentBatchStates;
 		std::vector<int> active_indices;
 		std::vector<DummyPlayer> activeGame;
-		for (int i = 0; i < this->batchSize;i++) {
+		for (int i = 0; i < batchSize;i++) {
 			if (!dones.at(i)) {
 				currentBatchStates.push_back(games.at(i).EncodeBoard());
 				currentBatchMoves.push_back(games.at(i).getAvailableMoves());
@@ -148,7 +148,7 @@ advantegeTrajectorie PPO::rollout(bool Dummy){
 
 
 		int activeIndex = 0;
-		for (int i = 0; i < this->batchSize;i++) {
+		for (int i = 0; i < batchSize;i++) {
 			if (!dones.at(i)) {
 				int action = actionsBatch[activeIndex].item<int>();
 				float actionProb = probsBatch[activeIndex].item<float>();
@@ -186,8 +186,8 @@ advantegeTrajectorie PPO::rollout(bool Dummy){
 					if (games.at(i).gameWon()) {
 						if (!Dummy) {
 							//std::cout << "Winner"<<std::endl;
+							winCount++;
 						}
-						winCount++;
 						rewardMean += 1;
 						rewards.at(i).back() = 10;
 						this->winFlag = true;
@@ -266,7 +266,7 @@ trajectorie PPO::flatten(std::vector <std::vector<torch::Tensor>> statesTwoD,
 	std::vector<int> actions = std::vector<int>();
 	std::vector<float> actionsProb = std::vector<float>();
 	std::vector<float> rewards = std::vector<float>();
-	for (int i = 0; i < this->batchSize; i++) {
+	for (int i = 0; i < actionsTwoD.size(); i++) {
 		for (int j = 0; j < statesTwoD.at(i).size(); j++) {
 			states.push_back(statesTwoD.at(i).at(j));
 			actions.push_back(actionsTwoD.at(i).at(j));
@@ -332,22 +332,18 @@ void PPO::learn() {
 	long double avgSumReward = 0;
 	for (int j = 1; j < this->numberLoops+1; j++) {
 		torch::Tensor ak;
-		advantegeTrajectorie traActor = this->rollout(false);
-		//advantegeTrajectorie traDummy = this->rollout(true);
-		torch::Tensor rewards = traActor.traject.rewards;//torch::cat({ traActor.rewards,traDummy.rewards }, 0);
-		torch::Tensor actions = traActor.traject.actions;//torch::cat({ traActor.actions,traDummy.actions }, 0);
-		torch::Tensor states = traActor.traject.states;//torch::cat({ traActor.states,traDummy.states }, 0);
-		torch::Tensor prob = traActor.traject.actionProb;//torch::cat({ traActor.actionProb,traDummy.actionProb }, 0);
+		advantegeTrajectorie traActor = this->rollout(false,this->batchSize/2);
+		advantegeTrajectorie traDummy = this->rollout(true,this->batchSize/2);
+		torch::Tensor rewards = torch::cat({ traActor.traject.rewards,traDummy.traject.rewards }, 0);//traActor.traject.rewards;//
+		torch::Tensor actions = torch::cat({ traActor.traject.actions,traDummy.traject.actions }, 0);//traActor.traject.actions;
+		torch::Tensor states = torch::cat({ traActor.traject.states,traDummy.traject.states }, 0); //traActor.traject.states;
+		torch::Tensor prob = torch::cat({ traActor.traject.actionProb,traDummy.traject.actionProb }, 0);//traActor.traject.actionProb;//
 
 
 		avgSumReward += torch::sum(rewards).item<float>();
 		//torch::Tensor Norm_rewards = (rewards - rewards.mean()) / (rewards.std() + 1e-8);
-		ak = traActor.advantage;
+		ak = torch::cat({traActor.advantage,traDummy.advantage},0);//traActor.advantage;
 		ak = (ak - ak.mean()) / (ak.std() + 1e-10);
-		if (this->winFlag) {
-			std::cout << rewards << std::endl;
-			this->winFlag = false;
-		}
 		torch::Tensor actorLoss;
 		torch::Tensor criticLoss;
 		float entropyMean=0.0;
@@ -403,6 +399,7 @@ void PPO::Test() {
 		{
 			torch::Tensor curState = torch::tensor(game.EncodeBoard(), torch::kFloat32).to(this->device);
 			this->obs_normalizer.update(curState,this->device);
+			std::cout << "Here";
 			ActionProbPair action = getAction(curState, game.getAvailableMoves());
 			game.doMove(GameBoard::DecodeMove(action.action));
 			

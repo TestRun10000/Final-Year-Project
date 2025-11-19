@@ -56,15 +56,15 @@ private:
 	//board is 146 array and there is 773 unique moves possible
     NetDeep actor = NetDeep(146, 904, 512);
     NetDeep critic = NetDeep(146, 1, 512);
-	float gamma = 0.999;
-    float lambda = 0.90;
-	int updatesPerLoop = 8;
-	int numberLoops = 1000;
-	float clip = 0.2;
-	float Actlr = 0.0003;
-	float Crtlr = 0.0003;
+	float gamma = 0.99;
+    float lambda = 0.95;
+	int updatesPerLoop = 16;
+	int numberLoops = 500;
+	float clip = 0.1;
+	float Actlr = 0.00001;
+	float Crtlr = 0.001;
     int batchSize = 64;
-    float entropy_co = 0.001;
+    float entropy_co = 0.005;
     bool winFlag = false;
     int winCount = 0;
     int test = 0;
@@ -74,7 +74,7 @@ private:
     torch::Device device = torch::kCPU;
     MeanStdFilter obs_normalizer = MeanStdFilter(146, this->device);
 
-	advantegeTrajectorie rollout(bool Dummy=false);
+	advantegeTrajectorie rollout(bool Dummy=false,int batchSize=1);
 
     std::vector<std::vector<float>> computeRewardsToGo(std::vector<std::vector<float>> rewards); 
 	BatchActionProbPair getActionBatch(torch::Tensor state, std::vector<std::vector <GameBoard::Move>> moves);
