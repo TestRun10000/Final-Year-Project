@@ -9,15 +9,13 @@ if (POLICY CMP0141)
 endif()
 
 
-project ("SolitairCPPCM" LANGUAGES CXX)
+project ("Solitaire" LANGUAGES CXX)
 
-add_executable(SolitairCPPCM "${MY_SOURCES}")
+add_executable(Solitaire "${MY_SOURCES}" "include/DummyPlayer.h")
 # Add source to this project's executable.
 target_link_libraries(${PROJECT_NAME} ${TORCH_LIBRARIES})
 target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC RESOURCES_PATH="./Resources/")
-target_include_directories(SolitairCPPCM PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/")
+target_include_directories(Solitaire PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/")
 if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET SolitairCPPCM PROPERTY CXX_STANDARD 20)
+  set_property(TARGET Solitaire PROPERTY CXX_STANDARD 20)
 endif()
-
-endforeach()

@@ -55,7 +55,7 @@ private:
 	}
 
 	void SaveGeneration() {
-		std::ofstream file("pop.csv");
+		std::ofstream file((std::string)RESOURCES_PATH + "pop.csv");
 		for (int i = 0; i < this->populationSize; i++) {
 			file << this->population.at(i).toString()<<this->fitnessValues.at(i)<<"\n";
 		}
@@ -63,7 +63,7 @@ private:
 	}
 
 	bool loadPopulation() {
-		std::ifstream file("pop.csv");
+		std::ifstream file((std::string)RESOURCES_PATH+"/pop.csv");
 		std::string text;
 		int index=0;
 		if (!file.is_open()) return false;
