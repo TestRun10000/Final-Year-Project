@@ -101,9 +101,9 @@ void BoardScoreOptimiser::grow() {
 		}
 
 	}
-	std::ofstream file("genOut.csv", std::ios_base::app);
-	std::ofstream best("best.txt", std::ios_base::app);
-	std::ifstream genortation("gen.txt");
+	std::ofstream file((std::string)RESOURCES_PATH + "genOut.csv", std::ios_base::app);
+	std::ofstream best((std::string)RESOURCES_PATH + "best.txt", std::ios_base::app);
+	std::ifstream genortation((std::string)RESOURCES_PATH + "gen.txt");
 	int gen = 0;
 	if (loaded) {
 		if (genortation.is_open()) {
@@ -138,7 +138,7 @@ void BoardScoreOptimiser::grow() {
 	}
 	std::cout << this->population.at(0).toString() << endl;
 	std::cout << fittnes(this->population.at(0)) << endl;
-	std::ofstream geno("gen.txt");
+	std::ofstream geno((std::string)RESOURCES_PATH + "gen.txt");
 	geno << std::to_string(maxGen);
 	geno.close();
 	file.close();
