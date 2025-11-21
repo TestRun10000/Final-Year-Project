@@ -7,8 +7,8 @@
 #pragma region  Deal
 void GameBoard::randomDeal() {
 	this->stockPile->shuffle();
-	for (int i = 0; i < 7; i++) {
-		for (int j = i; j < 7; j++) {
+	for (int i = 0; i < LastCol; i++) {
+		for (int j = i; j < LastCol; j++) {
 			Card c = this->stockPile->draw();
 			if (j == i) {
 				c.reveal();
@@ -53,21 +53,21 @@ void GameBoard::ShuffleTopCards() {
 		colPos[j] = temp;
 
 	}
-	for (int i = 0; i < 7; i++) {
+	for (int i = 0; i < LastCol; i++) {
 		Card c = this->stockPile->draw();
 		int col = colPos[i];
 		Card x = this->columns->popFromColumn(col, true);
 		this->columns->pushCardToColumn(col, c);
 		this->drawnCards->push(x);
 	}
-	for (int i = 0; i < 7; i++)
+	for (int i = 0; i < LastCol; i++)
 		this->stockPile->push(this->drawnCards->draw());
 }
 
 list<GameBoard::Move> GameBoard::getReverseMoves() {
 	list<GameBoard::Move> moves = list<GameBoard::Move>();
 	//from column
-	for (int i = 0; i < 7; i++) {
+	for (int i = 0; i < LastCol; i++) {
 		if (this->columns->isColEmpty(i) ||this->columns->getPosOfFistVisOfCol(i)==-1) {
 			continue;
 		}
@@ -81,7 +81,7 @@ list<GameBoard::Move> GameBoard::getReverseMoves() {
 			return moves;
 		}
 		else if (numOfCardStacked + topPos == i + 1) continue;
-		for (int j = 0; j < 7; j++) {
+		for (int j = 0; j < LastCol; j++) {
 			if (j == i) continue;
 			if (this->columns->isColEmpty(j) || this->columns->getPosOfFistVisOfCol(j) == -1 ) {
 				for (int x = topPos; x < this->columns->getLengthOfCol(i); x++)
@@ -123,7 +123,7 @@ list<GameBoard::Move> GameBoard::getReverseMoves() {
 			moves.push_back(generateMove(MoveType::drawToFoundation, 0, i));
 		}
 		Card card = this->foundation[i].top();
-		for (int j = 0; j < 7; j++) {
+		for (int j = 0; j < LastCol; j++) {
 			if (this->columns->isColEmpty(j) || this->columns->getPosOfFistVisOfCol(j) == -1) {
 				moves.push_back(generateMove(MoveType::foundationToCol, j, i));
 				continue;
@@ -165,14 +165,14 @@ void GameBoard::createWinStartBoard() {
 	delete this->stockPile;
 	this->stockPile = new Deck();//replaces a full deck with a empty one 
 	for (int i = 0; i < 4; i++) {
-		Card c =  Card((Card::Suits)i, 13);
+		Card c =  Card((Card::Suits)i, TopCard);
 		c.reveal();
 		this->stockPile->push(c);
 	}
 	this->stockPile->shuffle();
 	for (int i = 0; i < 4; i++) 
 		this->columns->pushCardToColumn(i, this->stockPile->draw());
-	for (int i = 12; i > 0; i--) {
+	for (int i = TopCard-1; i > 0; i--) {
 		bool suitUsed[4] = { false, false, false, false };
 		for (int j = 0; j < 4; j++) {
 			int colour = this->columns->getBottomCardFromColumn(j).getColour();
@@ -203,7 +203,7 @@ void GameBoard::createWinStartBoard() {
 }
 
 bool GameBoard::allOpeningCardsDelt(bool hiddenOnly) {
-	for (int i = 0; i < 7; i++) {
+	for (int i = 0; i < LastCol; i++) {
 		int lenOfCol = this->columns->getLengthOfCol(i);
 		if (!(this->columns->getPosOfFistVisOfCol(i) == -1 && lenOfCol == i)&&
 			!(this->columns->getPosOfFistVisOfCol(i) != -1 && lenOfCol - (lenOfCol - this->columns->getPosOfFistVisOfCol(i)) == i)&&hiddenOnly) 
@@ -230,7 +230,7 @@ void GameBoard::partailDeal(set<Card> cardPool, const GameBoard& base) {
 	for (int i = 0; i < 4; i++) {
 		this->foundation[i] = base.foundation[i];
 	}
-	for (int i = 0; i < 7; i++) {
+	for (int i = 0; i < LastCol; i++) {
 		for (int j = 0; j < base.columns->getLengthOfCol(i); j++) {
 			if (j < base.columns->getPosOfFistVisOfCol(i)) {
 				this->columns->pushCardToColumn(i,this->stockPile->draw());
@@ -277,9 +277,9 @@ void GameBoard::moveCardFromDrawn(unsigned int col) {
 	Card card = this->drawnCards->draw();
 	card.reveal();
 	if (card.isBlank()) return;
-	if (col >= 7) return;
+	if (col >= LastCol) return;
 	if (this->columns->isColEmpty(col)) {
-		if (card.getRank() == 13) {
+		if (card.getRank() == TopCard) {
 			this->columns->pushCardToColumn(col,card);
 			this->score += 5;
 		}
@@ -295,7 +295,7 @@ void GameBoard::moveCardFromDrawn(unsigned int col) {
 }
 
 void GameBoard::removeFromFoundation(unsigned int to, unsigned int from,bool allowAnyEmpty) {
-	if (from >= 4 || to>=7) return;
+	if (from >= 4 || to>=LastCol) return;
 	if (this->foundation[from].empty()) return;
 	Card card = this->foundation[from].top();
 	if (this->columns->isColEmpty(to)&&!allowAnyEmpty) return;
@@ -312,7 +312,7 @@ void GameBoard::removeFromFoundation(unsigned int to, unsigned int from,bool all
 }
 
 void GameBoard::placeInFoundationFromCol(unsigned int col) {
-	if (col >= 7) return;
+	if (col >= LastCol) return;
 
 	if (this->columns->isColEmpty(col)) return;
 	Card c = this->columns->getBottomCardFromColumn(col);
@@ -389,7 +389,7 @@ set<Card> GameBoard::visableCards() {
 	}
 	if (!this->drawnCards->isEmpty())
 		seen.insert(this->drawnCards->peek());
-	for (int i = 0; i < 7; i++) {
+	for (int i = 0; i < LastCol; i++) {
 		if (this->columns->isColEmpty(i)) continue;
 		for (int j = this->columns->getPosOfFistVisOfCol(i); j < this->columns->getLengthOfCol(i); j++)
 			seen.insert(this->columns->getCard(i, j));

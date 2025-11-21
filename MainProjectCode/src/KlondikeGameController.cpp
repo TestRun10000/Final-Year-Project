@@ -21,9 +21,9 @@ vector<KlondikeGameController::Move> KlondikeGameController::getAvailableMoves()
 			
 		}
 		//to column
-		for (int i = 0; i < 7; i++) {
+		for (int i = 0; i < LastCol; i++) {
 			if (this->columns->isColEmpty(i)){
-				if(drawnCard.getRank() == 13) {
+				if(drawnCard.getRank() == TopCard) {
 					possibleMoves.push_back(generateMove(MoveType::drawToCol, i)); 
 				}
 				continue;
@@ -35,18 +35,18 @@ vector<KlondikeGameController::Move> KlondikeGameController::getAvailableMoves()
 
 	}
 	//from column
-	for (int i = 0; i < 7; i++) {
+	for (int i = 0; i < LastCol; i++) {
 		if (this->columns->isColEmpty(i)) {
 			continue;
 		}
 		Card top = this->columns->getFirstVisFromCol(i);
 		int topPos = this->columns->getPosOfFistVisOfCol(i);
 		int numOfCardStacked = this->columns->getLengthOfCol(i)-topPos;
-		for (int j = 0; j < 7; j++) {
+		for (int j = 0; j < LastCol; j++) {
 			if (j == i) continue;
 			//if (this->columns->getPosOfFistVisOfCol(j) != -1)continue;
 			if (this->columns->isColEmpty(j)) {
-				if(top.getRank() == 13 && topPos!=-1) {
+				if(top.getRank() == TopCard && topPos!=-1) {
 					if(!isReverseMove(generateMove(MoveType::colToCol, j, i, topPos)))
 						possibleMoves.push_back(generateMove(MoveType::colToCol, j, i, topPos));
 				}
@@ -87,7 +87,7 @@ vector<KlondikeGameController::Move> KlondikeGameController::getAvailableMoves()
 			continue;
 		}
 		Card card = this->foundation[i].top();
-		for (int j = 0; j < 7; j++) {
+		for (int j = 0; j < (int)LastCol; j++) {
 			if (this->columns->isColEmpty(j)||this->columns->getPosOfFistVisOfCol(j) == -1) continue;
 			if (this->columns->getBottomCardFromColumn(j).doesStack(card)) {
 				if(!isReverseMove(generateMove(MoveType::foundationToCol, j, i)))
@@ -155,7 +155,7 @@ std::string KlondikeGameController::moveToString(Move m) {
 }
 
 bool KlondikeGameController::gameWon() {
-	for (int i = 0; i < 7; i++) {
+	for (int i = 0; i < LastCol; i++) {
 		if (this->columns->getPosOfFistVisOfCol(i) > 0) return false;
 	}
 	this->score += 1000;

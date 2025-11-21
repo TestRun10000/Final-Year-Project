@@ -110,7 +110,7 @@ class GameBoard
 
 		int numOfCardsRevealed() {
 			int numShown = 0;
-			for (int i = 0; i < 7; i++) {
+			for (int i = 0; i < LastCol; i++) {
 				if (this->columns->getPosOfFistVisOfCol(i) == -1) continue;
 				 numShown += i - this->columns->getPosOfFistVisOfCol(i);
 			}
@@ -119,7 +119,7 @@ class GameBoard
 
 		int numOfEmptyCols() {
 			int n = 0;
-			for (int i = 0; i < 7; i++) 
+			for (int i = 0; i < LastCol; i++) 
 				if (this->columns->isColEmpty(i))
 					n++;
 			return n;
@@ -127,9 +127,9 @@ class GameBoard
 
 		int numOfColsStartingWithKing() {
 			int n = 0;
-			for (int i = 0; i < 7; i++) {
+			for (int i = 0; i < LastCol; i++) {
 				if (this->columns->isColEmpty(i)) continue;
-				else if(this->columns->getFirstVisFromCol(i).getRank() == 13 && this->columns->getPosOfFistVisOfCol(i) == 0)
+				else if(this->columns->getFirstVisFromCol(i).getRank() == TopCard && this->columns->getPosOfFistVisOfCol(i) == 0)
 					n++;
 			}
 			return n;
