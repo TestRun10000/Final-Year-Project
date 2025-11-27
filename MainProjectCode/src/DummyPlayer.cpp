@@ -72,7 +72,8 @@ GameBoard::Move DummyPlayer::suidRandomMove() {
 			return cur.move;
 		}
 		lastPair = cur;
-	}	
+	}
+	return lastPair.move;
 }
 
 

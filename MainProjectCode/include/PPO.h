@@ -6,18 +6,22 @@
 #include<torch/optim.h>
 #include<vector>
 #include<fstream>
+
+#define inputSize 57
+#define outputSize 94
+
 //Welford's algorithm
 class MeanStdFilter {
 private:
-    // Tensors to store running mean, variance, and count
-    torch::Tensor M;
-    torch::Tensor S;
+    
+    torch::Tensor meanVal;
+    torch::Tensor stDiv;
     torch::Tensor N;
 
 public:
     MeanStdFilter(int shape,torch::Device device) {
-        M = torch::zeros({ shape }, torch::kFloat32).to(device);
-        S = torch::ones({ shape }, torch::kFloat32).to(device) * 1e-4;
+        meanVal = torch::zeros({ shape }, torch::kFloat32).to(device);
+        stDiv = torch::ones({ shape }, torch::kFloat32).to(device) * 1e-4;
         N = torch::ones({ 1 }, torch::kFloat32).to(device) * 1e-4; 
     }
 
@@ -30,21 +34,21 @@ public:
         float batch_count = (float)x.sizes()[0];
 
         float total_count = N.item<float>() + batch_count;
-        torch::Tensor delta = batch_mean - M;
-        torch::Tensor new_M = M + delta * batch_count / total_count;
-        torch::Tensor new_S = S + batch_var * batch_count +
+        torch::Tensor delta = batch_mean - meanVal;
+        torch::Tensor new_M = meanVal + delta * batch_count / total_count;
+        torch::Tensor new_S = stDiv + batch_var * batch_count +
             delta * delta * N * batch_count / total_count;
 
-        M = new_M;
-        S = new_S;
+        meanVal = new_M;
+        stDiv = new_S;
         N = torch::tensor({ total_count }).to(device);
     }
 
 
 
-    torch::Tensor mean() const { return M; }
+    torch::Tensor mean() const { return meanVal; }
     torch::Tensor std() const {
-        torch::Tensor raw_std = torch::sqrt(S / N + 1e-8);
+        torch::Tensor raw_std = torch::sqrt(stDiv / N + 1e-8);
         return torch::clamp(raw_std, 0.1f, 1e9f);
     }
 };
@@ -53,24 +57,24 @@ public:
 class PPO
 {
 private:
-	//board is 146 array and there is 773 unique moves possible
-    NetDeep actor = NetDeep(146, 904, 512);
-    NetDeep critic = NetDeep(146, 1, 512);
+	//board is 146 array and there is 773 unique moves possible but encoding to 904 is cleaner
+    NetDeep actor = NetDeep((int)inputSize, (int)outputSize, 512);
+    NetDeep critic = NetDeep((int)inputSize, 1, 512);
 	float gamma = 0.99;
     float lambda = 0.95;
-	int updatesPerLoop = 16;
+	int updatesPerLoop = 24;
 	int numberLoops = 500;
-	float clip = 0.1;
-	float Actlr = 0.00001;
-	float Crtlr = 0.001;
-    int batchSize = 64;
-    float entropy_co = 0.005;
+	float clip = 0.2;
+	float Actlr = 0.0003;
+	float Crtlr = 0.0005;
+    int batchSize = 30;
+    float entropy_co = 0.000001;
     bool winFlag = false;
     int winCount = 0;
     int test = 0;
 	torch::optim::Adam actorOptim= torch::optim::Adam(this->actor.get()->parameters(), torch::optim::AdamOptions(this->Actlr));
 	torch::optim::Adam criticOptim= torch::optim::Adam(this->critic.get()->parameters(), torch::optim::AdamOptions(this->Crtlr));
-	std::ofstream logger= std::ofstream("C:/Users/jonat/source/25-26_CE301_sale_jonathan/SolitairCPPCM/Resources/RLLogger.csv", std::ios_base::app);
+	std::ofstream logger= std::ofstream((std::string)RESOURCES_PATH +"RLLogger.csv", std::ios_base::app);
     torch::Device device = torch::kCPU;
     MeanStdFilter obs_normalizer = MeanStdFilter(146, this->device);
 

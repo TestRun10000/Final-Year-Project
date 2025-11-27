@@ -2,12 +2,12 @@
 #include <iostream>
 
 bool CardColumnCollection::moveCardsFromColtoCol(unsigned int fromCol, unsigned int fromRow, unsigned int toCol, bool allowAnyToEmpty) {
-	if (fromCol >= 7 || fromRow < this->columns[fromCol].getPosOfFirstVis() || toCol >= 7) return false;
+	if (fromCol >= this->size || fromRow < this->columns[fromCol].getPosOfFirstVis() || toCol >= this->size) return false;
 	int count = abs((int)fromRow - (int)this->columns[fromCol].getLength());
 	if (count > 1) {
 		Card topOfStack = this->columns[fromCol].get(fromRow);
 		if (this->columns[toCol].isEmpty() || this->columns[toCol].getPosOfFirstVis() == -1) {
-			if (topOfStack.getRank() == 13 || allowAnyToEmpty) {
+			if (topOfStack.getRank() == 10 || allowAnyToEmpty) {
 				this->columns[toCol].push(this->columns[fromCol].popGroupFrom(fromRow, allowAnyToEmpty), count);
 				return true;
 			}
@@ -24,7 +24,7 @@ bool CardColumnCollection::moveCardsFromColtoCol(unsigned int fromCol, unsigned 
 		Card card = this->columns[fromCol].getTail()->value;
 		if (card.isBlank()) return false;
 		if (this->columns[toCol].isEmpty() || this->columns[toCol].getPosOfFirstVis() == -1) {
-			if (card.getRank() == 13 || allowAnyToEmpty); {
+			if (card.getRank() == 10 || allowAnyToEmpty); {
 				this->columns[toCol].push(card);
 				this->columns[fromCol].pop(allowAnyToEmpty);
 				return true;

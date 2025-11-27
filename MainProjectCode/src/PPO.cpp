@@ -29,15 +29,15 @@ BatchActionProbPair PPO::getActionBatch(torch::Tensor states, std::vector<std::v
 		
 		torch::Tensor mean = actor.get()->forward(states).to(this->device);
 		int N = states.size(0);
-		std::vector<int> flat_mask_data(N * 904, 0);
+		std::vector<int> flat_mask_data(N * (int)outputSize, 0);
 		for (int i = 0; i < N; ++i) {
 			for (const auto& m : moves.at(i)) {
 				int v = GameBoard::EncodeMove(m);
-				flat_mask_data.at(i * 904 + v) = 1;
+				flat_mask_data.at(i * (int)outputSize + v) = 1;
 			}
 		}
 		torch::Tensor tBatchMask = torch::tensor(flat_mask_data,torch::TensorOptions().dtype(torch::kBool))
-			.view({ N, 904 }) 
+			.view({ N, (int)outputSize })
 			.to(this->device);
 
 		mean = mean.masked_fill(~tBatchMask, -1e9);
@@ -61,11 +61,11 @@ BatchActionProbPair PPO::getActionBatchDummy(std::vector<DummyPlayer> games,torc
 	//std::cout << "working"<<test++ << endl;
 	torch::Tensor tActions = torch::tensor(actions, torch::kInt).unsqueeze(1).to(this->device);
 
-	std::vector<int> flat_mask_data(N * 904, 0);
+	std::vector<int> flat_mask_data(N * (int)outputSize, 0);
 	for (int i = 0; i < N; ++i) {
 		for (const auto& m : moves.at(i)) {
 			int v = GameBoard::EncodeMove(m);
-			flat_mask_data.at(i * 904 + v) = 1;
+			flat_mask_data.at(i * (int)outputSize + v) = 1;
 		}
 	}
 	torch::Tensor tBatchMask = torch::tensor(flat_mask_data, torch::TensorOptions().dtype(torch::kBool))
@@ -120,28 +120,28 @@ advantegeTrajectorie PPO::rollout(bool Dummy,int batchSize){
 			}
 		}
 		std::vector<int> allStates;
-		allStates.reserve(currentBatchStates.size() * 146);
+		allStates.reserve(currentBatchStates.size() * (int)inputSize);
 		for (const auto& state_vector : currentBatchStates) {
 			for (int val : state_vector) {
 				allStates.push_back(val);
 			}
 		}
-		torch::Tensor batchStates_cpu = torch::tensor(allStates, torch::TensorOptions().dtype(torch::kFloat32)).view({ active_envs, 146});
+		torch::Tensor batchStates_cpu = torch::tensor(allStates, torch::TensorOptions().dtype(torch::kFloat32)).view({ active_envs, (int)inputSize });
 	
 		torch::Tensor batchStates = batchStates_cpu.to(this->device);
-		this->obs_normalizer.update(batchStates, this->device);
+		//this->obs_normalizer.update(batchStates, this->device);
 
-		torch::Tensor obs_mean = this->obs_normalizer.mean().to(this->device);
-		torch::Tensor obs_std = this->obs_normalizer.std().to(this->device);
-		torch::Tensor normalized_batchStates = (batchStates - obs_mean) / (obs_std + 1e-8);
+		//torch::Tensor obs_mean = this->obs_normalizer.mean().to(this->device);
+		//torch::Tensor obs_std = this->obs_normalizer.std().to(this->device);
+		//torch::Tensor normalized_batchStates = (batchStates - obs_mean) / (obs_std + 1e-8);
 		BatchActionProbPair outputBatch;
 		torch::Tensor actionsBatch;
 		if (Dummy) {
-			outputBatch = getActionBatchDummy(activeGame,normalized_batchStates,currentBatchMoves);
+			outputBatch = getActionBatchDummy(activeGame,batchStates,currentBatchMoves);
 			actionsBatch = outputBatch.actions.to(torch::kCPU);
 		}
 		else {
-			outputBatch = getActionBatch(normalized_batchStates, currentBatchMoves);
+			outputBatch = getActionBatch(batchStates, currentBatchMoves);
 			actionsBatch= outputBatch.actions.to(torch::kCPU).squeeze(1);
 		}
 		torch::Tensor probsBatch = outputBatch.log_probs.to(torch::kCPU);
@@ -157,23 +157,23 @@ advantegeTrajectorie PPO::rollout(bool Dummy,int batchSize){
 				//float reward = (games.at(i).boardScore() - baseScore);
 				float reward=0.0;
 				float currentRev = games.at(i).numOfCardsRevealed();
-				if (action == 1 || (action >= 30 && action < 58)) {
-					reward += 0.5f;
+				if (action == 1 || (action >= 8 && action < 14)) {
+					reward += 1.0f;
 				}
 				else if (prevRev.at(i) < currentRev) {
-					reward += 0.1f;
+					reward += 0.5f;
 				}
 				prevRev.at(i) = currentRev; 
-				if (currentBatchStates.at(activeIndex).size() != 146) {
+				if (currentBatchStates.at(activeIndex).size() != (int)inputSize) {
 					std::cout << "error";
 
 				}
-				torch::Tensor obs_mean = this->obs_normalizer.mean().to(this->device);
-				torch::Tensor obs_std = this->obs_normalizer.std().to(this->device);
+				//torch::Tensor obs_mean = this->obs_normalizer.mean().to(this->device);
+				//torch::Tensor obs_std = this->obs_normalizer.std().to(this->device);
 				torch::Tensor curState = torch::tensor(currentBatchStates.at(activeIndex), torch::kFloat32).to(this->device);
-				torch::Tensor normalized_state = (curState - obs_mean) / (obs_std + 1e-8);
+				//torch::Tensor normalized_state = (curState - obs_mean) / (obs_std + 1e-8);
 				actionsTaken++;
-				states.at(i).push_back(normalized_state);
+				states.at(i).push_back(curState);
 				actions.at(i).push_back(action);
 				rewards.at(i).push_back(reward);
 				actionsProb.at(i).push_back(actionProb);
@@ -189,7 +189,7 @@ advantegeTrajectorie PPO::rollout(bool Dummy,int batchSize){
 							winCount++;
 						}
 						rewardMean += 1;
-						rewards.at(i).back() = 10;
+						rewards.at(i).back() = 5;
 						this->winFlag = true;
 					}
 					else {
@@ -320,37 +320,38 @@ void PPO::LogData(float totalReward, float Actorloss, float CriticLoss, float Ad
 	this->logger << "," << totalReward << "," << Actorloss << "," << CriticLoss << "," << AdvantageMean << ",";
 	this->logger << MeanReward<<","<< kl << "," << entropy << "," << explainedVar <<","<<this->winCount << "\n";
 	std::cout << totalReward << "," << Actorloss << "," << CriticLoss << "," << AdvantageMean << ",";
-	std::cout<< MeanReward << "," << kl << "," << entropy << "," << explainedVar <<"," << this->winCount <<"\n";
+	std::cout<< MeanReward << "," << explainedVar <<"," << this->winCount <<"\n";
 }
 
 void PPO::learn() {
 	srand(time(0));
-	LoadActor(this->actor,"C:/Users/jonat/source/25-26_CE301_sale_jonathan/SolitairCPPCM/Resources/actor.pth");
-	LoadCritic(this->critic,"C:/Users/jonat/source/25-26_CE301_sale_jonathan/SolitairCPPCM/Resources/critic.pth");
+	LoadActor(this->actor, (std::string)RESOURCES_PATH + "actor.pth");
+	LoadCritic(this->critic, (std::string)RESOURCES_PATH + "critic.pth");
 	trajectorie winTra;
-	std::cout<<"|reward2Go|Actorloss|CriticLoss|AdvantageMean|MeanReward|KL|EntropyMean|Explained Var|Win Count"<<endl;
+	//std::cout<<"|reward2Go|Actorloss|CriticLoss|AdvantageMean|MeanReward|KL|EntropyMean|Explained Var|Win Count"<<endl;
+	std::cout<<"|reward2Go|Actorloss|CriticLoss|AdvantageMean|MeanReward|Explained Var|Win Count"<<endl;
 	long double avgSumReward = 0;
 	for (int j = 1; j < this->numberLoops+1; j++) {
 		torch::Tensor ak;
-		advantegeTrajectorie traActor = this->rollout(false,this->batchSize/2);
-		advantegeTrajectorie traDummy = this->rollout(true,this->batchSize/2);
-		torch::Tensor rewards = torch::cat({ traActor.traject.rewards,traDummy.traject.rewards }, 0);//traActor.traject.rewards;//
-		torch::Tensor actions = torch::cat({ traActor.traject.actions,traDummy.traject.actions }, 0);//traActor.traject.actions;
-		torch::Tensor states = torch::cat({ traActor.traject.states,traDummy.traject.states }, 0); //traActor.traject.states;
-		torch::Tensor prob = torch::cat({ traActor.traject.actionProb,traDummy.traject.actionProb }, 0);//traActor.traject.actionProb;//
+		advantegeTrajectorie traActor = this->rollout(false,this->batchSize);
+		//advantegeTrajectorie traDummy = this->rollout(true,1);
+		torch::Tensor rewards = traActor.traject.rewards;//torch::cat({ traActor.traject.rewards,traDummy.traject.rewards }, 0)
+		torch::Tensor actions = traActor.traject.actions;//torch::cat({ traActor.traject.actions,traDummy.traject.actions }, 0);
+		torch::Tensor states = traActor.traject.states;// torch::cat({ traActor.traject.states,traDummy.traject.states }, 0);
+		torch::Tensor prob = traActor.traject.actionProb;//torch::cat({ traActor.traject.actionProb,traDummy.traject.actionProb }, 0);
 
 
 		avgSumReward += torch::sum(rewards).item<float>();
 		//torch::Tensor Norm_rewards = (rewards - rewards.mean()) / (rewards.std() + 1e-8);
-		ak = torch::cat({traActor.advantage,traDummy.advantage},0);//traActor.advantage;
+		ak = traActor.advantage;//torch::cat({traActor.advantage,traDummy.advantage},0);
+		torch::Tensor crtTarget = ak;
 		ak = (ak - ak.mean()) / (ak.std() + 1e-10);
-		torch::Tensor actorLoss;
-		torch::Tensor criticLoss;
+		float actorLossVal=0.0;
+		float criticLossVal=0.0;
 		float entropyMean=0.0;
 		float explainedVar = 0.0;
 		float KL = 0.0;
 		for (int i = 0; i < this->updatesPerLoop; i++) {
-			torch::Tensor V = this->evaluateReward(states).to(this->device);
 			torch::Tensor curPobs = this->evaluateProb(states, actions).to(this->device);
 			torch::Tensor ratio = torch::exp(curPobs - prob).to(this->device);
 			torch::Tensor surr1 = ratio * ak;
@@ -360,38 +361,46 @@ void PPO::learn() {
 			torch::Tensor entropy = (-probs * torch::log_softmax(logs, -1)).sum(-1).mean();
 			entropyMean = entropy.item<float>();
 			KL = torch::mean(prob - curPobs).item<float>();
-			actorLoss = (-torch::min(surr1, surr2)).to(this->device).mean() - this->entropy_co * entropy;
+			torch::Tensor actorLoss = (-torch::min(surr1, surr2)).to(this->device).mean() - this->entropy_co * entropy;
+			actorLossVal = actorLoss.item<float>();
 			this->actorOptim.zero_grad();
 			actorLoss.backward({},true);
-			torch::nn::utils::clip_grad_norm_(this->actor->parameters(), 0.5);
+			//torch::nn::utils::clip_grad_norm_(this->actor->parameters(), 0.5);
 			this->actorOptim.step();
-			criticLoss = torch::nn::MSELoss()(V, rewards.detach());
+			//crtTarget = V.detach()+crtTarget.detach();
+			//torch::Tensor normCrtTarget = (crtTarget - crtTarget.mean()) / (crtTarget.std() + 1e-8);
+			
+			torch::Tensor V = this->evaluateReward(states).to(this->device);
+			torch::Tensor criticLoss = torch::nn::MSELoss()(V, rewards.detach());
+			criticLossVal = criticLoss.item<float>();
 			this->criticOptim.zero_grad();
-			criticLoss.backward({}, true);
-			torch::nn::utils::clip_grad_norm_(this->critic->parameters(), 0.5);
+			criticLoss.backward({},false);
+			//torch::nn::utils::clip_grad_norm_(this->critic->parameters(), 0.5);
 			this->criticOptim.step();
 			explainedVar = 1.0 - ((rewards - V).detach().var() / rewards.detach().var()).item<float>();
+			
+
 		}
 	/*	this->Actlr -= 0.00000005;
 		static_cast<torch::optim::AdamOptions&>(this->actorOptim.param_groups()[0].options())
 			.lr(this->Actlr);*/
 		//this->entropy_co -= 0.000045;
-		if (j % 100 == 0 && j!=0 ) {
-			LogData(torch::sum(rewards).item<float>()/this->batchSize, actorLoss.item<float>(), 
-				criticLoss.item<float>(), ak.mean().item<float>(), (avgSumReward/100)/this->batchSize,KL,entropyMean,explainedVar);
+		if (j % 10 == 0 && j!=0 ) {
+			LogData(torch::sum(rewards).item<float>()/this->batchSize, actorLossVal, 
+				criticLossVal, ak.mean().item<float>(), (avgSumReward/10)/this->batchSize,KL,entropyMean,explainedVar);
 			avgSumReward = 0;
 			this->winCount = 0;
-			torch::save(this->actor, "C:/Users/jonat/source/25-26_CE301_sale_jonathan/SolitairCPPCM/Resources/actor.pth");
-			torch::save(this->critic, "C:/Users/jonat/source/25-26_CE301_sale_jonathan/SolitairCPPCM/Resources/critic.pth");
+			torch::save(this->actor, (std::string)RESOURCES_PATH + "actor.pth");
+			torch::save(this->critic, (std::string)RESOURCES_PATH + "critic.pth");
 		}
 	}
-	torch::save(this->actor, "C:/Users/jonat/source/25-26_CE301_sale_jonathan/SolitairCPPCM/Resources/actor.pth");
-	torch::save(this->critic, "C:/Users/jonat/source/25-26_CE301_sale_jonathan/SolitairCPPCM/Resources/critic.pth");
+	torch::save(this->actor, (std::string)RESOURCES_PATH + "actor.pth");
+	torch::save(this->critic, (std::string)RESOURCES_PATH + "critic.pth");
 }
 
 void PPO::Test() {
-	LoadActor(this->actor, "C:/Users/jonat/source/25-26_CE301_sale_jonathan/SolitairCPPCM/Resources/actor.pth");
-	LoadCritic(this->critic, "C:/Users/jonat/source/25-26_CE301_sale_jonathan/SolitairCPPCM/Resources/critic.pth");
+	LoadActor(this->actor, (std::string)RESOURCES_PATH + "actor.pth");
+	LoadCritic(this->critic, (std::string)RESOURCES_PATH + "critic.pth");
 	int winCount=0;
 	for (int i = 0; i < 1000;i++) {
 		KlondikeGameController game(0);

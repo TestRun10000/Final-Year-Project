@@ -1,6 +1,7 @@
-SolitairCPPCM/.vs
-SolitairCPPCM/out
-SolitairCPPCM/External
+SolitairCPPCM
+MainProjectCode/.vs
+MainProjectCode/out
+MainProjectCode/External
 C++SolitareCode
 pythonCode
 .vs

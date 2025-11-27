@@ -2,11 +2,11 @@
 #include <iostream>
 
 
-Deck::Deck(int numSuits=4) {
-
+Deck::Deck(int numSuits=2) {
 	numSuits = min(4, numSuits);
-	for (int i = 0; i < numSuits; i++) {
-		for (int j = 13; j >0; j--) {
+	int start = numSuits < 3 ? 1 : 0;
+	for (int i = start; i < start+numSuits; i++) {
+		for (int j = 10; j >0; j--) {
 			push(Card((Card::Suits)i, j));
 		}
 	}

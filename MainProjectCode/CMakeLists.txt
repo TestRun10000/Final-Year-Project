@@ -20,7 +20,7 @@ find_package(Torch REQUIRED)
 add_executable(SolitaireRL "${MY_SOURCES}")
 # Add source to this project's executable.
 target_link_libraries(${PROJECT_NAME} ${TORCH_LIBRARIES})
-target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC RESOURCES_PATH="./resources/")
+target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC RESOURCES_PATH="${CMAKE_CURRENT_SOURCE_DIR}/resources/")
 target_include_directories(SolitaireRL PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/")
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET SolitaireRL PROPERTY CXX_STANDARD 20)

@@ -6,6 +6,7 @@
 #include "CardColumnCollection.h"
 #include "Card.h"
 #include <vector>
+#include<bitset>
 
 class GameBoard
 {
@@ -37,7 +38,7 @@ class GameBoard
 	public:
 		
 		GameBoard() {
-			this->stockPile = new Deck(4);
+			this->stockPile = new Deck(2);
 			this->drawnCards = new Deck();
 			this->columns = new CardColumnCollection();
 		}
@@ -112,7 +113,7 @@ class GameBoard
 
 		int numOfCardsRevealed() {
 			int numShown = 0;
-			for (int i = 0; i < 7; i++) {
+			for (int i = 0; i < 3; i++) {
 				if (this->columns->getPosOfFistVisOfCol(i) == -1) continue;
 				 numShown += i - this->columns->getPosOfFistVisOfCol(i);
 			}
@@ -121,7 +122,7 @@ class GameBoard
 
 		int numOfEmptyCols() {
 			int n = 0;
-			for (int i = 0; i < 7; i++) 
+			for (int i = 0; i < 3; i++) 
 				if (this->columns->isColEmpty(i))
 					n++;
 			return n;
@@ -129,7 +130,7 @@ class GameBoard
 
 		int numOfColsStartingWithKing() {
 			int n = 0;
-			for (int i = 0; i < 7; i++) {
+			for (int i = 0; i < 3; i++) {
 				if (this->columns->isColEmpty(i)) continue;
 				else if(this->columns->getFirstVisFromCol(i).getRank() == 13 && this->columns->getPosOfFistVisOfCol(i) == 0)
 					n++;
@@ -215,4 +216,6 @@ private:
 		bool allOpeningCardsDelt(bool hiddenOnly);
 
 		void ShuffleTopCards();
+
+		vector<int> OneHotEncodeing(Card c);
 };

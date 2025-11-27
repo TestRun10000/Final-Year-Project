@@ -139,9 +139,9 @@ int temp(float c) {
 
 
 void aneal() {
-	std::ofstream file("aneal.csv");
-	std::ofstream fileb("anealBest.csv");
-	std::ofstream filec("BestAneal.txt");
+	std::ofstream file((std::string)RESOURCES_PATH + "aneal.csv");
+	std::ofstream fileb((std::string)RESOURCES_PATH + "anealBest.csv");
+	std::ofstream filec((std::string)RESOURCES_PATH + "BestAneal.txt");
 
 	std::uniform_real_distribution<> chance(0, 1);
 	std::uniform_real_distribution<> shift(-0.05, 0.05);
@@ -190,13 +190,12 @@ int main()
 	PPO ppo = PPO();
 	ppo.learn();
 	//ppo.Test();
-	std::cout << "Done";
+	//std::cout << "Done";
 	//std::cout << "Random Deals" << endl;
 	//AIPlay(2000, 0);
 	//std::cout << "\nWinable Deals" << endl;
 	//AIPlay(2000,1);
-	//KlondikeGameController game = KlondikeGameController(1);
-	////game.showScoreAndBoard();
+
 	//BoardScoreOptimiser bso = BoardScoreOptimiser();
 	//bso.grow();
 

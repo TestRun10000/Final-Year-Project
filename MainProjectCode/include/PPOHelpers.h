@@ -28,6 +28,7 @@ struct NetDeepImpl : torch::nn::Module {
 	torch::nn::Linear linear3;
 	torch::nn::Linear linear4;
 
+
 	torch::Tensor forward(torch::Tensor input) {
 		torch::Tensor act1 = torch::relu(linear1(input));
 		torch::Tensor act2 = torch::relu(linear2(act1));
