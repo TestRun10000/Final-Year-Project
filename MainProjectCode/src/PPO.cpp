@@ -5,12 +5,9 @@
 //todo add rewards return as trajactorie currently retturns At
 
 ActionProbPair PPO::getAction(torch::Tensor state, vector < GameBoard::Move> moves) {
-	torch::Tensor obs_mean = this->obs_normalizer.mean().to(this->device);
-	torch::Tensor obs_std = this->obs_normalizer.std().to(this->device);
-	torch::Tensor normalized_state = (state - obs_mean) / (obs_std + 1e-8);
-	torch::Tensor mean = actor.get()->forward(normalized_state.unsqueeze(0)).to(this->device);
+	torch::Tensor mean = actor.get()->forward(state).to(this->device);
 
-	std::vector<int> mask = std::vector<int>(904);
+	std::vector<int> mask = std::vector<int>(outputSize);
 
 	for (auto m : moves) {
 		int v = GameBoard::EncodeMove(m);
@@ -21,7 +18,7 @@ ActionProbPair PPO::getAction(torch::Tensor state, vector < GameBoard::Move> mov
 	mean = mean.masked_fill(~tmask, -1e9).to(this->device);
 	int action = torch::multinomial(torch::softmax(mean, -1).to(this->device), 1).item<int>();
 
-	return ActionProbPair(action, torch::log_softmax(mean, -1).to(this->device)[0][action].item<float>());
+	return ActionProbPair(action, torch::log_softmax(mean, -1).to(this->device)[action].item<float>());
 
 }
 
@@ -189,7 +186,7 @@ advantegeTrajectorie PPO::rollout(bool Dummy,int batchSize){
 							winCount++;
 						}
 						rewardMean += 1;
-						rewards.at(i).back() = 5;
+						rewards.at(i).back() = 10;
 						this->winFlag = true;
 					}
 					else {
@@ -403,12 +400,12 @@ void PPO::Test() {
 	LoadCritic(this->critic, (std::string)RESOURCES_PATH + "critic.pth");
 	int winCount=0;
 	for (int i = 0; i < 1000;i++) {
+		std::cout << i << "/" << 1000 << " \r";
+		std::cout.flush();
 		KlondikeGameController game(0);
 		while (!game.isGameOver())
 		{
 			torch::Tensor curState = torch::tensor(game.EncodeBoard(), torch::kFloat32).to(this->device);
-			this->obs_normalizer.update(curState,this->device);
-			std::cout << "Here";
 			ActionProbPair action = getAction(curState, game.getAvailableMoves());
 			game.doMove(GameBoard::DecodeMove(action.action));
 			

@@ -412,7 +412,7 @@ int GameBoard::EncodeMove(Move m) {
 	case drawToCol:
 		return 14 + m.toCol;
 	case colToCol:
-		return 17 + (m.fromCol * 2 + (m.toCol < m.fromCol ? m.toCol : m.toCol - 1)) * 13 + m.row;
+		return 17 + (m.fromCol * 2 + (m.toCol < m.fromCol ? m.toCol : m.toCol - 1)) * 20 + m.row;
 	default:
 		return -1;
 	}
@@ -425,12 +425,12 @@ GameBoard::Move GameBoard::DecodeMove(int m) {
 	else if (m >= 2 && m < 8) return GameBoard::generateMove(2, (m - 2) % 3, (m - 2) / 3);
 	else if (m >= 8 && m < 14) return GameBoard::generateMove(3, (m - 8) / 3, (m - 8) % 3);
 	else if (m >= 14 && m < 17) return GameBoard::generateMove(4, (m - 14));
-	else if (m >= 17 && m<94) {
-		int base = ((m - 17) / 13);
+	else if (m >= 17) {
+		int base = ((m - 17) / 20);
 		int from = base / 2;
 		int to = base % 2 < from ? base % 2 : (base % 2) + 1;
 		//int to = base<(base*7)/6? base/6:(base/6)+1;
-		return GameBoard::generateMove(5, to, from, (m - 17) % 13);
+		return GameBoard::generateMove(5, to, from, (m - 17) % 20);
 	}
 
 }
@@ -458,16 +458,18 @@ std::vector<int> GameBoard::EncodeBoard() {
 		int length = this->columns->getLengthOfCol(i);
 		board.push_back(length - first-1);
 		board.push_back(first);
+		val = OneHotEncodeing(this->columns->isColEmpty(i) ? Card() : this->columns->getBottomCardFromColumn(i));
+		board.insert(board.end(), val.begin(), val.end());
 	}
 	return board;
 }
 
 std::vector<int> GameBoard::OneHotEncodeing(Card c) {
-	std::vector<int> encoding = std::vector<int>(12);
+	std::vector<int> encoding = std::vector<int>(3);
 	if (c.getRank() == -1) {
 		return encoding;
 	}
-	encoding.at(c.getRank()-1) = 1;
-	encoding.at(10 + c.getSuit()-1) = 1;
+	encoding.at(0) = c.getRank();
+	encoding.at(1+c.getSuit()) = 1;
 	return encoding;
 }

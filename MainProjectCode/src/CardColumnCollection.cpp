@@ -7,7 +7,7 @@ bool CardColumnCollection::moveCardsFromColtoCol(unsigned int fromCol, unsigned 
 	if (count > 1) {
 		Card topOfStack = this->columns[fromCol].get(fromRow);
 		if (this->columns[toCol].isEmpty() || this->columns[toCol].getPosOfFirstVis() == -1) {
-			if (topOfStack.getRank() == 10 || allowAnyToEmpty) {
+			if (topOfStack.getRank() == 13 || allowAnyToEmpty) {
 				this->columns[toCol].push(this->columns[fromCol].popGroupFrom(fromRow, allowAnyToEmpty), count);
 				return true;
 			}

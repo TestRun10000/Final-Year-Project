@@ -7,8 +7,8 @@
 #include<vector>
 #include<fstream>
 
-#define inputSize 57
-#define outputSize 94
+#define inputSize 30
+#define outputSize 136
 
 //Welford's algorithm
 class MeanStdFilter {

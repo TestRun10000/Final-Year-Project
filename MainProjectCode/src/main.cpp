@@ -190,6 +190,13 @@ int main()
 	PPO ppo = PPO();
 	ppo.learn();
 	//ppo.Test();
+	// 
+	//KlondikeGameController g(0);
+	//std::cout<<g.EncodeBoard().size()<<endl;
+	//for (int i = 0; i < 136; i++) {
+	//	std::cout << i<<" : " << KlondikeGameController::moveToString(GameBoard::DecodeMove(i)) << endl;
+	//}
+	
 	//std::cout << "Done";
 	//std::cout << "Random Deals" << endl;
 	//AIPlay(2000, 0);
