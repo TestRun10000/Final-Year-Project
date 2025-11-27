@@ -35,7 +35,7 @@ class GameBoard
 	
 	public:
 		GameBoard() {
-			this->stockPile = new Deck(4);
+			this->stockPile = new Deck(2);
 			this->drawnCards = new Deck();
 			this->columns = new CardColumnCollection();
 		}
