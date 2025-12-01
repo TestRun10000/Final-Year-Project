@@ -152,15 +152,19 @@ advantegeTrajectorie PPO::rollout(bool Dummy,int batchSize){
 				float baseScore = games.at(i).boardScore();
 				games.at(i).doMove(GameBoard::DecodeMove(action));
 				//float reward = (games.at(i).boardScore() - baseScore);
+				//reward = std::signbit(reward) ? -0.2:0.2;
 				float reward=0.0;
 				float currentRev = games.at(i).numOfCardsRevealed();
 				if (action == 1 || (action >= 8 && action < 14)) {
 					reward += 1.0f;
 				}
-				else if (prevRev.at(i) < currentRev) {
+				else if (prevRev.at(i) < currentRev) {//|| (action >= 14 && action < 17)
 					reward += 0.5f;
 				}
-				prevRev.at(i) = currentRev; 
+				prevRev.at(i) = currentRev;
+				//if (action >= 2 && action < 8) {
+				//	reward -= 1.0f;
+				//}
 				if (currentBatchStates.at(activeIndex).size() != (int)inputSize) {
 					std::cout << "error";
 
@@ -368,11 +372,11 @@ void PPO::learn() {
 			//torch::Tensor normCrtTarget = (crtTarget - crtTarget.mean()) / (crtTarget.std() + 1e-8);
 			
 			torch::Tensor V = this->evaluateReward(states).to(this->device);
-			torch::Tensor criticLoss = torch::nn::MSELoss()(V, rewards.detach());
+			torch::Tensor criticLoss = torch::nn::MSELoss()(V, rewards.detach());//torch::nn::HuberLoss()(V, rewards.detach());
+			//
 			criticLossVal = criticLoss.item<float>();
 			this->criticOptim.zero_grad();
 			criticLoss.backward({},false);
-			//torch::nn::utils::clip_grad_norm_(this->critic->parameters(), 0.5);
 			this->criticOptim.step();
 			explainedVar = 1.0 - ((rewards - V).detach().var() / rewards.detach().var()).item<float>();
 			

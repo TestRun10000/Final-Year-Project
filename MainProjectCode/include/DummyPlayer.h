@@ -6,7 +6,7 @@
 
 class DummyPlayer : public KlondikeGameController
 {
-
+protected:
 	struct ActionValue {
 		float score;
 		KlondikeGameController::Move move;
@@ -22,7 +22,6 @@ class DummyPlayer : public KlondikeGameController
 			return t1.score < t2.score;
 		}
 	};
-	private:
 		BoardScorer bso;
 		std::mt19937 gen;
 
@@ -55,7 +54,7 @@ class DummyPlayer : public KlondikeGameController
 
 		
 
-	private:
+	protected:
 
 		GameBoard copyBoard() {
 			/*GameBoard g =;*/

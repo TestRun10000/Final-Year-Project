@@ -4,6 +4,7 @@
 #include<fstream>
 #include<random>
 #include "DummyPlayer.h"
+#include"DummyAI.h"
 #include "PPO.h"
 
 
@@ -57,21 +58,6 @@ static void AIPlay(int numGames, int dealType) {
 	std::cout << "Games Won: " << winCount << endl;
 	std::cout << "This is a Win rate of:" << (winCount / (float)numGames) * 100 << "%" << endl << endl;
 
-	winCount = 0;
-	for (int i = 0; i < numGames; i++) {
-		std::cout << i << "/" << numGames << " \r";
-		std::cout.flush();
-		DummyPlayer game(bs, dealType);
-		while (!game.isGameOver()) {
-			game.doMove(game.suidRandomMove());
-		}
-		if (game.gameWon()) {
-			winCount++;
-		}
-	}
-	std::cout << "Playing the Suid Random Moves resulsts in" << endl;
-	std::cout << "Games Won: " << winCount << endl;
-	std::cout << "This is a Win rate of:" << (winCount / (float)numGames) * 100 << "%" << endl << endl;
 	int moves = 0;
 	winCount = 0;
 	for (int i = 0; i < numGames; i++) {
@@ -81,6 +67,25 @@ static void AIPlay(int numGames, int dealType) {
 		while (!game.isGameOver()) {
 			moves++;
 			game.doMove(game.bestMoveRandom());
+		}
+		if (game.gameWon()) {
+			winCount++;
+		}
+	}
+	std::cout << "Playing the Best Moves most of the time resulsts in" << endl;
+	std::cout << "Games Won: " << winCount << endl;
+	std::cout << "This is a Win rate of:" << (winCount / (float)numGames) * 100 << "%" << endl;
+	std::cout << "average number of moves: " << (moves / numGames) << endl << endl;
+	moves = 0;
+	winCount = 0;
+	for (int i = 0; i < numGames; i++) {
+		std::cout << i << "/" << numGames << " \r";
+		std::cout.flush();
+		DummyAI game(bs, dealType);
+		game.loadCritic("C://Users//jonat//source//25-26_CE301_sale_jonathan//MainProjectCode//Resources//OrdinalTopBottom//critic (2).pth");
+		while (!game.isGameOver()) {
+			moves++;
+			game.doMove(game.makeBestMove());
 		}
 		if (game.gameWon()) {
 			winCount++;
