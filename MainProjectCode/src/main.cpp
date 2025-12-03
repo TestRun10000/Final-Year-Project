@@ -82,7 +82,7 @@ static void AIPlay(int numGames, int dealType) {
 		std::cout << i << "/" << numGames << " \r";
 		std::cout.flush();
 		DummyAI game(bs, dealType);
-		game.loadCritic("C://Users//jonat//source//25-26_CE301_sale_jonathan//MainProjectCode//Resources//OrdinalTopBottom//critic (2).pth");
+		game.loadCritic("C://Users//jonat//source//25-26_CE301_sale_jonathan//MainProjectCode//Resources//critic.pth");
 		while (!game.isGameOver()) {
 			moves++;
 			game.doMove(game.makeBestMove());
@@ -193,8 +193,8 @@ int main()
 {
 	
 	PPO ppo = PPO();
-	ppo.learn();
-	//ppo.Test();
+	//ppo.learn();
+	ppo.Test();
 	// 
 	//KlondikeGameController g(0);
 	//std::cout<<g.EncodeBoard().size()<<endl;
@@ -203,8 +203,8 @@ int main()
 	//}
 	
 	//std::cout << "Done";
-	//std::cout << "Random Deals" << endl;
-	//AIPlay(2000, 0);
+	std::cout << "Random Deals" << endl;
+	AIPlay(2000, 0);
 	//std::cout << "\nWinable Deals" << endl;
 	//AIPlay(2000,1);
 
