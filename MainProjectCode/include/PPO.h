@@ -67,9 +67,9 @@ private:
 	float clip = 0.25;
     float Actlr = 0.0003;
 	float Crtlr = 0.0005;
-    int batchSize = 30;
+    int batchSize = 100;
     float entropy_co = 0;
-    bool winFlag = false;
+    bool newNet = true;
     int winCount = 0;
     int test = 0;
 	torch::optim::SGD actorOptim= torch::optim::SGD(this->actor.get()->parameters(), torch::optim::SGDOptions(this->Actlr));
@@ -112,6 +112,8 @@ public:
             this->device = torch::kCUDA;
             std::cout<<"using cuda" << std::endl;
         }
+        LoadActor(this->actor, (std::string)RESOURCES_PATH + "actor.pth");
+        LoadCritic(this->critic, (std::string)RESOURCES_PATH + "critic.pth");
         this->actor->to(this->device);
         this->critic->to(this->device);
         this->obs_normalizer = MeanStdFilter(146, this->device);

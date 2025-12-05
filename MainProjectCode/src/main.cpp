@@ -76,25 +76,25 @@ static void AIPlay(int numGames, int dealType) {
 	std::cout << "Games Won: " << winCount << endl;
 	std::cout << "This is a Win rate of:" << (winCount / (float)numGames) * 100 << "%" << endl;
 	std::cout << "average number of moves: " << (moves / numGames) << endl << endl;
-	moves = 0;
-	winCount = 0;
-	for (int i = 0; i < numGames; i++) {
-		std::cout << i << "/" << numGames << " \r";
-		std::cout.flush();
-		DummyAI game(bs, dealType);
-		game.loadCritic("C://Users//jonat//source//25-26_CE301_sale_jonathan//MainProjectCode//Resources//critic.pth");
-		while (!game.isGameOver()) {
-			moves++;
-			game.doMove(game.makeBestMove());
-		}
-		if (game.gameWon()) {
-			winCount++;
-		}
-	}
-	std::cout << "Playing the Best Moves most of the time resulsts in" << endl;
-	std::cout << "Games Won: " << winCount << endl;
-	std::cout << "This is a Win rate of:" << (winCount / (float)numGames) * 100 << "%" << endl;
-	std::cout << "average number of moves: " << (moves / numGames) << endl << endl;
+	//moves = 0;
+	//winCount = 0;
+	//for (int i = 0; i < numGames; i++) {
+	//	std::cout << i << "/" << numGames << " \r";
+	//	std::cout.flush();
+	//	DummyAI game(bs, dealType);
+	//	game.loadCritic("C://Users//jonat//source//25-26_CE301_sale_jonathan//MainProjectCode//Resources//critic.pth");
+	//	while (!game.isGameOver()) {
+	//		moves++;
+	//		game.doMove(game.makeBestMove());
+	//	}
+	//	if (game.gameWon()) {
+	//		winCount++;
+	//	}
+	//}
+	//std::cout << "Playing the Best Moves using the critic results in" << endl;
+	//std::cout << "Games Won: " << winCount << endl;
+	//std::cout << "This is a Win rate of:" << (winCount / (float)numGames) * 100 << "%" << endl;
+	//std::cout << "average number of moves: " << (moves / numGames) << endl << endl;
 }
 
 
@@ -191,20 +191,24 @@ void aneal() {
 
 int main()
 {
-	
 	PPO ppo = PPO();
 	//ppo.learn();
-	ppo.Test();
 	// 
 	//KlondikeGameController g(0);
 	//std::cout<<g.EncodeBoard().size()<<endl;
 	//for (int i = 0; i < 136; i++) {
 	//	std::cout << i<<" : " << KlondikeGameController::moveToString(GameBoard::DecodeMove(i)) << endl;
 	//}
-	
+	srand(time(0));
+	//ppo.Test();
 	//std::cout << "Done";
-	std::cout << "Random Deals" << endl;
-	AIPlay(2000, 0);
+	for (int i = 0; i < 10; i++) {
+		std::cout << "AI" << endl;
+		ppo.Test();
+		std::cout << "Random Deals" << endl;
+		AIPlay(1000, 0);
+		std::cout << "-------------------------------" << std::endl<<endl;
+	}
 	//std::cout << "\nWinable Deals" << endl;
 	//AIPlay(2000,1);
 

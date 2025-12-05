@@ -126,11 +126,6 @@ advantegeTrajectorie PPO::rollout(bool Dummy,int batchSize){
 		torch::Tensor batchStates_cpu = torch::tensor(allStates, torch::TensorOptions().dtype(torch::kFloat32)).view({ active_envs, (int)inputSize });
 	
 		torch::Tensor batchStates = batchStates_cpu.to(this->device);
-		//this->obs_normalizer.update(batchStates, this->device);
-
-		//torch::Tensor obs_mean = this->obs_normalizer.mean().to(this->device);
-		//torch::Tensor obs_std = this->obs_normalizer.std().to(this->device);
-		//torch::Tensor normalized_batchStates = (batchStates - obs_mean) / (obs_std + 1e-8);
 		BatchActionProbPair outputBatch;
 		torch::Tensor actionsBatch;
 		if (Dummy) {
@@ -169,8 +164,6 @@ advantegeTrajectorie PPO::rollout(bool Dummy,int batchSize){
 					std::cout << "error";
 
 				}
-				//torch::Tensor obs_mean = this->obs_normalizer.mean().to(this->device);
-				//torch::Tensor obs_std = this->obs_normalizer.std().to(this->device);
 				torch::Tensor curState = torch::tensor(currentBatchStates.at(activeIndex), torch::kFloat32).to(this->device);
 				//torch::Tensor normalized_state = (curState - obs_mean) / (obs_std + 1e-8);
 				actionsTaken++;
@@ -280,16 +273,10 @@ trajectorie PPO::flatten(std::vector <std::vector<torch::Tensor>> statesTwoD,
 
 
 torch::Tensor PPO::evaluateReward(torch::Tensor obs) {
-	//torch::Tensor obs_mean = this->obs_normalizer.mean().to(this->device);
-	//torch::Tensor obs_std = this->obs_normalizer.std().to(this->device);
-	//torch::Tensor normalized_obs = (obs - obs_mean) / (obs_std + 1e-8);
 	return this->critic.get()->forward(obs).squeeze().to(this->device);
 }
 
 torch::Tensor PPO::evaluateProb(torch::Tensor obs, torch::Tensor act) {
-	//torch::Tensor obs_mean = this->obs_normalizer.mean().to(this->device);
-	//torch::Tensor obs_std = this->obs_normalizer.std().to(this->device);
-	//torch::Tensor normalized_state = (obs - obs_mean) / (obs_std + 1e-8);
 	torch::Tensor logs = this->actor.get()->forward(obs);
 	torch::Tensor probs = torch::softmax(logs, -1);      
 	torch::Tensor log_probs = torch::log_softmax(logs, -1);
@@ -301,6 +288,7 @@ void PPO::LoadActor(NetDeep model,std::string path) {
 	try {
 		torch::load(model, path);
 		std::cout << path+" model loaded successfully.\n";
+		this->newNet = false;
 	}
 	catch (const c10::Error& e) {
 		std::cout << path + " moded did not load.\n";
@@ -311,6 +299,7 @@ void PPO::LoadCritic(NetDeep model, std::string path) {
 	try {
 		torch::load(model, path);
 		std::cout << path + " model loaded successfully.\n";
+		this->newNet = false;
 	}
 	catch (const c10::Error& e) {
 		std::cout << path + " moded did not load.\n";
@@ -321,13 +310,10 @@ void PPO::LogData(float totalReward, float Actorloss, float CriticLoss, float Ad
 	this->logger << "," << totalReward << "," << Actorloss << "," << CriticLoss << "," << AdvantageMean << ",";
 	this->logger << MeanReward<<","<< kl << "," << entropy << "," << explainedVar <<","<<this->winCount << "\n";
 	std::cout << totalReward << "," << Actorloss << "," << CriticLoss << "," << AdvantageMean << ",";
-	std::cout<< MeanReward << "," << explainedVar <<"," << this->winCount << "," << ((float)this->winCount / (float)300) * 100 << "\n";
+	std::cout<< MeanReward << "," << explainedVar <<"," << this->winCount << "," << ((float)this->winCount / ((float)this->batchSize*10)) * 100 << "\n";
 }
 
 void PPO::learn() {
-
-	LoadActor(this->actor, (std::string)RESOURCES_PATH + "actor.pth");
-	LoadCritic(this->critic, (std::string)RESOURCES_PATH + "critic.pth");
 	trajectorie winTra;
 	//std::cout<<"|reward2Go|Actorloss|CriticLoss|AdvantageMean|MeanReward|KL|EntropyMean|Explained Var|Win Count"<<endl;
 	std::cout<<"|reward2Go|Actorloss|CriticLoss|AdvantageMean|MeanReward|Explained Var|Win Count"<<endl;
@@ -389,7 +375,7 @@ void PPO::learn() {
 		static_cast<torch::optim::AdamOptions&>(this->actorOptim.param_groups()[0].options())
 			.lr(this->Actlr);*/
 		//this->entropy_co -= 0.0045;
-		if (j % 10 == 0 && j!=0 ) {
+		if (j % 10 == 0 ||(j<=10 && this->newNet)) {
 			LogData(torch::sum(rewards).item<float>()/this->batchSize, actorLossVal, 
 				criticLossVal, ak.sum().item<float>(), (avgSumReward / 10) / this->batchSize, KL, entropyMean, explainedVar);
 			avgSumReward = 0;
@@ -403,10 +389,9 @@ void PPO::learn() {
 }
 
 void PPO::Test() {
-	LoadActor(this->actor, (std::string)RESOURCES_PATH + "actor.pth");
-	LoadCritic(this->critic, (std::string)RESOURCES_PATH + "critic.pth");
+
 	int winCount=0;
-	srand(time(0));
+	
 	for (int i = 0; i < 1000;i++) {
 		std::cout << i << "/" << 1000 << " \r";
 		std::cout.flush();
