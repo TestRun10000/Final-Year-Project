@@ -1,8 +1,6 @@
 #include <PPO.h>
 #include<torch/nn.h>
-//based on code from git repo linked below
-//https://github.com/ericyangyu/PPO-for-Beginners/blob/master/ppo.py
-//todo add rewards return as trajactorie currently retturns At
+
 
 ActionProbPair PPO::getAction(torch::Tensor state, vector < GameBoard::Move> moves) {
 	torch::Tensor mean = actor.get()->forward(state).to(this->device);
@@ -146,14 +144,17 @@ advantegeTrajectorie PPO::rollout(bool Dummy,int batchSize){
 				float actionProb = probsBatch[activeIndex].item<float>();
 				float baseScore = games.at(i).boardScore();
 				games.at(i).doMove(GameBoard::DecodeMove(action));
-				//float reward = (games.at(i).boardScore() - baseScore);
+				//float reward = (games.at(i).boardScore() - baseScore)/10;
 				//reward = std::signbit(reward) ? -0.2:0.2;
 				float reward=0.0;
 				float currentRev = games.at(i).numOfCardsRevealed();
-				if (action == 1 || (action >= 8 && action < 14)) {
+				if (action == 1 || (action >= 8 && action < 14)) {//to foundation
 					reward += 1.0f;
 				}
-				else if (prevRev.at(i) < currentRev) {//|| (action >= 14 && action < 17)
+				else if (action >= 14 && action < 17){// removed card from deck
+					reward += 0.1f;
+				}
+				else if (prevRev.at(i) < currentRev) {//revealed a card
 					reward += 0.5f;
 				}
 				prevRev.at(i) = currentRev;
@@ -184,7 +185,7 @@ advantegeTrajectorie PPO::rollout(bool Dummy,int batchSize){
 						}
 						rewardMean += 1;
 						rewards.at(i).back() = 10;
-						this->winFlag = true;
+						
 					}
 					else {
 						rewardMean -= 1;
@@ -319,8 +320,8 @@ void PPO::learn() {
 	std::cout<<"|reward2Go|Actorloss|CriticLoss|AdvantageMean|MeanReward|Explained Var|Win Count"<<endl;
 	long double avgSumReward = 0;
 	for (int j = 1; j < this->numberLoops+1; j++) {
+	srand(((int)j/500)+1);
 		torch::Tensor ak;
-		srand(1);
 		advantegeTrajectorie traActor = this->rollout(false,this->batchSize);
 		//advantegeTrajectorie traDummy = this->rollout(true,1);
 		torch::Tensor rewards = traActor.traject.rewards;//torch::cat({ traActor.traject.rewards,traDummy.traject.rewards }, 0)
@@ -371,6 +372,9 @@ void PPO::learn() {
 			
 
 		}
+		/*if (j > 1500) {
+			this->clip -= 0.0002;
+		}*/
 	/*	this->Actlr -= 0.00000005;
 		static_cast<torch::optim::AdamOptions&>(this->actorOptim.param_groups()[0].options())
 			.lr(this->Actlr);*/
@@ -388,7 +392,7 @@ void PPO::learn() {
 	torch::save(this->critic, (std::string)RESOURCES_PATH + "critic.pth");
 }
 
-void PPO::Test() {
+float PPO::Test() {
 
 	int winCount=0;
 	
@@ -410,4 +414,5 @@ void PPO::Test() {
 	}
 	std::cout << "Games Won: " << winCount << endl;
 	std::cout << "This is a Win rate of:" << (winCount / (float)1000) * 100 << "%" << endl<<endl;
+	return (winCount / (float)1000) * 100;
 }

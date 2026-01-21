@@ -63,11 +63,11 @@ private:
 	float gamma = 0.99;
     float lambda = 0.90;
 	int updatesPerLoop = 24;
-	int numberLoops = 500;
+	int numberLoops = 1750;
 	float clip = 0.25;
     float Actlr = 0.0003;
 	float Crtlr = 0.0005;
-    int batchSize = 100;
+    int batchSize = 30;
     float entropy_co = 0;
     bool newNet = true;
     int winCount = 0;
@@ -106,7 +106,7 @@ private:
 public:
 	void learn();
 
-	void Test();
+	float Test();
     PPO() {
         if (torch::cuda::is_available()) {
             this->device = torch::kCUDA;
