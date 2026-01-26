@@ -196,7 +196,7 @@ int main()
 	// 
 	//KlondikeGameController g(0);
 	//std::cout<<g.EncodeBoard().size()<<endl;
-	//for (int i = 0; i < 136; i++) {
+	//for (int i = 0; i < 905; i++) {
 	//	std::cout << i<<" : " << KlondikeGameController::moveToString(GameBoard::DecodeMove(i)) << endl;
 	//}
 	srand(time(0));

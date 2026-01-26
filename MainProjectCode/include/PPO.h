@@ -7,52 +7,8 @@
 #include<vector>
 #include<fstream>
 
-#define inputSize 30
-#define outputSize 136
-
-//Welford's algorithm
-class MeanStdFilter {
-private:
-    
-    torch::Tensor meanVal;
-    torch::Tensor stDiv;
-    torch::Tensor N;
-
-public:
-    MeanStdFilter(int shape,torch::Device device) {
-        meanVal = torch::zeros({ shape }, torch::kFloat32).to(device);
-        stDiv = torch::ones({ shape }, torch::kFloat32).to(device) * 1e-4;
-        N = torch::ones({ 1 }, torch::kFloat32).to(device) * 1e-4; 
-    }
-
-    void update(const torch::Tensor& x, torch::Device device) {
-        if (x.sizes().empty() || x.sizes()[0] <= 1) {
-            return;
-        }
-        torch::Tensor batch_mean = x.mean(0,false);
-        torch::Tensor batch_var = x.var(0,false,false);
-        float batch_count = (float)x.sizes()[0];
-
-        float total_count = N.item<float>() + batch_count;
-        torch::Tensor delta = batch_mean - meanVal;
-        torch::Tensor new_M = meanVal + delta * batch_count / total_count;
-        torch::Tensor new_S = stDiv + batch_var * batch_count +
-            delta * delta * N * batch_count / total_count;
-
-        meanVal = new_M;
-        stDiv = new_S;
-        N = torch::tensor({ total_count }).to(device);
-    }
-
-
-
-    torch::Tensor mean() const { return meanVal; }
-    torch::Tensor std() const {
-        torch::Tensor raw_std = torch::sqrt(stDiv / N + 1e-8);
-        return torch::clamp(raw_std, 0.1f, 1e9f);
-    }
-};
-
+#define inputSize 94
+#define outputSize 905
 
 class PPO
 {
@@ -76,7 +32,7 @@ private:
 	torch::optim::SGD criticOptim= torch::optim::SGD(this->critic.get()->parameters(), torch::optim::SGDOptions(this->Crtlr));
 	std::ofstream logger= std::ofstream((std::string)RESOURCES_PATH +"RLLogger.csv", std::ios_base::app);
     torch::Device device = torch::kCPU;
-    MeanStdFilter obs_normalizer = MeanStdFilter(146, this->device);
+
 
 	advantegeTrajectorie rollout(bool Dummy=false,int batchSize=1);
 
@@ -116,7 +72,7 @@ public:
         LoadCritic(this->critic, (std::string)RESOURCES_PATH + "critic.pth");
         this->actor->to(this->device);
         this->critic->to(this->device);
-        this->obs_normalizer = MeanStdFilter(146, this->device);
+     
     }
 };
 

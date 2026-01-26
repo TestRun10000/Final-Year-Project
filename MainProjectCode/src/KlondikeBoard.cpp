@@ -7,8 +7,8 @@
 #pragma region  Deal
 void GameBoard::randomDeal() {
 	this->stockPile->shuffle();
-	for (int i = 0; i < 3; i++) {
-		for (int j = i; j < 3; j++) {
+	for (int i = 0; i < 7; i++) {
+		for (int j = i; j < 7; j++) {
 			Card c = this->stockPile->draw();
 			if (j == i) {
 				c.reveal();
@@ -389,7 +389,7 @@ set<Card> GameBoard::visableCards() {
 	}
 	if (!this->drawnCards->isEmpty())
 		seen.insert(this->drawnCards->peek());
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 7; i++) {
 		if (this->columns->isColEmpty(i)) continue;
 		for (int j = this->columns->getPosOfFistVisOfCol(i); j < this->columns->getLengthOfCol(i); j++)
 			seen.insert(this->columns->getCard(i, j));
@@ -406,31 +406,30 @@ int GameBoard::EncodeMove(Move m) {
 	case drawToFoundation:
 		return 1;
 	case foundationToCol:
-		return 2 + m.fromCol * 3 + m.toCol;
+		return 2 + m.fromCol * 7 + m.toCol;
 	case colToFoundation:
-		return 8 + m.fromCol + 3 * m.toCol;
+		return 30 + m.fromCol + 7 * m.toCol;
 	case drawToCol:
-		return 14 + m.toCol;
+		return 58 + m.toCol;
 	case colToCol:
-		return 17 + (m.fromCol * 2 + (m.toCol < m.fromCol ? m.toCol : m.toCol - 1)) * 20 + m.row;
+		return 65 + (m.fromCol * 6 + (m.toCol < m.fromCol ? m.toCol : m.toCol - 1)) * 20 + m.row;
 	default:
 		return -1;
 	}
-
 }
 
 GameBoard::Move GameBoard::DecodeMove(int m) {
 	if (m == 0) return GameBoard::generateMove(0);
 	else if (m == 1) return GameBoard::generateMove(1);
-	else if (m >= 2 && m < 8) return GameBoard::generateMove(2, (m - 2) % 3, (m - 2) / 3);
-	else if (m >= 8 && m < 14) return GameBoard::generateMove(3, (m - 8) / 3, (m - 8) % 3);
-	else if (m >= 14 && m < 17) return GameBoard::generateMove(4, (m - 14));
-	else if (m >= 17) {
-		int base = ((m - 17) / 20);
-		int from = base / 2;
-		int to = base % 2 < from ? base % 2 : (base % 2) + 1;
+	else if (m >= 2 && m < 30) return GameBoard::generateMove(2, (m - 2) % 7, (m - 2) / 7);
+	else if (m >= 30 && m < 58) return GameBoard::generateMove(3, (m - 30) / 7, (m - 30) % 7);
+	else if (m >= 58 && m < 65) return GameBoard::generateMove(4, (m - 58));
+	else if (m >= 65) {
+		int base = ((m - 65) / 20);
+		int from = base / 6;
+		int to = base % 6 < from ? base % 6 : (base % 6) + 1;
 		//int to = base<(base*7)/6? base/6:(base/6)+1;
-		return GameBoard::generateMove(5, to, from, (m - 17) % 20);
+		return GameBoard::generateMove(5, to, from, (m - 65) % 20);
 	}
 
 }
@@ -443,7 +442,7 @@ std::vector<int> GameBoard::EncodeBoard() {
 	board.push_back(!this->stockPile->isEmpty());
 	std::vector<int>val = OneHotEncodeing(this->drawnCards->isEmpty() ? Card() : this->drawnCards->peek());
 	board.insert(board.end(), val.begin(), val.end());
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < 4; i++) {
 		if (this->foundation[i].empty()) {
 			board.push_back(0);
 		}
@@ -451,7 +450,7 @@ std::vector<int> GameBoard::EncodeBoard() {
 			board.push_back(this->foundation[i].top().getRank());
 		}
 	}
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 7; i++) {
 		std::vector<int>val = OneHotEncodeing(this->columns->isColEmpty(i) ? Card() : this->columns->getFirstVisFromCol(i));
 		board.insert(board.end(), val.begin(), val.end());
 		int first = this->columns->getPosOfFistVisOfCol(i);
@@ -465,7 +464,7 @@ std::vector<int> GameBoard::EncodeBoard() {
 }
 
 std::vector<int> GameBoard::OneHotEncodeing(Card c) {
-	std::vector<int> encoding = std::vector<int>(3);
+	std::vector<int> encoding = std::vector<int>(5);
 	if (c.getRank() == -1) {
 		return encoding;
 	}

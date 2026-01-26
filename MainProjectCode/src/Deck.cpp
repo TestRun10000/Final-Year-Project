@@ -2,9 +2,9 @@
 #include <iostream>
 
 
-Deck::Deck(int numSuits=2) {
+Deck::Deck(int numSuits=4) {
 	numSuits = min(4, numSuits);
-	int start = numSuits < 3 ? 0 : 0;
+	int start = 0;
 	for (int i = start; i < start+numSuits; i++) {
 		for (int j = 13; j >0; j--) {
 			push(Card((Card::Suits)i, j));

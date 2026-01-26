@@ -320,7 +320,7 @@ void PPO::learn() {
 	std::cout<<"|reward2Go|Actorloss|CriticLoss|AdvantageMean|MeanReward|Explained Var|Win Count"<<endl;
 	long double avgSumReward = 0;
 	for (int j = 1; j < this->numberLoops+1; j++) {
-	srand(((int)j/500)+1);
+		srand(1);//((int)j/500)+1
 		torch::Tensor ak;
 		advantegeTrajectorie traActor = this->rollout(false,this->batchSize);
 		//advantegeTrajectorie traDummy = this->rollout(true,1);

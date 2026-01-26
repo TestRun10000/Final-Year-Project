@@ -11,7 +11,7 @@ Card::Card(Suits _suit, unsigned short _rank) {
 
 	this->rank = _rank % 14 == 0 && _rank!=0 ? 1 : _rank;
 	this->suit = _suit;
-	if (suit < 1)
+	if (suit < 2)
 		this->colour = black;
 	else
 		this->colour = red;
