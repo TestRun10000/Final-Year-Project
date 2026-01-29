@@ -391,8 +391,9 @@ set<Card> GameBoard::visableCards() {
 		seen.insert(this->drawnCards->peek());
 	for (int i = 0; i < 7; i++) {
 		if (this->columns->isColEmpty(i)) continue;
-		for (int j = this->columns->getPosOfFistVisOfCol(i); j < this->columns->getLengthOfCol(i); j++)
-			seen.insert(this->columns->getCard(i, j));
+		//for (int j = this->columns->getPosOfFistVisOfCol(i); j < this->columns->getLengthOfCol(i); j++)
+		//	seen.insert(this->columns->getCard(i, j));
+		seen.insert(this->columns->getFirstVisFromCol(i));
 	}
 	return seen;
 }

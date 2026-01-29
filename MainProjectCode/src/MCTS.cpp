@@ -56,7 +56,7 @@ MCTS::MCTS(GameBoard board, set<Card> seen, GameBoard::Move lastMove) {
 	this->root->setLastMove(lastMove);
 	this->current = root;
 	this->currentActionSet = this->current->actionSet();
-	this->veriance = ceil(std::exp((-(double)seen.size() / 20.0) + (7.0 / 20.0)) * 100);
+	this->veriance = ceil(std::exp((-(double)seen.size() / this->rateOfDecay) + (7.0 / this->rateOfDecay)) * this->peakVeriance);
 }
 
 shared_ptr<BoardNode> MCTS::selection(shared_ptr<BoardNode> base) {
@@ -98,8 +98,8 @@ shared_ptr<BoardNode> MCTS::expand() {
 
 GameBoard::Move MCTS::getAction() {
 	int count = this->iterations;
-	if (this->veriance < 80) { count = this->iterations / 2; }
-	if (this->veriance < 50) { count = this->iterations / 3; }
+	if (this->veriance < this->peakVeriance*0.8) { count = this->iterations / 2; }
+	if (this->veriance < this->peakVeriance/2) { count = this->iterations / 3; }
 	for (int i = 0; i < count; i++) {
 		if (!(this->current->getChildren().size() < this->current->actionSet().size() * (this->veriance / (this->current->getDepth() + 1)))) {
 			this->current = selection(this->root);

@@ -104,8 +104,6 @@ public:
 		}
 		else {
 			*reward= (int)(player.boardScore()-baseScore);
-
-
 		}
 
 	
