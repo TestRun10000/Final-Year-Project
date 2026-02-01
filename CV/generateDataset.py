@@ -4,6 +4,7 @@ import random
 from csv import writer
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
+import cv2 as cv
 
 suitsR={
     "Heart":"♥",
