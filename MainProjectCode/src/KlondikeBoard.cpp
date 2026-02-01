@@ -11,7 +11,9 @@ void GameBoard::randomDeal() {
 		for (int j = i; j < 7; j++) {
 			Card c = this->stockPile->draw();
 			if (j == i) {
+				
 				c.reveal();
+				this->seenCards[Card::EncodeCard(c)-1] = true;
 			}
 			this->columns->pushCardToColumn(j,c);
 		}
@@ -268,6 +270,7 @@ void GameBoard::drawCardsFromStockPile(unsigned int count) {
 			break;
 		Card drawn = this->stockPile->draw();
 		drawn.reveal();
+		this->seenCards[Card::EncodeCard(drawn)-1] = true;
 		this->drawnCards->push(drawn);
 	}
 	
@@ -316,6 +319,7 @@ void GameBoard::placeInFoundationFromCol(unsigned int col) {
 
 	if (this->columns->isColEmpty(col)) return;
 	Card c = this->columns->getBottomCardFromColumn(col);
+	int topVis = this->columns->getPosOfFistVisOfCol(col);
 	int foundationId = (int)c.getSuit();
 	if (c.getRank() == 1) {
 		this->foundation[foundationId].push(this->columns->popFromColumn(col));
@@ -324,6 +328,9 @@ void GameBoard::placeInFoundationFromCol(unsigned int col) {
 	else if (this->foundation[foundationId].top().doesStack(c, false, true)) {
 		this->foundation[foundationId].push(this->columns->popFromColumn(col));
 		this->score += 10;
+	}
+	if (topVis > this->columns->getPosOfFistVisOfCol(col) && this->columns->getPosOfFistVisOfCol(col)!=-1) {
+		this->seenCards[Card::EncodeCard(this->columns->getFirstVisFromCol(col))-1] = true;
 	}
 }
 
@@ -344,7 +351,11 @@ void GameBoard::placeInFoundationFromDraw() {
 }
 
 bool GameBoard::moveCardsFromColtoCol(unsigned int fromCol, unsigned int fromRow,unsigned int toCol) {
-	return this->columns->moveCardsFromColtoCol(fromCol, fromRow, toCol);
+	bool ret= this->columns->moveCardsFromColtoCol(fromCol, fromRow, toCol);
+	if (fromRow >= 1) {
+		this->seenCards[Card::EncodeCard(this->columns->getFirstVisFromCol(fromCol)) - 1] = true;
+	}
+	return ret;
 
 }
 #pragma endregion
@@ -460,15 +471,19 @@ std::vector<int> GameBoard::EncodeBoard() {
 		val = OneHotEncodeing(this->columns->isColEmpty(i) ? Card() : this->columns->getBottomCardFromColumn(i));
 		board.insert(board.end(), val.begin(), val.end());
 	}
+	//for (int i = 0; i < 52; i++) {
+	//	board.push_back(this->seenCards[i]);
+	//}
 	return board;
 }
 
 std::vector<int> GameBoard::OneHotEncodeing(Card c) {
-	std::vector<int> encoding = std::vector<int>(5);
+	std::vector<int> encoding = std::vector<int>(7);
 	if (c.getRank() == -1) {
 		return encoding;
 	}
 	encoding.at(0) = c.getRank();
 	encoding.at(1+c.getSuit()) = 1;
+	encoding.at(5 + c.getColour()) = 1;
 	return encoding;
 }

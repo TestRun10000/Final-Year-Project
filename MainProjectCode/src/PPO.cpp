@@ -184,18 +184,18 @@ advantegeTrajectorie PPO::rollout(bool Dummy,int batchSize){
 							winCount++;
 						}
 						rewardMean += 1;
-						rewards.at(i).back() = 10;
+						rewards.at(i).back() = 20;
 						
 					}
 					else {
 						rewardMean -= 1;
-						rewards.at(i).back() = -5;
+						rewards.at(i).back() = -15;
 					}
 				}
 				else if (movesMade == 139) {
 					rewardMean -= reward;
 					rewardMean -= 1;
-					rewards.at(i).back() = -5;
+					rewards.at(i).back() = -15;
 					movesTaken.at(i) = movesMade;
 				}
 				activeIndex++;

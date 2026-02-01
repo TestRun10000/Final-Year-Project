@@ -7,7 +7,7 @@
 #include<vector>
 #include<fstream>
 
-#define inputSize 94
+#define inputSize 124
 #define outputSize 905
 
 class PPO
@@ -19,7 +19,7 @@ private:
 	float gamma = 0.99;
     float lambda = 0.90;
 	int updatesPerLoop = 24;
-	int numberLoops = 1750;
+	int numberLoops = 1000;
 	float clip = 0.25;
     float Actlr = 0.0003;
 	float Crtlr = 0.0005;

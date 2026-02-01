@@ -7,15 +7,17 @@
 #include "Card.h"
 #include <vector>
 #include<bitset>
+#include<array>
 
 class GameBoard
 {
-	protected:
-		stack<Card> foundation[4];
-		Deck* stockPile;
-		Deck* drawnCards;
-		CardColumnCollection* columns;
-		int score = 0;
+protected:
+	stack<Card> foundation[4];
+	Deck* stockPile;
+	Deck* drawnCards;
+	CardColumnCollection* columns;
+	int score = 0;
+	array<bool,52> seenCards;
 
 	public:
 		enum MoveType
@@ -66,6 +68,7 @@ class GameBoard
 			delete this->stockPile;
 			delete this->drawnCards;
 			delete this->columns;
+			//delete this->seenCards;
 		}
 	
 		void randomDeal();
