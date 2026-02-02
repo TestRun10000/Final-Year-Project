@@ -3,7 +3,7 @@ import os
 import random
 from csv import writer
 import numpy as np
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont,ImageFilter
 import cv2 as cv
 
 suitsR={
@@ -37,9 +37,11 @@ fonts=[
 
 
 def createImage(text,pos,font):
-    img=Image.new("1",(28,28),color='black')
+    xSize=random.randint(56,200)
+    ySize=random.randint(56,200)
+    img=Image.new("L",(xSize,ySize),color='black')
     drawing=ImageDraw.Draw(img)
-    drawing.text(pos,text,fill=1,font=font)
+    drawing.text(pos,text,fill=255,font=font)
     return img
 
 def genFonts(index,size):
@@ -57,7 +59,10 @@ def dataGen(numberOfImages,data:dict[str,str],basePos:tuple[int,int],fontSizeRan
             xShift=random.randint(shift[0],shift[1])
             yShift=random.randint(shift[0],shift[1])
             im=createImage(text,(basePos[0]+xShift,basePos[1]+yShift),genFonts(0,fontSize))
-            im=np.array(im,dtype=np.int64).flatten()
+            im=np.array(im,dtype=np.uint8)  
+            im=cv.GaussianBlur(im,(3,3),0)
+            im=cv.resize(im,(28,28),interpolation=cv.INTER_LINEAR_EXACT)
+            im=im.flatten()
             x=np.array([[label]],dtype=object).flatten()
             im=np.append(arr=x,values=im,axis=0)
             write.writerow(im)
@@ -65,17 +70,17 @@ def dataGen(numberOfImages,data:dict[str,str],basePos:tuple[int,int],fontSizeRan
 
 rankStarSize=(2,-4)
 
-if not os.path.exists("SuitsRDataset"):
-    os.makedirs("SuitsRDataset")
-if not os.path.exists("SuitsBDataset"):
-    os.makedirs("SuitsBDataset")
+# if not os.path.exists("SuitsRDataset"):
+#     os.makedirs("SuitsRDataset")
+# if not os.path.exists("SuitsBDataset"):
+#     os.makedirs("SuitsBDataset")
 
-dataGen(400,suitsR,(2,-8),(30,40),(0,10),"SuitsRDataset/Train.csv")
-dataGen(400,suitsB,(2,-8),(30,40),(0,10),"SuitsBDataset/Train.csv")
-dataGen(100,suitsR,(2,-8),(30,40),(0,10),"SuitsRDataset/Test.csv")
-dataGen(100,suitsB,(2,-8),(30,40),(0,10),"SuitsBDataset/Test.csv")
+dataGen(5000,suitsR,(2,-8),(90,100),(0,10),"SuitsRDataset/Train.csv")
+# dataGen(400,suitsB,(2,-8),(30,40),(0,10),"SuitsBDataset/Train.csv")
+dataGen(1000,suitsR,(2,-8),(90,100),(0,10),"SuitsRDataset/Test.csv")
+# dataGen(100,suitsB,(2,-8),(30,40),(0,10),"SuitsBDataset/Test.csv")
 
-if not os.path.exists("RankDataset"):
-    os.makedirs("RankDataset")
-dataGen(800,ranks,(2,-4),(30,40),(0,10),"RankDataset/Train.csv")
-dataGen(200,ranks,(2,-4),(30,40),(0,10),"RankDataset/Test.csv")
+# if not os.path.exists("RankDataset"):
+#     os.makedirs("RankDataset")
+# dataGen(800,ranks,(2,-4),(30,40),(0,10),"RankDataset/Train.csv")
+# dataGen(200,ranks,(2,-4),(30,40),(0,10),"RankDataset/Test.csv")
