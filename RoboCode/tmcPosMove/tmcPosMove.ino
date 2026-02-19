@@ -5,7 +5,7 @@ const int dirPin = 10;
 const int ms1=11;
 const int ms2=12;
 int count=10;
-float distPerStep=0.37;
+float distPerStep=0.76;
 
 #define FORWARD HIGH
 #define BACKWARD LOW
