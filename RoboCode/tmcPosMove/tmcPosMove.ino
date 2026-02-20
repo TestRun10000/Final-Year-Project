@@ -1,4 +1,6 @@
 // Pin definitions
+#include<EEPROM.h>
+
 const int microsPin = 8;
 const int stepPinX = 9;
 const int dirPinX = 10;
@@ -7,10 +9,15 @@ const int dirPinY = 12;
 const int enablePin = 2;
 
 
-int count=10;
-float distPerStep=0.76;
-float distPerStepY=0.37;
-// 651
+float distPerStep=0.8;
+float distPerStepY=0.8;
+
+float currentX=0.0;
+float currentY=0.0;
+
+float maxY=427.5;
+float maxX=427.5;
+
 #define FORWARD HIGH
 #define BACKWARD LOW
 
@@ -24,6 +31,7 @@ void rotateMotorX(int direction) {
         digitalWrite(stepPinX, LOW);
         delayMicroseconds(50);
     }
+    currentX= direction==FORWARD? currentX+distPerStep:currentX-distPerStep;
 }
 
 void rotateMotorY(int direction) {
@@ -34,6 +42,7 @@ void rotateMotorY(int direction) {
         digitalWrite(stepPinY, LOW);
         delayMicroseconds(50);
     }
+    currentY= direction==FORWARD? currentY+distPerStepY:currentY-distPerStepY;
 }
 
 void rotateMotors(int directionX,int directionY) {
@@ -47,6 +56,8 @@ void rotateMotors(int directionX,int directionY) {
         digitalWrite(stepPinX, LOW);
         delayMicroseconds(50);
     }
+    currentX= directionX==FORWARD? currentX+distPerStep:currentX-distPerStep;
+    currentY= directionY==FORWARD? currentY+distPerStepY:currentY-distPerStepY;
 }
 
 
@@ -58,16 +69,6 @@ unsigned int distToStepsY(float dist){
     return abs(dist)/distPerStepY;
 }
 
-void moveDistanceX(float dist){
-  int direction = dist>0 ? FORWARD:BACKWARD;
-  Serial.println(direction);
-  Serial.println(dist);
-  int steps=distToStepsX(dist);
-  for(int i=0;i<steps;i++){
-    rotateMotorX(direction);
-  }
-  Serial.println("Done");
-}
 
 void moveDistance(float x,float y){
   int directionX=x>0?FORWARD:BACKWARD;
@@ -85,10 +86,26 @@ void moveDistance(float x,float y){
     else if(stepsMade<ySteps){
       rotateMotorY(directionY);
     }
+    if(stepsMade%0){}
     stepsMade++;
   }
+  savePos();
 }
 
+void moveToPos(float x,float y){
+  moveDistance(x-currentX,y-currentY);
+  savePos();
+}
+
+void loadPos(){
+  EEPROM.get(0,currentX);
+  EEPROM.get(4,currentY);
+}
+
+void savePos(){
+  EEPROM.put(0,currentX);
+  EEPROM.put(4,currentY);
+}
 
 void setup() {
     pinMode(microsPin, OUTPUT);
@@ -97,20 +114,40 @@ void setup() {
     pinMode(stepPinY, OUTPUT);
     pinMode(dirPinY, OUTPUT);
     pinMode(enablePin, OUTPUT);
-    
+    Serial.begin(9600);
+    // savePos();
+    Serial.print("\nX: ");Serial.print(currentX);
+    Serial.print(" , Y: ");Serial.println(currentY);
     // Enable the driver
     digitalWrite(microsPin, HIGH);
     digitalWrite(enablePin, LOW);
-    
-    Serial.begin(9600);
+
+    loadPos();
+    Serial.print("X: ");Serial.print(currentX);
+    Serial.print(" , Y: ");Serial.println(currentY);
     Serial.println("TMC2209 Basic Control Ready");
     // moveDistance(60.0);
-    moveDistance(150,-150);
+    moveDistance(100,-150);
+    Serial.print("X: ");Serial.print(currentX);
+    Serial.print(" , Y: ");Serial.println(currentY);
     Serial.println("Done"); 
   // put your setup code here, to run once:
 }
 
 void loop() {
+  if (Serial.available()) {
+    String input = Serial.readStringUntil('\n');  // Read until newline
+    Serial.print("You entered: ");
+    input = input.substring(1, input.length() - 1);
+    int commaIndex = input.indexOf(','); 
+    double x = input.substring(0, commaIndex).toDouble(); 
+    double y = input.substring(commaIndex + 1).toDouble();
+    Serial.print(x);
+    Serial.print(" , ");
+    Serial.print(y);
+    Serial.print("\n");
+    moveToPos(x,y);
+  }
   // put your main code here, to run repeatedly:
 
 }
