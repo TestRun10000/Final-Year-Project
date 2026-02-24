@@ -9,11 +9,12 @@ class MCTS
 private:
 	std::mutex node_mutex;
 	shared_ptr<BoardNode> root;
-	int iterations=3000;
+	int iterations=2000;
 	int veriance=100;
 	float c = 1.414213562;//root 2
 	int rateOfDecay = 20;
-	int peakVeriance = 150;
+	int peakVeriance = 100;
+	float percentToExpand = 0.8;
 	shared_ptr<BoardNode> current;
 	vector <GameBoard::Move> currentActionSet;
 public:

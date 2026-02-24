@@ -61,25 +61,28 @@ MCTS::MCTS(GameBoard board, set<Card> seen, GameBoard::Move lastMove) {
 
 shared_ptr<BoardNode> MCTS::selection(shared_ptr<BoardNode> base) {
 	shared_ptr<BoardNode> x = base;
-	float bestVal = -std::numeric_limits<float>::infinity();
-	if (x->getChildren().size() < x->actionSet().size() * this->veriance && !x->isTerminal()) {
-		bestVal = x->UCB(this->c);
-	}
-	if (base->getChildren().empty()) {
+	if (base.get() == this->root.get() && (base->getChildren().empty() || base->getChildren().size() < base->actionSet().size() * this->veriance)) {
 		return base;
 	}
-	for (auto node : base->getChildren()) {
-		if (node->UCB(this->c) > bestVal && !node->isTerminal()) {
+	float bestVal = -std::numeric_limits<float>::infinity();
+	if (base->getChildren().empty() || base->isTerminal()) {
+		return base;
+	}
+	//if (x->getChildren().size() < x->actionSet().size() * this->veriance && !x->isTerminal()) {
+	//	bestVal = x->UCB(this->c);
+	//}
 
+	for (auto node : base->getChildren()) {
+		bool isFullyExp = node->getChildren().size() == node->actionSet().size() * (this->veriance / (node->getDepth() + 1));
+		if (node->UCB(this->c) > bestVal && !isFullyExp) {
 			x = node;
 			bestVal = node->UCB(this->c);
-
 		}
 	}
-	if (x == base) {
-		return base;
-	}
 	return selection(x);
+	//if (x == base) {
+	//	return base;
+	//}
 }
 
 
@@ -101,15 +104,25 @@ GameBoard::Move MCTS::getAction() {
 	if (this->veriance < this->peakVeriance*0.8) { count = this->iterations / 2; }
 	if (this->veriance < this->peakVeriance/2) { count = this->iterations / 3; }
 	for (int i = 0; i < count; i++) {
-		if (!(this->current->getChildren().size() < this->current->actionSet().size() * (this->veriance / (this->current->getDepth() + 1)))) {
+		if (!(this->current->getChildren().size() <= this->current->actionSet().size() * (this->veriance / (this->current->getDepth() + 1) * this->percentToExpand))) {
 			this->current = selection(this->root);
 			this->currentActionSet = this->current->actionSet();
 		}
-		shared_ptr<BoardNode> n = expand();
-		int r = 0;
-		n->Rollout(&r);
-		n->Backpropergate(r);
+		if (this->current->isTerminal()) {
+			int r = 0;
+			this->current->Rollout(&r);
+			this->current->Backpropergate(r);
+		}
+		else {
+			shared_ptr<BoardNode> n = expand();
+			int r = 0;
+			n->Rollout(&r);
+			n->Backpropergate(r);
+		}
+	
 	}
+
+
 	shared_ptr<BoardNode> x = this->root;
 	int bestVal = -std::numeric_limits<int>::infinity();
 	for (auto node : this->root->getChildren()) {
