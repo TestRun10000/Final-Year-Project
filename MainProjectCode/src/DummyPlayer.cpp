@@ -75,6 +75,8 @@ void DummyPlayer::bestMoveRandom(float s) {
 
 
 void DummyPlayer::doMove(GameBoard::Move m) {
+	this->lastMove = m;
+	int currentScore = this->boardScore();
 	switch (m.moveType)
 	{
 	case draw:
@@ -97,6 +99,9 @@ void DummyPlayer::doMove(GameBoard::Move m) {
 	case drawToCol:
 		this->moveCardFromDrawn(m.toCol);
 		break;
+	}
+	if (currentScore <= this->LastTopScore) {
+		this->movesSinceLastScoreChange++;
 	}
 }
 

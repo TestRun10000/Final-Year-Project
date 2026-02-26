@@ -14,7 +14,7 @@ private:
 	float c = 1.414213562;//root 2
 	int rateOfDecay = 20;
 	int peakVeriance = 100;
-	float percentToExpand = 0.8;
+	float percentToExpand = 1;
 	shared_ptr<BoardNode> current;
 	vector <GameBoard::Move> currentActionSet;
 public:

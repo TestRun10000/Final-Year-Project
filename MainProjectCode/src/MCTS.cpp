@@ -65,7 +65,7 @@ shared_ptr<BoardNode> MCTS::selection(shared_ptr<BoardNode> base) {
 		return base;
 	}
 	float bestVal = -std::numeric_limits<float>::infinity();
-	if (base->getChildren().empty() || base->isTerminal()) {
+	if (base->getChildren().empty() || base->isTerminal()||base->getChildren().size() != base->actionSet().size() * (this->veriance / (base->getDepth() + 1))) {
 		return base;
 	}
 	//if (x->getChildren().size() < x->actionSet().size() * this->veriance && !x->isTerminal()) {
@@ -73,24 +73,21 @@ shared_ptr<BoardNode> MCTS::selection(shared_ptr<BoardNode> base) {
 	//}
 
 	for (auto node : base->getChildren()) {
-		bool isFullyExp = node->getChildren().size() == node->actionSet().size() * (this->veriance / (node->getDepth() + 1));
-		if (node->UCB(this->c) > bestVal && !isFullyExp) {
+		if (node->UCB(this->c) > bestVal) {
 			x = node;
 			bestVal = node->UCB(this->c);
 		}
 	}
 	return selection(x);
-	//if (x == base) {
-	//	return base;
-	//}
+	if (x == base) {
+		return base;
+	}
 }
 
 
 shared_ptr<BoardNode> MCTS::expand() {
+	//int actionsIndex = (this->current->getChildren().size())/ (this->veriance / (this->current->getDepth() + 1));
 	int actionsIndex = this->current->getChildren().size();
-	if (actionsIndex == 0) {
-		this->current;
-	}
 	actionsIndex = actionsIndex >= this->currentActionSet.size() ? actionsIndex % this->currentActionSet.size() : actionsIndex;
 	GameBoard newBoard = GameBoard();
 	newBoard.partailDeal(this->current->getUnseenCard(), this->current->getCurrentBoard());
@@ -104,14 +101,18 @@ GameBoard::Move MCTS::getAction() {
 	if (this->veriance < this->peakVeriance*0.8) { count = this->iterations / 2; }
 	if (this->veriance < this->peakVeriance/2) { count = this->iterations / 3; }
 	for (int i = 0; i < count; i++) {
-		if (!(this->current->getChildren().size() <= this->current->actionSet().size() * (this->veriance / (this->current->getDepth() + 1) * this->percentToExpand))) {
+		//std::cout << "Begin" << endl;
+		if ((this->current->getChildren().size() >= this->current->actionSet().size() * (this->veriance / (this->current->getDepth() + 1) * this->percentToExpand))) {
+			//std::cout << "Selection" << endl;
 			this->current = selection(this->root);
 			this->currentActionSet = this->current->actionSet();
 		}
 		if (this->current->isTerminal()) {
+			//std::cout << "Terminal" << endl;
 			int r = 0;
 			this->current->Rollout(&r);
 			this->current->Backpropergate(r);
+
 		}
 		else {
 			shared_ptr<BoardNode> n = expand();

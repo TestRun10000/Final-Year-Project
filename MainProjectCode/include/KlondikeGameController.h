@@ -8,7 +8,7 @@ class KlondikeGameController : public GameBoard
 
 
 
-private:
+protected:
 	int LastTopScore = 0;
 	int LastNumberOfMove = 1;
 	int movesSinceLastScoreChange = 0;

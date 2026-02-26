@@ -100,9 +100,10 @@ vector<KlondikeGameController::Move> KlondikeGameController::getAvailableMoves()
 
 void KlondikeGameController::doMove(KlondikeGameController::Move m)
 {
-	this->lastMove = m;
 	if (m.toCol == 0 && m.moveType==drawToCol)
 		int i = 0;
+	this->lastMove = m;
+	int currentScore = this->boardScore();
 	switch (m.moveType)
 	{
 	case draw:
@@ -125,6 +126,13 @@ void KlondikeGameController::doMove(KlondikeGameController::Move m)
 	case drawToCol:
 		this->moveCardFromDrawn(m.toCol);
 		break;
+	}
+	if (currentScore <= this->LastTopScore) {
+		this->movesSinceLastScoreChange++;
+	}
+	else {
+		this->LastTopScore = currentScore;
+		this->movesSinceLastScoreChange = 0;
 	}
 	//if (gameWon()) {
 	//	std::cout << "You Have Won";
@@ -166,13 +174,7 @@ bool KlondikeGameController::isGameOver() {
 	if (gameWon()) return true;
 	int currentScore = this->boardScore();
 	if (this->getAvailableMoves().size() == 0) return true;
-	if (currentScore <= this->LastTopScore) {
-		this->movesSinceLastScoreChange++;
-	}
-	else {
-		this->LastTopScore = currentScore;
-		this->movesSinceLastScoreChange = 0;
-	}
+
 	if (this->movesSinceLastScoreChange >= 28) {
 		//std::cout << "GameOver";
 		return true;
