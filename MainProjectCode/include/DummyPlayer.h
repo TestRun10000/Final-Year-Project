@@ -57,7 +57,6 @@ protected:
 	protected:
 
 		GameBoard copyBoard() {
-			/*GameBoard g =;*/
 			return GameBoard(*this->stockPile, *this->drawnCards, *this->columns, this->foundation);
 		}
 

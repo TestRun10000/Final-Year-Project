@@ -21,15 +21,6 @@ GameBoard::Move DummyPlayer::makeRandomMove() {
 	vector<KlondikeGameController::Move> moves = getAvailableMoves();
 	int j = (rand() % moves.size());
 	KlondikeGameController::Move m = generateMove(0, 0, 0, 0);
-	//int x = 0;
-	//for (const auto& mov : moves) {
-	//	if (x == j) {
-	//		m = mov;
-	//		break;
-	//	}
-	//	x++;
-	//}
-	//KlondikeGameController::doMove(moves.at(j));
 	return moves.at(j);
 }
 
