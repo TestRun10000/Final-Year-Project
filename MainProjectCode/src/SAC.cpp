@@ -43,140 +43,140 @@ BatchActionProbPair SAC::getActionBatch(torch::Tensor states, std::vector<std::v
 }
 
 
-//trajectorie SAC::rollout(bool Dummy,int batchSize){
-//	std::vector<std::vector<torch::Tensor>> states = std::vector <std::vector<torch::Tensor>>(batchSize);
-//	std::vector<std::vector<int>> actions = std::vector <std::vector<int>>(batchSize);
-//	std::vector<std::vector<float>> rewards = std::vector <std::vector<float>>(batchSize);
-//	std::vector<std::vector<float>> actionsProb = std::vector <std::vector<float>>(batchSize);
-//	std::vector<DummyPlayer> games= std::vector<DummyPlayer>(batchSize);
-//	float s[5] = { 10.818811,1.636655,6.108121,0.444798,6.098790 };
-//	BoardScorer bs = BoardScorer(s);
-//	for (int i = 0; i < batchSize; ++i) {
-//		games.at(i) = DummyPlayer(bs,0);
-//	}
-//	std::vector<float> prevRev=std::vector<float>(batchSize); 
-//	std::vector<bool> dones= std::vector<bool>(batchSize, false); 
-//	std::vector<int> movesTaken = std::vector<int>(batchSize, 0);
-//	int active_envs = batchSize;
-//	int movesMade = 0;
-//	int finalVal = 0;
-//	float rewardMean = 0.0;
-//	int actionsTaken = 0;
-//
-//
-//	while (active_envs>0 && movesMade<140)
-//	{
-//		std::vector<std::vector<GameBoard::Move>> currentBatchMoves;
-//		std::vector<std::vector<int>> currentBatchStates;
-//		std::vector<int> active_indices;
-//		std::vector<DummyPlayer> activeGame;
-//		for (int i = 0; i < batchSize;i++) {
-//			if (!dones.at(i)) {
-//				currentBatchStates.push_back(games.at(i).EncodeBoard());
-//				currentBatchMoves.push_back(games.at(i).getAvailableMoves());
-//				active_indices.push_back(i);
-//				activeGame.push_back(games.at(i));
-//				if (movesMade == 0) {
-//					prevRev.at(i) = games.at(i).numOfCardsRevealed();
-//				}
-//			}
-//		}
-//		std::vector<int> allStates;
-//		allStates.reserve(currentBatchStates.size() * (int)inputSize);
-//		for (const auto& state_vector : currentBatchStates) {
-//			for (int val : state_vector) {
-//				allStates.push_back(val);
-//			}
-//		}
-//		torch::Tensor batchStates_cpu = torch::tensor(allStates, torch::TensorOptions().dtype(torch::kFloat32)).view({ active_envs, (int)inputSize });
-//	
-//		torch::Tensor batchStates = batchStates_cpu.to(this->device);
-//		BatchActionProbPair outputBatch;
-//		torch::Tensor actionsBatch;
-//
-//		outputBatch = getActionBatch(batchStates, currentBatchMoves);
-//		actionsBatch= outputBatch.actions.to(torch::kCPU).squeeze(1);
-//		torch::Tensor probsBatch = outputBatch.log_probs.to(torch::kCPU);
-//
-//
-//		int activeIndex = 0;
-//		for (int i = 0; i < batchSize;i++) {
-//			if (!dones.at(i)) {
-//				int action = actionsBatch[activeIndex].item<int>();
-//				float actionProb = probsBatch[activeIndex].item<float>();
-//				float baseScore = games.at(i).boardScore();
-//				games.at(i).doMove(GameBoard::DecodeMove(action));
-//				//float reward = (games.at(i).boardScore() - baseScore)/10;
-//				//reward = std::signbit(reward) ? -0.2:0.2;
-//				float reward=0.0;
-//				float currentRev = games.at(i).numOfCardsRevealed();
-//				if (action == 1 || (action >= 8 && action < 14)) {//to foundation
-//					reward += 1.0f;
-//				}
-//				else if (action >= 14 && action < 17){// removed card from deck
-//					reward += 0.1f;
-//				}
-//				else if (prevRev.at(i) < currentRev) {//revealed a card
-//					reward += 0.5f;
-//				}
-//				prevRev.at(i) = currentRev;
-//				//if (action >= 2 && action < 8) {
-//				//	reward -= 1.0f;
-//				//}
-//				if (currentBatchStates.at(activeIndex).size() != (int)inputSize) {
-//					std::cout << "error";
-//
-//				}
-//				torch::Tensor curState = torch::tensor(currentBatchStates.at(activeIndex), torch::kFloat32).to(this->device);
-//				//torch::Tensor normalized_state = (curState - obs_mean) / (obs_std + 1e-8);
-//				actionsTaken++;
-//				states.at(i).push_back(curState);
-//				actions.at(i).push_back(action);
-//				rewards.at(i).push_back(reward);
-//				actionsProb.at(i).push_back(actionProb);
-//				rewardMean += reward;
-//				if (games.at(i).isGameOver()) {
-//					dones.at(i) = true;
-//					active_envs--;
-//					movesTaken.at(i) = movesMade;
-//					rewardMean -= reward;
-//					if (games.at(i).gameWon()) {
-//						if (!Dummy) {
-//							//std::cout << "Winner"<<std::endl;
-//							winCount++;
-//						}
-//						rewardMean += 1;
-//						rewards.at(i).back() = 20;
-//						
-//					}
-//					else {
-//						rewardMean -= 1;
-//						rewards.at(i).back() = -15;
-//					}
-//				}
-//				else if (movesMade == 139) {
-//					rewardMean -= reward;
-//					rewardMean -= 1;
-//					rewards.at(i).back() = -15;
-//					movesTaken.at(i) = movesMade;
-//				}
-//				activeIndex++;
-//			}
-//		}
-//		
-//		movesMade++;
-//	}
-//	rewardMean /= actionsTaken;
-//	float var = 0.0;
-//	for (auto i : rewards) for (auto j : i) 
-//		var+=std::pow(j - rewardMean, 2);
-//	var /= actionsTaken;
-//	var=std::sqrt(var)+1e-8;
-//	trajectorie tra = flatten(states, actions, computeRewardsToGo(rewards), actionsProb);
-//	//torch::Tensor adv = torch::tensor(advantageGAE(rewards, states,rewardMean,var),torch::kFloat).to(this->device);
-//
-//	return tra;
-//}
+trajectorie SAC::rollout(bool Dummy,int batchSize){
+	std::vector<std::vector<torch::Tensor>> states = std::vector <std::vector<torch::Tensor>>(batchSize);
+	std::vector<std::vector<int>> actions = std::vector <std::vector<int>>(batchSize);
+	std::vector<std::vector<float>> rewards = std::vector <std::vector<float>>(batchSize);
+	std::vector<std::vector<float>> actionsProb = std::vector <std::vector<float>>(batchSize);
+	std::vector<DummyPlayer> games= std::vector<DummyPlayer>(batchSize);
+	float s[5] = { 10.818811,1.636655,6.108121,0.444798,6.098790 };
+	BoardScorer bs = BoardScorer(s);
+	for (int i = 0; i < batchSize; ++i) {
+		games.at(i) = DummyPlayer(bs,0);
+	}
+	std::vector<float> prevRev=std::vector<float>(batchSize); 
+	std::vector<bool> dones= std::vector<bool>(batchSize, false); 
+	std::vector<int> movesTaken = std::vector<int>(batchSize, 0);
+	int active_envs = batchSize;
+	int movesMade = 0;
+	int finalVal = 0;
+	float rewardMean = 0.0;
+	int actionsTaken = 0;
+
+
+	while (active_envs>0 && movesMade<140)
+	{
+		std::vector<std::vector<GameBoard::Move>> currentBatchMoves;
+		std::vector<std::vector<int>> currentBatchStates;
+		std::vector<int> active_indices;
+		std::vector<DummyPlayer> activeGame;
+		for (int i = 0; i < batchSize;i++) {
+			if (!dones.at(i)) {
+				currentBatchStates.push_back(games.at(i).EncodeBoard());
+				currentBatchMoves.push_back(games.at(i).getAvailableMoves());
+				active_indices.push_back(i);
+				activeGame.push_back(games.at(i));
+				if (movesMade == 0) {
+					prevRev.at(i) = games.at(i).numOfCardsRevealed();
+				}
+			}
+		}
+		std::vector<int> allStates;
+		allStates.reserve(currentBatchStates.size() * (int)inputSize);
+		for (const auto& state_vector : currentBatchStates) {
+			for (int val : state_vector) {
+				allStates.push_back(val);
+			}
+		}
+		torch::Tensor batchStates_cpu = torch::tensor(allStates, torch::TensorOptions().dtype(torch::kFloat32)).view({ active_envs, (int)inputSize });
+	
+		torch::Tensor batchStates = batchStates_cpu.to(this->device);
+		BatchActionProbPair outputBatch;
+		torch::Tensor actionsBatch;
+
+		outputBatch = getActionBatch(batchStates, currentBatchMoves);
+		actionsBatch= outputBatch.actions.to(torch::kCPU).squeeze(1);
+		torch::Tensor probsBatch = outputBatch.log_probs.to(torch::kCPU);
+
+
+		int activeIndex = 0;
+		for (int i = 0; i < batchSize;i++) {
+			if (!dones.at(i)) {
+				int action = actionsBatch[activeIndex].item<int>();
+				float actionProb = probsBatch[activeIndex].item<float>();
+				float baseScore = games.at(i).boardScore();
+				games.at(i).doMove(GameBoard::DecodeMove(action));
+				//float reward = (games.at(i).boardScore() - baseScore)/10;
+				//reward = std::signbit(reward) ? -0.2:0.2;
+				float reward=0.0;
+				float currentRev = games.at(i).numOfCardsRevealed();
+				if (action == 1 || (action >= 8 && action < 14)) {//to foundation
+					reward += 1.0f;
+				}
+				else if (action >= 14 && action < 17){// removed card from deck
+					reward += 0.1f;
+				}
+				else if (prevRev.at(i) < currentRev) {//revealed a card
+					reward += 0.5f;
+				}
+				prevRev.at(i) = currentRev;
+				//if (action >= 2 && action < 8) {
+				//	reward -= 1.0f;
+				//}
+				if (currentBatchStates.at(activeIndex).size() != (int)inputSize) {
+					std::cout << "error";
+
+				}
+				torch::Tensor curState = torch::tensor(currentBatchStates.at(activeIndex), torch::kFloat32).to(this->device);
+				//torch::Tensor normalized_state = (curState - obs_mean) / (obs_std + 1e-8);
+				actionsTaken++;
+				states.at(i).push_back(curState);
+				actions.at(i).push_back(action);
+				rewards.at(i).push_back(reward);
+				actionsProb.at(i).push_back(actionProb);
+				rewardMean += reward;
+				if (games.at(i).isGameOver()) {
+					dones.at(i) = true;
+					active_envs--;
+					movesTaken.at(i) = movesMade;
+					rewardMean -= reward;
+					if (games.at(i).gameWon()) {
+						if (!Dummy) {
+							//std::cout << "Winner"<<std::endl;
+							winCount++;
+						}
+						rewardMean += 1;
+						rewards.at(i).back() = 20;
+						
+					}
+					else {
+						rewardMean -= 1;
+						rewards.at(i).back() = -15;
+					}
+				}
+				else if (movesMade == 139) {
+					rewardMean -= reward;
+					rewardMean -= 1;
+					rewards.at(i).back() = -15;
+					movesTaken.at(i) = movesMade;
+				}
+				activeIndex++;
+			}
+		}
+		
+		movesMade++;
+	}
+	rewardMean /= actionsTaken;
+	float var = 0.0;
+	for (auto i : rewards) for (auto j : i) 
+		var+=std::pow(j - rewardMean, 2);
+	var /= actionsTaken;
+	var=std::sqrt(var)+1e-8;
+	//trajectorie tra = flatten(states, actions, computeRewardsToGo(rewards), actionsProb);
+	//torch::Tensor adv = torch::tensor(advantageGAE(rewards, states,rewardMean,var),torch::kFloat).to(this->device);
+
+	return tra;
+}
 
 
 std::vector<std::vector<float>> SAC::computeRewardsToGo(std::vector<std::vector<float>> rewards) {

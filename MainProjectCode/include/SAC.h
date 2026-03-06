@@ -36,7 +36,8 @@ private:
     torch::optim::Adam actorOptim = torch::optim::Adam(this->actor.get()->parameters(), torch::optim::AdamOptions(this->lr));
     torch::optim::Adam criticAOp = torch::optim::Adam(this->criticA.get()->parameters(), torch::optim::AdamOptions(this->lr));
     torch::optim::Adam criticBOp = torch::optim::Adam(this->criticB.get()->parameters(), torch::optim::AdamOptions(this->lr));
-    buffer    
+    
+    ReplayBuffer buffer = ReplayBuffer(5000);
 
 
 	std::ofstream logger= std::ofstream((std::string)RESOURCES_PATH +"RLLogger.csv", std::ios_base::app);
@@ -68,8 +69,6 @@ private:
     LossPair criticLoss(trajectorie tra);
     torch::Tensor actorLoss(trajectorie tra);
     torch::Tensor entropyLoss(trajectorie tra);
-    
-    torch::Tensor predictQ(torch::Tensor state);
 
     void LoadActor(NetDeep model, std::string path);
     void LoadCritic(NetDeep model,std::string path);
