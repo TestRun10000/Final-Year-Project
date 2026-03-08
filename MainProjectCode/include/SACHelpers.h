@@ -49,44 +49,73 @@ struct trajectorie {
 	torch::Tensor nextState;
 	torch::Tensor done;
 
-	trajectorie(torch::Tensor state, int action, float reward, torch::Tensor nextState, bool done) {
-		this->state = state;
-		this->actions = torch::tensor(action,torch::kInt);
-		this->rewards = torch::tensor(reward, torch::kFloat);
-		this->nextState = nextState;
-		this->done = torch::tensor(done,torch::kBool);
+	trajectorie(torch::Tensor state, int action, torch::Tensor reward, torch::Tensor nextState, bool done, torch::Device device=torch::kCPU) {
+		this->state = state.clone().to(device);
+		this->action = torch::tensor(action,torch::kLong).to(device);
+		this->reward = reward.clone().to(device);
+		this->nextState = nextState.clone().to(device);
+		this->done = torch::tensor(done,torch::kFloat).to(device);
 		
 	}
 	trajectorie() {}
 };	
 
+struct trajectorieTensorBatch {
+	torch::Tensor state;
+	torch::Tensor action;
+	torch::Tensor reward;
+	torch::Tensor nextState;
+	torch::Tensor done;
+
+	trajectorieTensorBatch(std::vector<torch::Tensor> state, std::vector<torch::Tensor>  action, std::vector<torch::Tensor>  reward, std::vector<torch::Tensor>  nextState, std::vector<torch::Tensor>  done) {
+		this->state = torch::stack(state);
+		this->action = torch::stack(action);
+		this->reward = torch::stack(reward);
+		this->nextState = torch::stack(nextState);
+		this->done = torch::stack(done);
+
+	}
+	trajectorieTensorBatch() {}
+};
+
+
 class ReplayBuffer {
 private:
-	std::array<trajectorie> buffer;
+	std::vector<trajectorie> buffer;
 	int maxSize;
 	int index;
+	int size;
 	std::mt19937 gen;
 
 public:
 	ReplayBuffer(int maxSize) {
-		this->buffer = std::Array<trajectorie, maxSize>();
-		this->length = 0;
-		this.maxSize = maxSize;
+		this->buffer = std::vector<trajectorie>(maxSize);
+		this->index = 0;
+		this->size = 0;
+		this->maxSize = maxSize;
 	}
 
 	void push(trajectorie tra) {
-		int newIndex = this->index + 1 > this->maxSize ? 0:this->index + 1;
-		this->buffer.at(newIndex) = tra;
+		this->buffer.at(index) = tra;
+		trajectorie store = trajectorie(tra.state.clone(), tra.action.item<int>(), tra.reward.clone(), tra.nextState.clone(), tra.done.item<bool>());
+		int newIndex = this->index + 1 >= this->maxSize ? 0:this->index + 1;
+		this->index = newIndex;
+		this->size = this->size + 1 >= maxSize ? maxSize : this->size + 1;
+		//std::cout << "index:" << newIndex << std::endl;
 	}
 
-	std::vector<trajectorie> getSample(int size) {
-		std::vector<trajectorie> sample = std::vector<trajectorie>();
-		for (int i = 0; i < size; i++) {
-			std::uniform_int_distribution<> chance(0, index);
-			sample.append(this->buffer.at(chance(gen)));
+	std::vector<const trajectorie*> getSample(int sampleSize) {
+		std::vector<const trajectorie*> sample = std::vector<const trajectorie*>();
+		for (int i = 0; i < sampleSize; i++) {
+			std::uniform_int_distribution<> chance(0, this->size-1);
+			int pos = chance(gen);
+			sample.push_back(&this->buffer.at(pos));
 		}
+		
 		return sample;
 	}
+
+	int getSize() { return this->size; }
 
 };
 

@@ -13,26 +13,26 @@ endif()
 
 
 set(CUDAToolkit_ROOT "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v13.0")
-project ("SolitaireRL" LANGUAGES CXX CUDA)
+project ("SolitaireRLS" LANGUAGES CXX CUDA)
 #set(CMAKE_INSTALL_RPATH "$ORIGIN;${TORCH_INSTALL_PREFIX}/lib")
 set(CMAKE_PREFIX_PATH "C:/Users/jonat/source/25-26_CE301_sale_jonathan/MainProjectCode/External/libtorch")
 find_package(Torch REQUIRED)
-add_executable(SolitaireRL "${MY_SOURCES}")
+add_executable(SolitaireRLS "${MY_SOURCES}")
 # Add source to this project's executable.
 target_link_libraries(${PROJECT_NAME} ${TORCH_LIBRARIES})
 target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC RESOURCES_PATH="${CMAKE_CURRENT_SOURCE_DIR}/resources/")
-target_include_directories(SolitaireRL PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/")
+target_include_directories(SolitaireRLS PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/")
 if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET SolitaireRL PROPERTY CXX_STANDARD 20)
+  set_property(TARGET SolitaireRLS PROPERTY CXX_STANDARD 20)
 endif()
 set(TORCH_DLL_DIR "C:/Users/jonat/source/25-26_CE301_sale_jonathan/MainProjectCode/External/libtorch/lib")
 file(GLOB TORCH_DLLS "${TORCH_DLL_DIR}/*.dll")
 message(STATUS "Found DLLs: ${TORCH_DLLS}")
 foreach(DLL ${TORCH_DLLS})
-    add_custom_command(TARGET SolitaireRL POST_BUILD
+    add_custom_command(TARGET SolitaireRLS POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "${DLL}"
-        $<TARGET_FILE_DIR:SolitaireRL>
+        $<TARGET_FILE_DIR:SolitaireRLS>
     )
 endforeach()
 # TODO: Add tests and install targets if needed.

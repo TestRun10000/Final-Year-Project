@@ -4,8 +4,7 @@
 #include<fstream>
 #include<random>
 #include "DummyPlayer.h"
-#include"DummyAI.h"
-#include "PPO.h"
+#include "SAC.h"
 
 
 //#define _CRTDBG_MAP_ALLOC
@@ -191,11 +190,11 @@ void aneal() {
 
 int main()
 {
-	//PPO ppo = PPO();
-	//ppo.learn();
+	SAC ppo = SAC();
+	ppo.learn();
 	// 
-	KlondikeGameController g(0);
-	std::cout<<g.EncodeBoard().size()<<endl;
+	//KlondikeGameController g(0);
+	//std::cout<<g.EncodeBoard().size()<<endl;
 	//for (int i = 0; i < 905; i++) {
 	//	std::cout << i<<" : " << KlondikeGameController::moveToString(GameBoard::DecodeMove(i)) << endl;
 	//}

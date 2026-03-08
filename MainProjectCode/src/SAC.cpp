@@ -1,4 +1,4 @@
-#include <SAC.h>
+﻿#include <SAC.h>
 #include<torch/nn.h>
 
 
@@ -42,13 +42,9 @@ BatchActionProbPair SAC::getActionBatch(torch::Tensor states, std::vector<std::v
 		return BatchActionProbPair{ actions, log_probs };
 }
 
-
-trajectorie SAC::rollout(bool Dummy,int batchSize){
-	std::vector<std::vector<torch::Tensor>> states = std::vector <std::vector<torch::Tensor>>(batchSize);
-	std::vector<std::vector<int>> actions = std::vector <std::vector<int>>(batchSize);
-	std::vector<std::vector<float>> rewards = std::vector <std::vector<float>>(batchSize);
-	std::vector<std::vector<float>> actionsProb = std::vector <std::vector<float>>(batchSize);
+std::vector<trajectorie> SAC::rollout(int batchSize){
 	std::vector<DummyPlayer> games= std::vector<DummyPlayer>(batchSize);
+	std::vector<trajectorie> trajectories = std::vector<trajectorie>();
 	float s[5] = { 10.818811,1.636655,6.108121,0.444798,6.098790 };
 	BoardScorer bs = BoardScorer(s);
 	for (int i = 0; i < batchSize; ++i) {
@@ -105,7 +101,9 @@ trajectorie SAC::rollout(bool Dummy,int batchSize){
 				int action = actionsBatch[activeIndex].item<int>();
 				float actionProb = probsBatch[activeIndex].item<float>();
 				float baseScore = games.at(i).boardScore();
+				torch::Tensor state = torch::tensor(games.at(i).EncodeBoard(), torch::kFloat32).to(this->device);
 				games.at(i).doMove(GameBoard::DecodeMove(action));
+				torch::Tensor nextState = torch::tensor(games.at(i).EncodeBoard(), torch::kFloat32).to(this->device);
 				//float reward = (games.at(i).boardScore() - baseScore)/10;
 				//reward = std::signbit(reward) ? -0.2:0.2;
 				float reward=0.0;
@@ -127,139 +125,116 @@ trajectorie SAC::rollout(bool Dummy,int batchSize){
 					std::cout << "error";
 
 				}
-				torch::Tensor curState = torch::tensor(currentBatchStates.at(activeIndex), torch::kFloat32).to(this->device);
 				//torch::Tensor normalized_state = (curState - obs_mean) / (obs_std + 1e-8);
 				actionsTaken++;
-				states.at(i).push_back(curState);
-				actions.at(i).push_back(action);
-				rewards.at(i).push_back(reward);
-				actionsProb.at(i).push_back(actionProb);
 				rewardMean += reward;
-				if (games.at(i).isGameOver()) {
+				bool isDone = games.at(i).isGameOver();
+				if (isDone) {
 					dones.at(i) = true;
 					active_envs--;
 					movesTaken.at(i) = movesMade;
-					rewardMean -= reward;
 					if (games.at(i).gameWon()) {
-						if (!Dummy) {
-							//std::cout << "Winner"<<std::endl;
-							winCount++;
-						}
-						rewardMean += 1;
-						rewards.at(i).back() = 20;
+						winCount++;
+						
+						reward = 20;
 						
 					}
 					else {
-						rewardMean -= 1;
-						rewards.at(i).back() = -15;
+						reward  = -15;
 					}
 				}
 				else if (movesMade == 139) {
-					rewardMean -= reward;
-					rewardMean -= 1;
-					rewards.at(i).back() = -15;
+					reward = -15;
 					movesTaken.at(i) = movesMade;
 				}
+				//torch::Tensor vs = getQvalue(state);
+				//torch::Tensor td = vs + this->alpha * (reward + this->gamma * getQvalue(nextState) - vs);
+				trajectories.push_back(trajectorie(state, action, torch::tensor(reward,torch::kFloat), nextState, isDone,this->device));
 				activeIndex++;
 			}
 		}
-		
 		movesMade++;
 	}
-	rewardMean /= actionsTaken;
-	float var = 0.0;
-	for (auto i : rewards) for (auto j : i) 
-		var+=std::pow(j - rewardMean, 2);
-	var /= actionsTaken;
-	var=std::sqrt(var)+1e-8;
-	//trajectorie tra = flatten(states, actions, computeRewardsToGo(rewards), actionsProb);
-	//torch::Tensor adv = torch::tensor(advantageGAE(rewards, states,rewardMean,var),torch::kFloat).to(this->device);
 
-	return tra;
+	return trajectories;
 }
 
 
-std::vector<std::vector<float>> SAC::computeRewardsToGo(std::vector<std::vector<float>> rewards) {
-	std::vector<std::vector<float>> rewards2Go= std::vector<std::vector<float>>();
-	for (int j = 0; j < rewards.size(); j++) {
-		float discounted = 0;
-		std::vector<float> batch = std::vector<float>(rewards.at(j).size());
-		for (int i = rewards.at(j).size() - 1; i >= 0; --i) {
-			discounted = rewards.at(j).at(i) + this->gamma * discounted;
-			batch.at(i) = discounted;
-		}
-		rewards2Go.push_back(batch);
+torch::Tensor SAC::getQvalue(torch::Tensor state) {
+	return torch::min(this->criticA.get()->forward(state), this->criticB.get()->forward(state));
+}
+
+
+trajectorieTensorBatch SAC::getSample(int size) {
+	vector<torch::Tensor> state = vector<torch::Tensor>(size);
+	vector<torch::Tensor> reward = vector<torch::Tensor>(size);
+	vector<torch::Tensor> nextState = vector<torch::Tensor>(size);
+	vector<torch::Tensor> action = vector<torch::Tensor>(size);
+	vector<torch::Tensor> done = vector<torch::Tensor>(size);
+	int i = 0;
+	for (auto a : this->buffer.getSample(size)) {
+		state.at(i) = a->state;
+		reward.at(i) = a->reward;
+		nextState.at(i) = a->nextState;
+		done.at(i) = a->done;
+		action.at(i) = a->action;
+		i++;
 	}
-	return rewards2Go;
+	return trajectorieTensorBatch(state, action, reward, nextState, done);
 }
 
 
 
 
-
-//trajectorie SAC::flatten(std::vector <std::vector<torch::Tensor>> statesTwoD,
-//	std::vector <std::vector<int>> actionsTwoD, std::vector<std::vector<float>> rewardsTwoD, std::vector <std::vector<float>> nextStateTwoD,std::vector <std::vector<float>> doneTwoD) {
-//	std::vector<torch::Tensor> states = std::vector<torch::Tensor>();
-//	std::vector<int> actions = std::vector<int>();
-//	std::vector<float> nextState = std::vector<float>();
-//	std::vector<float> rewards = std::vector<float>();
-//	std::vector<bool> done= std::vector<bool>();
-//	for (int i = 0; i < actionsTwoD.size(); i++) {
-//		for (int j = 0; j < statesTwoD.at(i).size(); j++) {
-//			states.push_back(statesTwoD.at(i).at(j));
-//			actions.push_back(actionsTwoD.at(i).at(j));
-//			nextState.push_back(nextStateTwoD.at(i).at(j));
-//			rewards.push_back(rewardsTwoD.at(i).at(j));
-//			done.push_back(doneTwoD.at(i).at(j));
-//		}
-//	}
-//	return trajectorie(states, actions, rewards, nextState, done, this->device);
-//}
-
-LossPair SAC::criticLoss(trajectorie tra) {
-	torch::NoGradGuard no_grad;
-	torch::Tensor raw = this->actor.get()->forward(tra.nextState);
+LossPair SAC::getCriticLoss(trajectorieTensorBatch tra) {
+	//torch::NoGradGuard no_grad;
+	torch::Tensor raw = this->actor.get()->forward(tra.nextState).detach();
 	torch::Tensor actionProb = torch::softmax(raw, -1).to(this->device);
 	torch::Tensor actionProbLog = torch::log_softmax(raw, -1).to(this->device);
-
 	torch::Tensor next_q_values_target = this->criticTA.get()->forward(tra.nextState);
-	torch::Tensor next_q_values_target2 = this->criticTB.get()->forward(tra.nextState)
-		;
+	torch::Tensor next_q_values_target2 = this->criticTB.get()->forward(tra.nextState);
+		
 	torch::Tensor soft_state_values =torch::sum(actionProb * (torch::min(next_q_values_target, next_q_values_target2) - this->alpha * actionProbLog), 1);
-	torch::Tensor nextQ = tra.reward + ~tra.done * this->gamma * soft_state_values;
+	torch::Tensor not_done = (1 - tra.done.to(torch::kFloat32));
+	torch::Tensor nextQ = tra.reward + not_done * this->gamma * soft_state_values;
+	nextQ=nextQ.detach();
 
 	torch::Tensor soft_q = this->criticA.get()->forward(tra.state).gather(1, tra.action.unsqueeze(-1)).squeeze(-1);
 	torch::Tensor soft_q2 = this->criticB.get()->forward(tra.state).gather(1, tra.action.unsqueeze(-1)).squeeze(-1);
 
 	torch::nn::MSELoss mse_loss(torch::nn::MSELossOptions().reduction(torch::kNone));
-	torch::Tensor critic_error = mse_loss(soft_q, next_q_values_target);
-	torch::Tensor critic_error2 = mse_loss(soft_q2, next_q_values_target2);
+	torch::Tensor critic_error = mse_loss(soft_q, nextQ);
+	torch::Tensor critic_error2 = mse_loss(soft_q2, nextQ);
 	torch::Tensor criticLossA = critic_error.mean();
 	torch::Tensor criticLossB = critic_error2.mean();
+	
 	return LossPair(criticLossA,criticLossB);
 }
 
-torch::Tensor SAC::actorLoss(trajectorie tra) {
+torch::Tensor SAC::getActorLoss(trajectorieTensorBatch tra) {
 	torch::Tensor raw = this->actor.get()->forward(tra.state);
 	torch::Tensor actionProb = torch::softmax(raw, -1).to(this->device);
 	torch::Tensor actionProbLog = torch::log_softmax(raw, -1).to(this->device);
 
-	torch::Tensor q_values_local = this->criticA.get()->forward(tra.state);
-	torch::Tensor q_values_local2 = this->criticB.get()->forward(tra.state);
-
+	torch::Tensor q_values_local = this->criticA.get()->forward(tra.state).detach();
+	torch::Tensor q_values_local2 = this->criticB.get()->forward(tra.state).detach();
 	torch::Tensor inside_term =  torch::min(q_values_local, q_values_local2) - this->alpha * actionProbLog;
 	torch::Tensor policyLoss = torch::sum((actionProb * inside_term), 1).mean();
+
 	return policyLoss;
 }
 
-torch::Tensor SAC::entropyLoss(trajectorie tra) {
-	torch::Tensor actionProbLog = torch::log_softmax(this->actor.get()->forward(tra.state), -1).to(this->device);
-	return -(this->logAlpha * (actionProbLog + this->target_entropy).detach()).mean();
+torch::Tensor SAC::getEntropyLoss(trajectorieTensorBatch tra) {
+	torch::Tensor raw = this->actor->forward(tra.state).detach();
+	torch::Tensor log_prob = torch::log_softmax(raw, -1);
+	torch::Tensor prob = torch::softmax(raw, -1);
+	torch::Tensor expected_logp = (prob * log_prob).sum(1);  // shape [batch]
+	return -(this->logAlpha * (expected_logp.detach() + this->target_entropy)).mean();;
 }
 
 
 
-void SAC::LoadActor(NetDeep model,std::string path) {
+void SAC::LoadNetwork(NetDeep model,std::string path) {
 	try {
 		torch::load(model, path);
 		std::cout << path+" model loaded successfully.\n";
@@ -270,20 +245,10 @@ void SAC::LoadActor(NetDeep model,std::string path) {
 	}
 }
 
-void SAC::LoadCritic(NetDeep model, std::string path) {
-	try {
-		torch::load(model, path);
-		std::cout << path + " model loaded successfully.\n";
-		this->newNet = false;
-	}
-	catch (const c10::Error& e) {
-		std::cout << path + " moded did not load.\n";
-	}
-}
 
 void SAC::LogData(float totalReward, float Actorloss, float CriticLoss, float AdvantageMean, float MeanReward, float kl, float entropy, float explainedVar) {
-	this->logger << "," << totalReward << "," << Actorloss << "," << CriticLoss << "," << AdvantageMean << ",";
-	this->logger << MeanReward<<","<< kl << "," << entropy << "," << explainedVar <<","<<this->winCount << "\n";
+//	this->logger << "," << totalReward << "," << Actorloss << "," << CriticLoss << "," << AdvantageMean << ",";
+//	this->logger << MeanReward<<","<< kl << "," << entropy << "," << explainedVar <<","<<this->winCount << "\n";
 	std::cout << totalReward << "," << Actorloss << "," << CriticLoss << "," << AdvantageMean << ",";
 	std::cout<< MeanReward << "," << explainedVar <<"," << this->winCount << "," << ((float)this->winCount / ((float)this->batchSize*10)) * 100 << "\n";
 }
@@ -295,31 +260,47 @@ void SAC::learn() {
 	long double avgSumReward = 0;
 	for (int j = 1; j < this->numberLoops+1; j++) {
 		srand(1);//((int)j/500)+1
-		torch::Tensor ak;
-		trajectorie traActor = this->rollout(false,this->batchSize);
-
-
-			
-
+		int k = 0;
+		for (auto tra : this->rollout(this->rolloutBatchSize)) {
+			this->buffer.push(tra);
 		}
-		/*if (j > 1500) {
-			this->clip -= 0.0002;
-		}*/
-	/*	this->Actlr -= 0.00000005;
-		static_cast<torch::optim::AdamOptions&>(this->actorOptim.param_groups()[0].options())
-//			.lr(this->Actlr);*/
-//		//this->entropy_co -= 0.0045;
-//		if (j % 10 == 0 ||(j<=10 && this->newNet)) {
-//			LogData(torch::sum(rewards).item<float>()/this->batchSize, actorLossVal, 
-//				criticLossVal, ak.sum().item<float>(), (avgSumReward / 10) / this->batchSize, KL, entropyMean, explainedVar);
-//			avgSumReward = 0;
-//			this->winCount = 0;
-//			torch::save(this->actor, (std::string)RESOURCES_PATH + "actor.pth");
-//			torch::save(this->critic, (std::string)RESOURCES_PATH + "critic.pth");
-//		}
-//	}
-//	torch::save(this->actor, (std::string)RESOURCES_PATH + "actor.pth");
-//	torch::save(this->critic, (std::string)RESOURCES_PATH + "critic.pth");
+		float actorLossVal = 0.0;
+		float criticLossVal = 0.0;
+		float entropyLoss = 0.0;
+		if (this->buffer.getSize() > this->batchSize) {
+			for (int i = 0; i < this->updatesPerLoop; i++) {
+				//std::cout << "done" << std::endl;
+				trajectorieTensorBatch sample = getSample(this->batchSize);
+				LossPair criticLoss = getCriticLoss(sample);
+				this->criticAOp.zero_grad();
+				this->criticBOp.zero_grad();
+				this->actorOptim.zero_grad();
+				this->alphaOp.zero_grad();
+				criticLoss.lossA.backward();
+				this->criticAOp.step();
+				criticLossVal = torch::min(criticLoss.lossA, criticLoss.lossB).item<float>();
+				
+				criticLoss.lossB.backward();
+				this->criticBOp.step();
+
+				torch::Tensor actorLoss = getActorLoss(sample);
+				actorLossVal = actorLoss.item<float>();
+				actorLoss.backward();
+				this->actorOptim.step();
+				
+				torch::Tensor entropyLoss = getEntropyLoss(sample);
+				entropyLoss.backward();
+				this->alphaOp.step();
+				soft_update_target_networks(this->tau);
+				this->alpha = this->logAlpha.exp();
+			}
+		}
+
+		if (j % 10 == 0 ||(j<=10 && this->newNet)) {
+			LogData(0, actorLossVal, criticLossVal, 0, 0, 0, 0,0 );
+		}
+	}
+
 }
 
 float SAC::Test() {

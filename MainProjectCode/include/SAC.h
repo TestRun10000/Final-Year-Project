@@ -21,57 +21,62 @@ private:
     NetDeep criticTB = NetDeep((int)inputSize, (int)outputSize, 512);
     float gamma = 0.99;
     float lambda = 0.90;
-    int updatesPerLoop = 24;
+    int updatesPerLoop = 3;
     int numberLoops = 1000;
     float lr = 0.0003;
-    int batchSize = 30;
+    int rolloutBatchSize = 5;
+    int batchSize = 300;
     float entropy_co = 0;
     bool newNet = true;
     int winCount = 0;
-    float upadatFactor = 0.01;
-    float target_entropy = 0.98 * -std::log(1 / outputSize);
-    torch::Tensor logAlpha = torch::tensor(std::log(1), torch::requires_grad(true));
-    torch::Tensor alpha = logAlpha;
+    float tau = 0.05;
+    float target_entropy = 0.98 * -std::log(1.0f / (float)outputSize);
+    torch::Tensor logAlpha = torch::tensor(std::log(0.1),torch::TensorOptions().dtype(torch::kFloat32).requires_grad(true));
+    torch::Tensor alpha = logAlpha.exp();
     torch::optim::Adam alphaOp = torch::optim::Adam(std::vector<torch::Tensor>{logAlpha}, torch::optim::AdamOptions(this->lr));
     torch::optim::Adam actorOptim = torch::optim::Adam(this->actor.get()->parameters(), torch::optim::AdamOptions(this->lr));
     torch::optim::Adam criticAOp = torch::optim::Adam(this->criticA.get()->parameters(), torch::optim::AdamOptions(this->lr));
     torch::optim::Adam criticBOp = torch::optim::Adam(this->criticB.get()->parameters(), torch::optim::AdamOptions(this->lr));
     
-    ReplayBuffer buffer = ReplayBuffer(5000);
+    ReplayBuffer buffer = ReplayBuffer(10000);
 
 
 	std::ofstream logger= std::ofstream((std::string)RESOURCES_PATH +"RLLogger.csv", std::ios_base::app);
     torch::Device device = torch::kCPU;
 
 
-    trajectorie rollout(bool Dummy=false,int batchSize=1);
+    std::vector<trajectorie> rollout(int batchSize=1);
 
     std::vector<std::vector<float>> computeRewardsToGo(std::vector<std::vector<float>> rewards); 
 	BatchActionProbPair getActionBatch(torch::Tensor state, std::vector<std::vector <GameBoard::Move>> moves);
     ActionProbPair getAction(torch::Tensor state, vector < GameBoard::Move> moves);
 
-    void softUpdate(NetDeep target, NetDeep local, double tau) {
-        auto targetParam = target.get()->parameters();
-        auto localParam = target.get()->parameters();
-        for (int i = 0; i < targerParam.size(); i++) {
-            target_params[i].copy_(tau * local_params[i] + (1.0 - tau) * target_params[i]);
+    void softUpdate(NetDeep& target, NetDeep& local, double tau) {
+        auto targetParams = target->parameters();
+        auto localParams = local->parameters();
+
+        for (size_t i = 0; i < targetParams.size(); ++i) {
+            targetParams[i].data().copy_(
+                tau * localParams[i].data() + (1.0 - tau) * targetParams[i].data()
+            );
         }
     }
 
+            //std::cout << "done" << std::endl;
     void soft_update_target_networks(double tau) {
-        soft_update(*criticTA, *criticA, tau);
-        soft_update(*criticTB, *criticB, tau);
+        softUpdate(criticTA, criticA, tau);
+        softUpdate(criticTB, criticB, tau);
     }
 
-    trajectorie flatten(std::vector <std::vector<torch::Tensor>> states, 
-        std::vector <std::vector<int>> actions, std::vector<std::vector<float>> rewardsTwoD, std::vector <std::vector<float>> nextState, std::vector <std::vector<float>> done);
+    trajectorieTensorBatch getSample(int size);
 
-    LossPair criticLoss(trajectorie tra);
-    torch::Tensor actorLoss(trajectorie tra);
-    torch::Tensor entropyLoss(trajectorie tra);
+    torch::Tensor getQvalue(torch::Tensor state);
 
-    void LoadActor(NetDeep model, std::string path);
-    void LoadCritic(NetDeep model,std::string path);
+    LossPair getCriticLoss(trajectorieTensorBatch tra);
+    torch::Tensor getActorLoss(trajectorieTensorBatch tra);
+    torch::Tensor getEntropyLoss(trajectorieTensorBatch tra);
+
+    void LoadNetwork(NetDeep model, std::string path);
 
 	void LogData(float totalReward, float Actorloss,float CriticLoss,float AdvantageMean,float MeanReward,float kl,float entropy,float explainedVar);
 
@@ -79,13 +84,20 @@ public:
 	void learn();
 
 	float Test();
+
     SAC() {
         if (torch::cuda::is_available()) {
             this->device = torch::kCUDA;
             std::cout<<"using cuda" << std::endl;
         }
-        LoadActor(this->actor, (std::string)RESOURCES_PATH + "actor.pth");
+        LoadNetwork(this->actor, (std::string)RESOURCES_PATH + "actor.pth");
+        LoadNetwork(this->actor, (std::string)RESOURCES_PATH + "criticA.pth");
+        LoadNetwork(this->actor, (std::string)RESOURCES_PATH + "criticB.pth");
         this->actor->to(this->device);
+        this->criticA->to(this->device);
+        this->criticB->to(this->device);
+        this->criticTA->to(this->device);
+        this->criticTB->to(this->device);
 
     }
 };
