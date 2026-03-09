@@ -203,7 +203,7 @@ int main()
 	float avg = 0.0;
 	for (int i = 0; i < 10; i++) {
 		std::cout << "AI" << endl;
-		//avg+=ppo.Test();
+		avg+=ppo.Test();
 		std::cout << "Random Deals" << endl;
 		AIPlay(1000, 0);
 		std::cout << "-------------------------------" << std::endl<<endl;

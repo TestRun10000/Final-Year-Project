@@ -42,7 +42,43 @@ BatchActionProbPair SAC::getActionBatch(torch::Tensor states, std::vector<std::v
 		return BatchActionProbPair{ actions, log_probs };
 }
 
-std::vector<trajectorie> SAC::rollout(int batchSize){
+BatchActionProbPair SAC::getActionBatchDummy(std::vector<DummyPlayer> games, torch::Tensor states, std::vector<std::vector <GameBoard::Move>> moves) {
+	std::vector<int> actions = std::vector<int>();
+	int N = states.size(0);
+	for (auto game : games) {
+		actions.push_back(GameBoard::EncodeMove(game.makeBestMove()));
+	}
+
+	torch::Tensor tact = torch::tensor(actions, torch::kInt).to(this->device);
+	if (actions.empty()) {
+		return BatchActionProbPair(torch::empty({ 0 }, torch::kInt), torch::empty({ 0 }, torch::kFloat32));
+	}
+	//std::cout << "working"<<test++ << endl;
+	torch::Tensor tActions = torch::tensor(actions, torch::kInt).unsqueeze(1).to(this->device);
+
+	std::vector<int> flat_mask_data(N * (int)outputSize, 0);
+	for (int i = 0; i < N; ++i) {
+		for (const auto& m : moves.at(i)) {
+			int v = GameBoard::EncodeMove(m);
+			flat_mask_data.at(i * (int)outputSize + v) = 1;
+		}
+	}
+	torch::Tensor tBatchMask = torch::tensor(flat_mask_data, torch::TensorOptions().dtype(torch::kBool))
+		.view({ N, (int)outputSize })
+		.to(this->device);
+	//std::cout << "working"<< endl;
+
+	torch::Tensor mean = actor.get()->forward(states).to(this->device);
+	mean = mean.masked_fill(~tBatchMask, -1e9);
+	torch::Tensor logs = torch::log_softmax(mean, -1).to(this->device);
+	torch::Tensor log_probs = logs.gather(1, tActions).squeeze(1);
+
+	return BatchActionProbPair(tact, log_probs);
+}
+
+
+
+std::vector<trajectorie> SAC::rollout(int batchSize,bool dummy){
 	std::vector<DummyPlayer> games= std::vector<DummyPlayer>(batchSize);
 	std::vector<trajectorie> trajectories = std::vector<trajectorie>();
 	float s[5] = { 10.818811,1.636655,6.108121,0.444798,6.098790 };
@@ -89,9 +125,14 @@ std::vector<trajectorie> SAC::rollout(int batchSize){
 		torch::Tensor batchStates = batchStates_cpu.to(this->device);
 		BatchActionProbPair outputBatch;
 		torch::Tensor actionsBatch;
-
-		outputBatch = getActionBatch(batchStates, currentBatchMoves);
-		actionsBatch= outputBatch.actions.to(torch::kCPU).squeeze(1);
+		if (dummy) {
+			outputBatch = getActionBatchDummy(activeGame, batchStates, currentBatchMoves);
+			actionsBatch = outputBatch.actions.to(torch::kCPU);
+		}
+		else {
+			outputBatch = getActionBatch(batchStates, currentBatchMoves);
+			actionsBatch = outputBatch.actions.to(torch::kCPU).squeeze(1);
+		}
 		torch::Tensor probsBatch = outputBatch.log_probs.to(torch::kCPU);
 
 
@@ -261,9 +302,9 @@ void SAC::learn() {
 	for (int j = 1; j < this->numberLoops+1; j++) {
 		srand(1);//((int)j/500)+1
 		int k = 0;
-		for (auto tra : this->rollout(this->rolloutBatchSize)) {
+		/*for (auto tra : this->rollout(this->rolloutBatchSize)) {
 			this->buffer.push(tra);
-		}
+		}*/
 		float actorLossVal = 0.0;
 		float criticLossVal = 0.0;
 		float entropyLoss = 0.0;
@@ -298,6 +339,11 @@ void SAC::learn() {
 
 		if (j % 10 == 0 ||(j<=10 && this->newNet)) {
 			LogData(0, actorLossVal, criticLossVal, 0, 0, 0, 0,0 );
+			this->winCount = 0;
+			torch::save(this->actor, (std::string)RESOURCES_PATH + "actor.pth");
+			torch::save(this->criticA, (std::string)RESOURCES_PATH + "criticA.pth");
+			torch::save(this->criticB, (std::string)RESOURCES_PATH + "criticB.pth");
+
 		}
 	}
 

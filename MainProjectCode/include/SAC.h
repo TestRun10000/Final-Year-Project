@@ -21,7 +21,7 @@ private:
     NetDeep criticTB = NetDeep((int)inputSize, (int)outputSize, 512);
     float gamma = 0.99;
     float lambda = 0.90;
-    int updatesPerLoop = 3;
+    int updatesPerLoop = 7;
     int numberLoops = 1000;
     float lr = 0.0003;
     int rolloutBatchSize = 5;
@@ -38,18 +38,21 @@ private:
     torch::optim::Adam criticAOp = torch::optim::Adam(this->criticA.get()->parameters(), torch::optim::AdamOptions(this->lr));
     torch::optim::Adam criticBOp = torch::optim::Adam(this->criticB.get()->parameters(), torch::optim::AdamOptions(this->lr));
     
-    ReplayBuffer buffer = ReplayBuffer(10000);
+    ReplayBuffer buffer = ReplayBuffer(50000);
 
 
 	std::ofstream logger= std::ofstream((std::string)RESOURCES_PATH +"RLLogger.csv", std::ios_base::app);
     torch::Device device = torch::kCPU;
 
 
-    std::vector<trajectorie> rollout(int batchSize=1);
+    std::vector<trajectorie> rollout(int batchSize=1, bool dummy = false);
 
     std::vector<std::vector<float>> computeRewardsToGo(std::vector<std::vector<float>> rewards); 
 	BatchActionProbPair getActionBatch(torch::Tensor state, std::vector<std::vector <GameBoard::Move>> moves);
     ActionProbPair getAction(torch::Tensor state, vector < GameBoard::Move> moves);
+    BatchActionProbPair getActionBatchDummy(std::vector<DummyPlayer> games, torch::Tensor states, std::vector<std::vector <GameBoard::Move>> moves);
+
+
 
     void softUpdate(NetDeep& target, NetDeep& local, double tau) {
         auto targetParams = target->parameters();
@@ -93,11 +96,17 @@ public:
         LoadNetwork(this->actor, (std::string)RESOURCES_PATH + "actor.pth");
         LoadNetwork(this->actor, (std::string)RESOURCES_PATH + "criticA.pth");
         LoadNetwork(this->actor, (std::string)RESOURCES_PATH + "criticB.pth");
+        soft_update_target_networks(this->tau);
         this->actor->to(this->device);
         this->criticA->to(this->device);
         this->criticB->to(this->device);
         this->criticTA->to(this->device);
         this->criticTB->to(this->device);
+        if (this->newNet) {
+            for (auto tra : this->rollout(50,true)) {
+                this->buffer.push(tra);
+            }
+        }
 
     }
 };
