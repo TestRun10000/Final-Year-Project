@@ -1,5 +1,6 @@
 // Pin definitions
 #include<EEPROM.h>
+#include<Servo.h>
 
 const int microsPin = 8;
 const int stepPinX = 9;
@@ -11,12 +12,20 @@ const int enablePin = 2;
 
 float distPerStep=0.8;
 float distPerStepY=0.8;
+float distPerDegZ=0.263;
+float heightPerCard=0.266;
 
 float currentX=0.0;
 float currentY=0.0;
+float currentZ=47.34;
 
 float maxY=427.5;
 float maxX=427.5;
+float maxZ=47.34;
+float maxDeckHeight=13.85;
+
+Servo centreArm; 
+
 
 #define FORWARD HIGH
 #define BACKWARD LOW
@@ -35,7 +44,7 @@ void rotateMotorX(int direction) {
 }
 
 void rotateMotorY(int direction) {
-    digitalWrite(dirPinX, direction);
+    digitalWrite(dirPinY, direction);
     for (int i = 0; i < 200; i++) {
         digitalWrite(stepPinY, HIGH);
         delayMicroseconds(50);
@@ -92,9 +101,15 @@ void moveDistance(float x,float y){
   savePos();
 }
 
-void moveToPos(float x,float y){
+void moveToPos(float x,float y,float z){
+
   moveDistance(x-currentX,y-currentY);
   savePos();
+  if(z>=0 &&z<=maxZ){
+    z=maxZ-z; 
+    centreArm.write((int)(z/distPerDegZ));
+  }
+
 }
 
 void loadPos(){
@@ -114,8 +129,10 @@ void setup() {
     pinMode(stepPinY, OUTPUT);
     pinMode(dirPinY, OUTPUT);
     pinMode(enablePin, OUTPUT);
+    centreArm.attach(3);
+    centreArm.write(0);
     Serial.begin(9600);
-    // savePos();
+    savePos();
     Serial.print("\nX: ");Serial.print(currentX);
     Serial.print(" , Y: ");Serial.println(currentY);
     // Enable the driver
@@ -124,12 +141,8 @@ void setup() {
 
     loadPos();
     Serial.print("X: ");Serial.print(currentX);
-    Serial.print(" , Y: ");Serial.println(currentY);
-    Serial.println("TMC2209 Basic Control Ready");
-    // moveDistance(60.0);
-    moveDistance(100,-150);
-    Serial.print("X: ");Serial.print(currentX);
-    Serial.print(" , Y: ");Serial.println(currentY);
+    Serial.print(" , Y: ");Serial.print(currentY);
+    Serial.print(" , Z: ");Serial.println(currentZ);
     Serial.println("Done"); 
   // put your setup code here, to run once:
 }
@@ -141,12 +154,17 @@ void loop() {
     input = input.substring(1, input.length() - 1);
     int commaIndex = input.indexOf(','); 
     double x = input.substring(0, commaIndex).toDouble(); 
-    double y = input.substring(commaIndex + 1).toDouble();
+    String yS = input.substring(commaIndex + 1);
+    commaIndex = yS.indexOf(','); 
+    double y = yS.substring(0,commaIndex).toDouble();
+    double z = yS.substring(commaIndex + 1).toDouble();
     Serial.print(x);
     Serial.print(" , ");
     Serial.print(y);
+    Serial.print(" , ");
+    Serial.print(z);
     Serial.print("\n");
-    moveToPos(x,y);
+    moveToPos(x,y,z);
   }
   // put your main code here, to run repeatedly:
 
