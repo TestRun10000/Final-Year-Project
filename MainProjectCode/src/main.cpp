@@ -190,8 +190,8 @@ void aneal() {
 
 int main()
 {
-	SAC ppo = SAC();
-	ppo.learn();
+	SAC sac = SAC();
+	sac.learn();
 	// 
 	//KlondikeGameController g(0);
 	//std::cout<<g.EncodeBoard().size()<<endl;
@@ -203,7 +203,7 @@ int main()
 	float avg = 0.0;
 	for (int i = 0; i < 10; i++) {
 		std::cout << "AI" << endl;
-		avg+=ppo.Test();
+		avg+=sac.Test();
 		std::cout << "Random Deals" << endl;
 		AIPlay(1000, 0);
 		std::cout << "-------------------------------" << std::endl<<endl;

@@ -177,15 +177,15 @@ std::vector<trajectorie> SAC::rollout(int batchSize,bool dummy){
 					if (games.at(i).gameWon()) {
 						winCount++;
 						
-						reward = 20;
+						reward = 10;
 						
 					}
 					else {
-						reward  = -15;
+						reward  = -5;
 					}
 				}
 				else if (movesMade == 139) {
-					reward = -15;
+					reward = -5;
 					movesTaken.at(i) = movesMade;
 				}
 				//torch::Tensor vs = getQvalue(state);
@@ -246,9 +246,20 @@ LossPair SAC::getCriticLoss(trajectorieTensorBatch tra) {
 	torch::nn::MSELoss mse_loss(torch::nn::MSELossOptions().reduction(torch::kNone));
 	torch::Tensor critic_error = mse_loss(soft_q, nextQ);
 	torch::Tensor critic_error2 = mse_loss(soft_q2, nextQ);
+	
+	std::vector<float> newWeights;
+	newWeights.reserve(critic_error.size(0));
+	torch::Tensor td1 = (soft_q - nextQ).detach().abs();
+	torch::Tensor td2 = (soft_q2 - nextQ).detach().abs();
+	torch::Tensor prio = torch::min(td1, td2);
+	prio = torch::clamp(prio, 0.001f, 1.0f);
+	for (int i = 0; i < critic_error.size(0); i++) {
+		newWeights.push_back(prio[i].item<float>());
+	}
+	this->buffer.updateWeights(newWeights);
+
 	torch::Tensor criticLossA = critic_error.mean();
 	torch::Tensor criticLossB = critic_error2.mean();
-	
 	return LossPair(criticLossA,criticLossB);
 }
 
@@ -259,7 +270,8 @@ torch::Tensor SAC::getActorLoss(trajectorieTensorBatch tra) {
 
 	torch::Tensor q_values_local = this->criticA.get()->forward(tra.state).detach();
 	torch::Tensor q_values_local2 = this->criticB.get()->forward(tra.state).detach();
-	torch::Tensor inside_term =  torch::min(q_values_local, q_values_local2) - this->alpha * actionProbLog;
+	torch::Tensor inside_term =  -torch::min(q_values_local, q_values_local2)+this->alpha * actionProbLog;
+
 	torch::Tensor policyLoss = torch::sum((actionProb * inside_term), 1).mean();
 
 	return policyLoss;
@@ -270,7 +282,7 @@ torch::Tensor SAC::getEntropyLoss(trajectorieTensorBatch tra) {
 	torch::Tensor log_prob = torch::log_softmax(raw, -1);
 	torch::Tensor prob = torch::softmax(raw, -1);
 	torch::Tensor expected_logp = (prob * log_prob).sum(1);  // shape [batch]
-	return -(this->logAlpha * (expected_logp.detach() + this->target_entropy)).mean();;
+	return -(this->logAlpha * (expected_logp.detach() + this->target_entropy)).mean();
 }
 
 
@@ -287,28 +299,33 @@ void SAC::LoadNetwork(NetDeep model,std::string path) {
 }
 
 
-void SAC::LogData(float totalReward, float Actorloss, float CriticLoss, float AdvantageMean, float MeanReward, float kl, float entropy, float explainedVar) {
-//	this->logger << "," << totalReward << "," << Actorloss << "," << CriticLoss << "," << AdvantageMean << ",";
-//	this->logger << MeanReward<<","<< kl << "," << entropy << "," << explainedVar <<","<<this->winCount << "\n";
-	std::cout << totalReward << "," << Actorloss << "," << CriticLoss << "," << AdvantageMean << ",";
-	std::cout<< MeanReward << "," << explainedVar <<"," << this->winCount << "," << ((float)this->winCount / ((float)this->batchSize*10)) * 100 << "\n";
+void SAC::LogData(float Actorloss, float CriticLoss,float MeanReward, float entropyLoss) {
+	this->logger << Actorloss << "," << CriticLoss << ",";
+	this->logger << MeanReward << "," << this->winCount << "," << ((float)this->winCount / ((float)this->rolloutBatchSize * 10)) * 100 << "," << entropyLoss << "\n";
+	std::cout << Actorloss << "," << CriticLoss << ",";
+	std::cout << MeanReward << "," << this->winCount << "," << ((float)this->winCount / ((float)this->rolloutBatchSize * 10)) * 100 << "," << entropyLoss;
+	std::cout<<","<<this->alpha.item<float>()<<","<<this->logAlpha.item<float>() << "\n";
 }
 
 void SAC::learn() {
 	trajectorie winTra;
 	//std::cout<<"|reward2Go|Actorloss|CriticLoss|AdvantageMean|MeanReward|KL|EntropyMean|Explained Var|Win Count"<<endl;
-	std::cout<<"|reward2Go|Actorloss|CriticLoss|AdvantageMean|MeanReward|Explained Var|Win Count"<<endl;
+	std::cout<<"Actorloss|CriticLoss|MeanReward|Win Count|Win Percentage|EntropyLoss|Entropy"<<endl;
 	long double avgSumReward = 0;
 	for (int j = 1; j < this->numberLoops+1; j++) {
-		srand(1);//((int)j/500)+1
+		srand(j%200);
+		float meanReward = 0.0;
 		int k = 0;
-		/*for (auto tra : this->rollout(this->rolloutBatchSize)) {
+		for (auto tra : this->rollout(this->rolloutBatchSize)) {
 			this->buffer.push(tra);
-		}*/
+			meanReward += tra.reward.item<float>();
+			k++;
+		}
+		meanReward /= k;
 		float actorLossVal = 0.0;
 		float criticLossVal = 0.0;
-		float entropyLoss = 0.0;
-		if (this->buffer.getSize() > this->batchSize) {
+		float entropyLossVal = 0.0;
+		if (this->buffer.getSize() >= this->batchSize) {
 			for (int i = 0; i < this->updatesPerLoop; i++) {
 				//std::cout << "done" << std::endl;
 				trajectorieTensorBatch sample = getSample(this->batchSize);
@@ -330,20 +347,27 @@ void SAC::learn() {
 				this->actorOptim.step();
 				
 				torch::Tensor entropyLoss = getEntropyLoss(sample);
+				entropyLossVal = entropyLoss.item<float>();
 				entropyLoss.backward();
 				this->alphaOp.step();
-				soft_update_target_networks(this->tau);
 				this->alpha = this->logAlpha.exp();
+				soft_update_target_networks(this->tau);
 			}
 		}
 
 		if (j % 10 == 0 ||(j<=10 && this->newNet)) {
-			LogData(0, actorLossVal, criticLossVal, 0, 0, 0, 0,0 );
+			LogData(actorLossVal, criticLossVal,meanReward,entropyLossVal );
 			this->winCount = 0;
 			torch::save(this->actor, (std::string)RESOURCES_PATH + "actor.pth");
 			torch::save(this->criticA, (std::string)RESOURCES_PATH + "criticA.pth");
 			torch::save(this->criticB, (std::string)RESOURCES_PATH + "criticB.pth");
 
+		}
+		if (j % 100 == 0) {
+			//std::cout << "Clear" << std::endl;
+	/*		this->logAlpha = torch::tensor(std::log(0.1), torch::TensorOptions().dtype(torch::kFloat32).requires_grad(true));
+			this->alpha = logAlpha.exp();
+			this->buffer.clearBuffer();*/
 		}
 	}
 

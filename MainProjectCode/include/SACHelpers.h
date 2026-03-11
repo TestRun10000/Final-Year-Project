@@ -85,18 +85,24 @@ private:
 	int maxSize;
 	int index;
 	int size;
+	std::vector<float> weights;
+	std::vector<int> sampleIndex;
 	std::mt19937 gen;
 
 public:
 	ReplayBuffer(int maxSize) {
 		this->buffer = std::vector<trajectorie>(maxSize);
+		this->weights = std::vector<float>(maxSize);
 		this->index = 0;
 		this->size = 0;
 		this->maxSize = maxSize;
+		std::random_device rd;
+		gen = std::mt19937(rd());
 	}
 
 	void push(trajectorie tra) {
 		this->buffer.at(index) = tra;
+		this->weights.at(index) = 0.01;
 		trajectorie store = trajectorie(tra.state.clone(), tra.action.item<int>(), tra.reward.clone(), tra.nextState.clone(), tra.done.item<bool>());
 		int newIndex = this->index + 1 >= this->maxSize ? 0:this->index + 1;
 		this->index = newIndex;
@@ -106,16 +112,50 @@ public:
 
 	std::vector<const trajectorie*> getSample(int sampleSize) {
 		std::vector<const trajectorie*> sample = std::vector<const trajectorie*>();
-		for (int i = 0; i < sampleSize; i++) {
-			std::uniform_int_distribution<> chance(0, this->size-1);
-			int pos = chance(gen);
-			sample.push_back(&this->buffer.at(pos));
+		this->sampleIndex = std::vector<int>();
+		std::vector<float> probs = std::vector<float>(this->size);
+		float sum = 0;
+		for (int i = 0; i < this->size; i++) {
+			probs.at(i) = this->weights.at(i) + 0.0001;
+			sum+= this->weights.at(i) + 0.0001;
 		}
+		for (int i = 0; i < this->size; i++) {
+			probs.at(i) /= sum;
+		}
+		for (int s = 0; s < sampleSize; s++) {
+			std::discrete_distribution<> dist(probs.begin(), probs.end());
+			int chosen = dist(gen);
+			this->sampleIndex.push_back(chosen);
+			sample.push_back(&this->buffer.at(chosen));
+
+			probs.at(chosen) = 0.0f;
+			sum = std::accumulate(probs.begin(), probs.end(), 0.0f);
+			if (sum == 0.0f) break;
+
+			for (int i = 0; i < this->size; i++) {
+				probs.at(i) /= sum;
+			}
+		}
+	
 		
 		return sample;
 	}
 
+	void updateWeights(std::vector<float> newWeights) {
+		int j = 0;
+		for (auto i : this->sampleIndex) {
+			this->weights.at(i) = std::min(newWeights.at(j++),0.01f);
+		}
+	}
+
 	int getSize() { return this->size; }
+
+	void clearBuffer() {
+		this->buffer = std::vector<trajectorie>(maxSize);
+		this->weights = std::vector<float>(maxSize);
+		this->index = 0;
+		this->size = 0;
+	}
 
 };
 

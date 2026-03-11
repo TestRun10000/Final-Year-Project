@@ -7,8 +7,8 @@
 #include<vector>
 #include<fstream>
 
-#define inputSize 124
-#define outputSize 905
+#define inputSize 30
+#define outputSize 126
 
 class SAC
 {
@@ -21,16 +21,16 @@ private:
     NetDeep criticTB = NetDeep((int)inputSize, (int)outputSize, 512);
     float gamma = 0.99;
     float lambda = 0.90;
-    int updatesPerLoop = 7;
     int numberLoops = 1000;
     float lr = 0.0003;
     int rolloutBatchSize = 5;
-    int batchSize = 300;
+    int batchSize = 256;
+    int updatesPerLoop = 8;
     float entropy_co = 0;
     bool newNet = true;
     int winCount = 0;
-    float tau = 0.05;
-    float target_entropy = 0.98 * -std::log(1.0f / (float)outputSize);
+    float tau = 0.005;
+    float target_entropy = 0.98 * -std::log((float)outputSize);
     torch::Tensor logAlpha = torch::tensor(std::log(0.1),torch::TensorOptions().dtype(torch::kFloat32).requires_grad(true));
     torch::Tensor alpha = logAlpha.exp();
     torch::optim::Adam alphaOp = torch::optim::Adam(std::vector<torch::Tensor>{logAlpha}, torch::optim::AdamOptions(this->lr));
@@ -81,7 +81,7 @@ private:
 
     void LoadNetwork(NetDeep model, std::string path);
 
-	void LogData(float totalReward, float Actorloss,float CriticLoss,float AdvantageMean,float MeanReward,float kl,float entropy,float explainedVar);
+	void LogData(float Actorloss, float CriticLoss, float MeanReward, float entropyLoss);
 
 public:
 	void learn();
@@ -102,8 +102,9 @@ public:
         this->criticB->to(this->device);
         this->criticTA->to(this->device);
         this->criticTB->to(this->device);
+        srand(1);
         if (this->newNet) {
-            for (auto tra : this->rollout(50,true)) {
+            for (auto tra : this->rollout(100,true)) {
                 this->buffer.push(tra);
             }
         }
