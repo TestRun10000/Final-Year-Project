@@ -30,7 +30,7 @@ private:
     bool newNet = true;
     int winCount = 0;
     float tau = 0.005;
-    float target_entropy = 0.98 * -std::log((float)outputSize);
+    float target_entropy = 0.7 * -std::log((float)outputSize);
     torch::Tensor logAlpha = torch::tensor(std::log(0.1),torch::TensorOptions().dtype(torch::kFloat32).requires_grad(true));
     torch::Tensor alpha = logAlpha.exp();
     torch::optim::Adam alphaOp = torch::optim::Adam(std::vector<torch::Tensor>{logAlpha}, torch::optim::AdamOptions(this->lr));
@@ -108,6 +108,7 @@ public:
                 this->buffer.push(tra);
             }
         }
+        this->winCount = 0;
 
     }
 };
