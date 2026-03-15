@@ -7,8 +7,8 @@
 #include<vector>
 #include<fstream>
 
-#define inputSize 30
-#define outputSize 126
+#define inputSize 124
+#define outputSize 905
 
 class SAC
 {
@@ -23,7 +23,7 @@ private:
     float lambda = 0.90;
     int numberLoops = 1000;
     float lr = 0.0003;
-    int rolloutBatchSize = 5;
+    int rolloutBatchSize = 10;
     int batchSize = 256;
     int updatesPerLoop = 8;
     float entropy_co = 0;

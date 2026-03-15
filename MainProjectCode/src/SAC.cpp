@@ -46,7 +46,7 @@ BatchActionProbPair SAC::getActionBatchDummy(std::vector<DummyPlayer> games, tor
 	std::vector<int> actions = std::vector<int>();
 	int N = states.size(0);
 	for (auto game : games) {
-		actions.push_back(GameBoard::EncodeMove(game.bestMoveRandom()));
+		actions.push_back(GameBoard::EncodeMove(game.makeBestMove()));
 	}
 
 	torch::Tensor tact = torch::tensor(actions, torch::kInt).to(this->device);
@@ -95,7 +95,6 @@ std::vector<trajectorie> SAC::rollout(int batchSize,bool dummy){
 	float rewardMean = 0.0;
 	int actionsTaken = 0;
 
-
 	while (active_envs>0 && movesMade<140)
 	{
 		std::vector<std::vector<GameBoard::Move>> currentBatchMoves;
@@ -121,7 +120,6 @@ std::vector<trajectorie> SAC::rollout(int batchSize,bool dummy){
 			}
 		}
 		torch::Tensor batchStates_cpu = torch::tensor(allStates, torch::TensorOptions().dtype(torch::kFloat32)).view({ active_envs, (int)inputSize });
-	
 		torch::Tensor batchStates = batchStates_cpu.to(this->device);
 		BatchActionProbPair outputBatch;
 		torch::Tensor actionsBatch;
@@ -149,10 +147,10 @@ std::vector<trajectorie> SAC::rollout(int batchSize,bool dummy){
 				//reward = std::signbit(reward) ? -0.2:0.2;
 				float reward=0.0;
 				float currentRev = games.at(i).numOfCardsRevealed();
-				if (action == 1 || (action >= 8 && action < 14)) {//to foundation
+				if (action == 1 || (action >= 30 && action < 58)) {//to foundation
 					reward += 1.0f;
 				}
-				else if (action >= 14 && action < 17){// removed card from deck
+				else if (action >= 58 && action < 65){// removed card from deck
 					reward += 0.1f;
 				}
 				else if (prevRev.at(i) < currentRev) {//revealed a card
@@ -175,8 +173,7 @@ std::vector<trajectorie> SAC::rollout(int batchSize,bool dummy){
 					active_envs--;
 					movesTaken.at(i) = movesMade;
 					if (games.at(i).gameWon()) {
-						winCount++;
-						
+						this->winCount++;
 						reward = 10;
 						
 					}
@@ -367,7 +364,7 @@ void SAC::learn() {
 			//std::cout << "Clear" << std::endl;
 			this->logAlpha = torch::tensor(std::log(0.1), torch::TensorOptions().dtype(torch::kFloat32).requires_grad(true));
 			this->alpha = logAlpha.exp();
-			this->buffer.clearBuffer();
+			//this->buffer.clearBuffer();
 		}
 	}
 

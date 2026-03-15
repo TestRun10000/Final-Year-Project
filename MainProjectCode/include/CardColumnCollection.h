@@ -4,13 +4,13 @@
 class CardColumnCollection
 {
 private:
-	CardColumn columns[3];
-	int size = 3;
+	CardColumn columns[7];
+	int size = 7;
 
 public:
 	CardColumnCollection() {
 		//this->columns =(CardColumn**) calloc(7, sizeof(CardColumn*));
-		for (int i = 0; i < 3; i++) { this->columns[i] = CardColumn(); }
+		for (int i = 0; i < 7; i++) { this->columns[i] = CardColumn(); }
 		//this->size = 7;
 	}
 
