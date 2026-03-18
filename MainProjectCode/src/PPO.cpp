@@ -148,10 +148,10 @@ advantegeTrajectorie PPO::rollout(bool Dummy,int batchSize){
 				//reward = std::signbit(reward) ? -0.2:0.2;
 				float reward=0.0;
 				float currentRev = games.at(i).numOfCardsRevealed();
-				if (action == 1 || (action >= 8 && action < 14)) {//to foundation
+				if (action == 1 || (action >= 30 && action < 58)) {//to foundation
 					reward += 1.0f;
 				}
-				else if (action >= 14 && action < 17){// removed card from deck
+				else if (action >= 58 && action < 65){// removed card from deck
 					reward += 0.1f;
 				}
 				else if (prevRev.at(i) < currentRev) {//revealed a card

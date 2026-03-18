@@ -191,11 +191,11 @@ void aneal() {
 
 int main()
 {
-	//PPO ppo = PPO();
-	//ppo.learn();
+	PPO ppo = PPO();
+	ppo.learn();
 	// 
-	KlondikeGameController g(0);
-	std::cout<<g.EncodeBoard().size()<<endl;
+	//KlondikeGameController g(0);
+	//std::cout<<g.EncodeBoard().size()<<endl;
 	//for (int i = 0; i < 905; i++) {
 	//	std::cout << i<<" : " << KlondikeGameController::moveToString(GameBoard::DecodeMove(i)) << endl;
 	//}
@@ -204,7 +204,7 @@ int main()
 	float avg = 0.0;
 	for (int i = 0; i < 10; i++) {
 		std::cout << "AI" << endl;
-		//avg+=ppo.Test();
+		avg+=ppo.Test();
 		std::cout << "Random Deals" << endl;
 		AIPlay(1000, 0);
 		std::cout << "-------------------------------" << std::endl<<endl;

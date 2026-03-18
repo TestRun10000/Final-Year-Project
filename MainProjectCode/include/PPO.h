@@ -19,7 +19,7 @@ private:
 	float gamma = 0.99;
     float lambda = 0.90;
 	int updatesPerLoop = 24;
-	int numberLoops = 1000;
+	int numberLoops = 1500;
 	float clip = 0.25;
     float Actlr = 0.0003;
 	float Crtlr = 0.0005;
