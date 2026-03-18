@@ -10,8 +10,8 @@ const int dirPinY = 12;
 const int enablePin = 2;
 
 
-float distPerStep=0.8;
-float distPerStepY=0.8;
+float distPerStep=0.4;
+float distPerStepY=1.65;
 float distPerDegZ=0.263;
 float heightPerCard=0.266;
 
@@ -122,6 +122,65 @@ void savePos(){
   EEPROM.put(4,currentY);
 }
 
+void penUp(){
+  centreArm.write(20);
+}
+void penDown(){
+  centreArm.write(115);
+}
+
+void drawC(){
+  penDown();
+  for(int i=0;i<50;i++){
+    moveDistance(0.8,-0.8);
+  }
+  for(int i=0;i<50;i++){
+    moveDistance(-0.8,-0.8);
+  }
+  for(int i=0;i<50;i++){
+    moveDistance(-0.8,0.8);
+  }
+  for(int i=0;i<50;i++){
+    moveDistance(0.8,0.8);
+  }
+  penUp();
+}
+
+void drawE(){
+  penDown();
+  delay(200);
+  penDown();
+  delay(200);
+  moveDistance(0,80);
+  delay(200);
+  penUp();
+  delay(100);
+  moveDistance(-2,-80);
+  delay(100);
+  penDown();
+  delay(100);
+  moveDistance(40,0);
+  // delay(100);
+  moveDistance(0,80);
+  delay(100);
+  penUp();
+  delay(100);
+  moveDistance(-14,-80);
+  penDown();
+  delay(100);
+  moveDistance(40,0);
+  delay(100);
+  moveDistance(0,80);
+  delay(100);
+  penUp();
+}
+
+void drawS(){
+
+}
+
+
+
 void setup() {
     pinMode(microsPin, OUTPUT);
     pinMode(stepPinX, OUTPUT);
@@ -132,7 +191,7 @@ void setup() {
     centreArm.attach(3);
     centreArm.write(0);
     Serial.begin(9600);
-    savePos();
+    // savePos();
     Serial.print("\nX: ");Serial.print(currentX);
     Serial.print(" , Y: ");Serial.println(currentY);
     // Enable the driver
@@ -144,6 +203,8 @@ void setup() {
     Serial.print(" , Y: ");Serial.print(currentY);
     Serial.print(" , Z: ");Serial.println(currentZ);
     Serial.println("Done"); 
+ 
+
   // put your setup code here, to run once:
 }
 
@@ -158,13 +219,23 @@ void loop() {
     commaIndex = yS.indexOf(','); 
     double y = yS.substring(0,commaIndex).toDouble();
     double z = yS.substring(commaIndex + 1).toDouble();
-    Serial.print(x);
-    Serial.print(" , ");
-    Serial.print(y);
-    Serial.print(" , ");
-    Serial.print(z);
-    Serial.print("\n");
-    moveToPos(x,y,z);
+
+    if(x==0 && y==0 && z==0 ){
+      Serial.print("Error");
+    }
+    else{
+      Serial.print(x);
+      Serial.print(" , ");
+      Serial.print(y);
+      Serial.print(" , ");
+      Serial.print(z);
+      Serial.print("\n");
+      moveToPos(200,200,0);
+      penUp();
+      delay(100);
+      drawE();
+      // moveToPos(x,y,z);
+    }
   }
   // put your main code here, to run repeatedly:
 
