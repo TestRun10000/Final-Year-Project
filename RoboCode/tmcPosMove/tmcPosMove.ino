@@ -130,19 +130,27 @@ void penDown(){
 }
 
 void drawC(){
+  float radius = 36.0;
+  float centerX = currentX + radius;
+  float centerY = currentY + 80;
+  
+  penUp();
+  delay(200);
+  float targetX = centerX + 36 * sin(1.6 * PI);
+  float targetY = centerY + 80 * cos(1.6 * PI);
+  moveToPos(targetX, targetY, 17.095);
+  // moveToPos(centerX - radius, centerY + 15, 0); 
+  delay(200);
   penDown();
-  for(int i=0;i<50;i++){
-    moveDistance(0.8,-0.8);
+  delay(200);
+
+  for (float angle = 1.6 * PI; angle > 0.4 * PI; angle -= 0.1) {
+    float targetX = centerX + 36 * sin(angle);
+    float targetY = centerY + 80 * cos(angle);
+    moveToPos(targetX, targetY, 17.095);
+    delay(50);
   }
-  for(int i=0;i<50;i++){
-    moveDistance(-0.8,-0.8);
-  }
-  for(int i=0;i<50;i++){
-    moveDistance(-0.8,0.8);
-  }
-  for(int i=0;i<50;i++){
-    moveDistance(0.8,0.8);
-  }
+  delay(200);
   penUp();
 }
 
@@ -151,16 +159,15 @@ void drawE(){
   delay(200);
   penDown();
   delay(200);
-  moveDistance(0,80);
+  moveDistance(0,85);
   delay(200);
   penUp();
   delay(100);
-  moveDistance(-2,-80);
+  moveDistance(-2,-82);
   delay(100);
   penDown();
   delay(100);
-  moveDistance(40,0);
-  // delay(100);
+  moveDistance(45,0);
   moveDistance(0,80);
   delay(100);
   penUp();
@@ -168,7 +175,7 @@ void drawE(){
   moveDistance(-14,-80);
   penDown();
   delay(100);
-  moveDistance(40,0);
+  moveDistance(45,0);
   delay(100);
   moveDistance(0,80);
   delay(100);
@@ -176,7 +183,42 @@ void drawE(){
 }
 
 void drawS(){
+    float radius = 40.0;
+  float centerX = currentX + 20;
+  float centerY = currentY + 40;
+  
+  penUp();
+  delay(200);
+  float targetX = centerX + 20 * sin(0 * PI);
+  float targetY = centerY + 40 * cos(0 * PI);
+  moveToPos(targetX, targetY, 17.095);
+  // moveToPos(centerX - radius, centerY + 15, 0); 
+  delay(200);
+  penDown();
+  delay(200);
 
+  for (float angle = 0 * PI; angle < 1.5 * PI; angle += 0.1) {
+    float targetX = centerX + 20 * sin(angle);
+    float targetY = centerY + 40 * cos(angle);
+    moveToPos(targetX, targetY, 17.095);
+    delay(50);
+  }
+  centerX = currentX - 20;
+  // centerY = currentY + 40;
+  for (float angle = 0.5 * PI; angle > 0; angle -= 0.1) {
+    float targetX = centerX + 20 * sin(angle);
+    float targetY = centerY + 40 * cos(angle);
+    moveToPos(targetX, targetY, 17.095);
+    delay(50);
+  }
+  for (float angle = 2*PI; angle > 1*PI; angle -= 0.1) {
+    float targetX = centerX + 20 * sin(angle);
+    float targetY = centerY + 40 * cos(angle);
+    moveToPos(targetX, targetY, 17.095);
+    delay(50);
+  }
+  delay(200);
+  penUp();
 }
 
 
@@ -192,6 +234,7 @@ void setup() {
     centreArm.write(0);
     Serial.begin(9600);
     // savePos();
+
     Serial.print("\nX: ");Serial.print(currentX);
     Serial.print(" , Y: ");Serial.println(currentY);
     // Enable the driver
@@ -230,10 +273,28 @@ void loop() {
       Serial.print(" , ");
       Serial.print(z);
       Serial.print("\n");
-      moveToPos(200,200,0);
+      moveToPos(160,100,0);
+      penUp();
+      delay(100);
+      drawC(); 
+      delay(100);
+      penUp(); 
+      moveToPos(195,200,0);
+      delay(100);
+      drawS(); 
+      delay(100);
+      penUp();
+      delay(200);
+      moveToPos(160,320,0);
+      delay(100);
+      drawE(); delay(100);
+      moveToPos(160,420,0);
       penUp();
       delay(100);
       drawE();
+      penUp();
+      delay(100);
+      moveToPos(0,0,47.34);
       // moveToPos(x,y,z);
     }
   }
