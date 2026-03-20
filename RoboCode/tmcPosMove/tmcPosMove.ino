@@ -221,7 +221,83 @@ void drawS(){
   penUp();
 }
 
+void drawX(){
+  delay(200);
+  penDown();
+  delay(200);
+  for(int i=0;i<82;i++){
+      moveDistance(1,2);
+  }
+  delay(100);
+  penUp();
+  delay(100);
+  moveDistance(0,-130);
+  delay(100);
+  penDown();
+  delay(100);
+  for(int i=0;i<82;i++){
+      moveDistance(-1,2);
+  }
+  delay(100);
+  penUp();
+}
 
+void writeEssex(){
+  float startX=currentX;
+  float startY=currentX;
+  penUp();
+  delay(100);
+  drawE(); 
+  delay(100);
+  penUp(); 
+  moveToPos(startX+35,startY+25,0);
+  delay(100);
+  drawS(); 
+  delay(100);
+  penUp();
+  delay(200);
+  moveToPos(startX+35,startY+115,0);
+  delay(100);
+  drawS(); delay(100);
+  moveToPos(startX,startY+220,0);
+  penUp();
+  delay(100);
+  drawE();
+  penUp();
+  delay(100);
+  moveToPos(startX,startY+310,0);
+  penUp();
+  delay(100);
+  drawX();
+  penUp();
+  delay(100);
+}
+
+void writeCSEE(){
+  // moveToPos(160,100,0);
+  float startX=currentX;
+  float startY=currentX;
+  penUp();
+  delay(100);
+  drawC(); 
+  delay(100);
+  penUp(); 
+  moveToPos(startX+35,startY+105,0);
+  delay(100);
+  drawS(); 
+  delay(100);
+  penUp();
+  delay(200);
+  moveToPos(startX,startY+220,0);
+  delay(100);
+  drawE(); delay(100);
+  moveToPos(startX,startY+320,0);
+  penUp();
+  delay(100);
+  drawE();
+  penUp();
+  delay(100);
+}
 
 void setup() {
     pinMode(microsPin, OUTPUT);
@@ -273,28 +349,12 @@ void loop() {
       Serial.print(" , ");
       Serial.print(z);
       Serial.print("\n");
-      moveToPos(160,100,0);
-      penUp();
-      delay(100);
-      drawC(); 
-      delay(100);
-      penUp(); 
-      moveToPos(195,200,0);
-      delay(100);
-      drawS(); 
-      delay(100);
-      penUp();
-      delay(200);
-      moveToPos(160,320,0);
-      delay(100);
-      drawE(); delay(100);
-      moveToPos(160,420,0);
-      penUp();
-      delay(100);
-      drawE();
-      penUp();
-      delay(100);
-      moveToPos(0,0,47.34);
+      moveToPos(160,60,47.34);
+      writeEssex(); 
+      moveToPos(60,65,47.34);
+      writeCSEE();
+      // drawX();
+      moveToPos(0,0,47);
       // moveToPos(x,y,z);
     }
   }
