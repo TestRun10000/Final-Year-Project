@@ -31,24 +31,24 @@ private:
     int winCount = 0;
     float tau = 0.005;
     float target_entropy = 0.7 * -std::log((float)outputSize);
-    torch::Tensor logAlpha = torch::tensor(std::log(0.1),torch::TensorOptions().dtype(torch::kFloat32).requires_grad(true));
+    torch::Tensor logAlpha = torch::tensor(std::log(0.1), torch::TensorOptions().dtype(torch::kFloat32).requires_grad(true));
     torch::Tensor alpha = logAlpha.exp();
     torch::optim::Adam alphaOp = torch::optim::Adam(std::vector<torch::Tensor>{logAlpha}, torch::optim::AdamOptions(this->lr));
     torch::optim::Adam actorOptim = torch::optim::Adam(this->actor.get()->parameters(), torch::optim::AdamOptions(this->lr));
     torch::optim::Adam criticAOp = torch::optim::Adam(this->criticA.get()->parameters(), torch::optim::AdamOptions(this->lr));
     torch::optim::Adam criticBOp = torch::optim::Adam(this->criticB.get()->parameters(), torch::optim::AdamOptions(this->lr));
-    
+
     ReplayBuffer buffer = ReplayBuffer(50000);
 
 
-	std::ofstream logger= std::ofstream((std::string)RESOURCES_PATH +"RLLogger.csv", std::ios_base::app);
+    std::ofstream logger = std::ofstream((std::string)RESOURCES_PATH + "RLLogger.csv", std::ios_base::app);
     torch::Device device = torch::kCPU;
 
 
-    std::vector<trajectorie> rollout(int batchSize=1, bool dummy = false);
+    std::vector<trajectorie> rollout(int batchSize = 1, bool dummy = false);
 
-    std::vector<std::vector<float>> computeRewardsToGo(std::vector<std::vector<float>> rewards); 
-	BatchActionProbPair getActionBatch(torch::Tensor state, std::vector<std::vector <GameBoard::Move>> moves);
+    std::vector<std::vector<float>> computeRewardsToGo(std::vector<std::vector<float>> rewards);
+    BatchActionProbPair getActionBatch(torch::Tensor state, std::vector<std::vector <GameBoard::Move>> moves);
     ActionProbPair getAction(torch::Tensor state, vector < GameBoard::Move> moves);
     BatchActionProbPair getActionBatchDummy(std::vector<DummyPlayer> games, torch::Tensor states, std::vector<std::vector <GameBoard::Move>> moves);
 
@@ -65,7 +65,7 @@ private:
         }
     }
 
-            //std::cout << "done" << std::endl;
+    //std::cout << "done" << std::endl;
     void soft_update_target_networks(double tau) {
         softUpdate(criticTA, criticA, tau);
         softUpdate(criticTB, criticB, tau);
@@ -81,17 +81,17 @@ private:
 
     void LoadNetwork(NetDeep model, std::string path);
 
-	void LogData(float Actorloss, float CriticLoss, float MeanReward, float entropyLoss);
+    void LogData(float Actorloss, float CriticLoss, float MeanReward, float entropyLoss);
 
 public:
-	void learn();
+    void learn();
 
-	float Test();
+    float Test();
 
     SAC() {
         if (torch::cuda::is_available()) {
             this->device = torch::kCUDA;
-            std::cout<<"using cuda" << std::endl;
+            std::cout << "using cuda" << std::endl;
         }
         LoadNetwork(this->actor, (std::string)RESOURCES_PATH + "actor.pth");
         LoadNetwork(this->actor, (std::string)RESOURCES_PATH + "criticA.pth");
@@ -104,7 +104,7 @@ public:
         this->criticTB->to(this->device);
         srand(1);
         if (this->newNet) {
-            for (auto tra : this->rollout(100,true)) {
+            for (auto tra : this->rollout(100, true)) {
                 this->buffer.push(tra);
             }
         }
@@ -113,3 +113,4 @@ public:
     }
 };
 
+#pragma once

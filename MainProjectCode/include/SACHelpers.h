@@ -4,10 +4,11 @@
 #include<cmath>
 #include<random>
 
-struct NetImpl : torch::nn::Module{
-	NetImpl(int64_t In, int64_t Out,int64_t hidden=256) :linear1(register_module("linear1", torch::nn::Linear(In, hidden))),
+struct NetImpl : torch::nn::Module {
+	NetImpl(int64_t In, int64_t Out, int64_t hidden = 256) :linear1(register_module("linear1", torch::nn::Linear(In, hidden))),
 		linear2(register_module("linear2", torch::nn::Linear(hidden, hidden))),
-		linear3(register_module("linear3", torch::nn::Linear(hidden, Out))) {}
+		linear3(register_module("linear3", torch::nn::Linear(hidden, Out))) {
+	}
 	torch::nn::Linear linear1;
 	torch::nn::Linear linear2;
 	torch::nn::Linear linear3;
@@ -49,16 +50,16 @@ struct trajectorie {
 	torch::Tensor nextState;
 	torch::Tensor done;
 
-	trajectorie(torch::Tensor state, int action, torch::Tensor reward, torch::Tensor nextState, bool done, torch::Device device=torch::kCPU) {
+	trajectorie(torch::Tensor state, int action, torch::Tensor reward, torch::Tensor nextState, bool done, torch::Device device = torch::kCPU) {
 		this->state = state.clone().to(device);
-		this->action = torch::tensor(action,torch::kLong).to(device);
+		this->action = torch::tensor(action, torch::kLong).to(device);
 		this->reward = reward.clone().to(device);
 		this->nextState = nextState.clone().to(device);
-		this->done = torch::tensor(done,torch::kFloat).to(device);
-		
+		this->done = torch::tensor(done, torch::kFloat).to(device);
+
 	}
 	trajectorie() {}
-};	
+};
 
 struct trajectorieTensorBatch {
 	torch::Tensor state;
@@ -104,7 +105,7 @@ public:
 		this->buffer.at(index) = tra;
 		this->weights.at(index) = 0.01;
 		trajectorie store = trajectorie(tra.state.clone(), tra.action.item<int>(), tra.reward.clone(), tra.nextState.clone(), tra.done.item<bool>());
-		int newIndex = this->index + 1 >= this->maxSize ? 0:this->index + 1;
+		int newIndex = this->index + 1 >= this->maxSize ? 0 : this->index + 1;
 		this->index = newIndex;
 		this->size = this->size + 1 >= maxSize ? maxSize : this->size + 1;
 		//std::cout << "index:" << newIndex << std::endl;
@@ -117,7 +118,7 @@ public:
 		float sum = 0;
 		for (int i = 0; i < this->size; i++) {
 			probs.at(i) = this->weights.at(i) + 0.0001;
-			sum+= this->weights.at(i) + 0.0001;
+			sum += this->weights.at(i) + 0.0001;
 		}
 		for (int i = 0; i < this->size; i++) {
 			probs.at(i) /= sum;
@@ -136,15 +137,15 @@ public:
 				probs.at(i) /= sum;
 			}
 		}
-	
-		
+
+
 		return sample;
 	}
 
 	void updateWeights(std::vector<float> newWeights) {
 		int j = 0;
 		for (auto i : this->sampleIndex) {
-			this->weights.at(i) = std::min(newWeights.at(j++),0.01f);
+			this->weights.at(i) = std::min(newWeights.at(j++), 0.01f);
 		}
 	}
 
