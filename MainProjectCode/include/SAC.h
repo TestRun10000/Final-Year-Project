@@ -24,7 +24,7 @@ private:
     int numberLoops = 1000;
     float lr = 0.0003;
     int rolloutBatchSize = 10;
-    int batchSize = 256;
+    int batchSize = 1024;
     int updatesPerLoop = 8;
     float entropy_co = 0;
     bool newNet = true;
