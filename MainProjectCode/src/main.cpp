@@ -192,6 +192,8 @@ int main()
 {
 	SAC sac = SAC();
 	sac.learn();
+	//PPO ppo = PPO();
+	//ppo.learn();
 	// 
 	//KlondikeGameController g(0);
 	//std::cout<<g.EncodeBoard().size()<<endl;
@@ -204,6 +206,7 @@ int main()
 	for (int i = 0; i < 10; i++) {
 		std::cout << "AI" << endl;
 		avg+=sac.Test();
+		//avg+=ppo.Test();
 		std::cout << "Random Deals" << endl;
 		AIPlay(1000, 0);
 		std::cout << "-------------------------------" << std::endl<<endl;
