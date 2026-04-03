@@ -8,20 +8,17 @@ def button_callback(row, col):
     print(f"button({row},{col})")
 
 
-class display:
+class game(ct.CTkFrame):
     def __init__(self):
         self.cross = "❌"
         self.naught = "⭕"
-        self.app = ct.CTk()
-        self.app.title("my app")
-        self.app.geometry("500x450")
 
-        self.app.grid_rowconfigure(1, weight=1)
-        self.app.grid_columnconfigure(0, weight=1)
-        self.text = ct.CTkLabel(self.app, height=100, text="Players Turn ❌")
+        self.grid_rowconfigure(1, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        self.text = ct.CTkLabel(self, height=100, text="Players Turn ❌")
         self.text.grid(row=0, column=0, columnspan=3, padx=20, pady=20, sticky="nsew")
 
-        frame = ct.CTkFrame(self.app, width=315, height=315)
+        frame = ct.CTkFrame(self, width=315, height=315)
         frame.grid(row=1, column=0, padx=20, pady=20, sticky="nsew")
         for i in range(3):
             frame.grid_rowconfigure(i, weight=1, uniform="group1")
@@ -48,9 +45,8 @@ class display:
                 buttonIndex += 1
         self.game = ticTacToe.ticTacToeGame()
         self.HumansGo = True
-        self.app.bind("<Configure>", self.on_resize)
-        self.app.after(100, self.gameLoop)
-        self.app.mainloop()
+        self.bind("<Configure>", self.on_resize)
+        self.after(100, self.gameLoop)
 
     def buttonPress(self, row, col):
         if self.HumansGo:
@@ -61,7 +57,7 @@ class display:
 
     def on_resize(self, event):
         # Get current window width
-        width = self.app.winfo_width()
+        width = self.winfo_width()
         self.text.configure(font=("Arial", width / 25))
         # Adjust UI based on width
         for i in self.buttons:
@@ -72,7 +68,7 @@ class display:
             if not self.HumansGo:
                 self.text.configure(text="Players Turn ⭕")
                 time.sleep(0.5)
-                self.app.update()
+                self.update()
                 pos = self.game.makeAiMove()
                 self.buttons[pos.x * 3 + pos.y].configure(
                     text=self.naught, text_color="blue"
@@ -80,7 +76,9 @@ class display:
                 self.HumansGo = True
             else:
                 self.text.configure(text="Players Turn ❌")
-            self.app.after(100, self.gameLoop)
+            self.after(100, self.gameLoop)
 
 
-display()
+class homePage:
+    def __init__(self):
+        pass
