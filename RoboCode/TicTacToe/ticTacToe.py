@@ -71,10 +71,8 @@ class ticTacToeGame:
         self.human = 1
 
     def makeAiMove(self):
-        print(self.board.board)
         pos = self.minmax(1, self.board)[0]
         self.board.place(pos, self.ai)
-        print(self.board.board)
         return pos
 
     # uses negaMax
