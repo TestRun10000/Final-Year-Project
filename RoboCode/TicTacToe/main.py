@@ -1,9 +1,11 @@
+import tkinter
 import customtkinter as ct
 import ticTacToe
 import threading
-
+import serialCom
 
 FELT_GREEN = "#2D5A27"
+serial = serialCom.com("COM4")
 
 
 class game(ct.CTkFrame):
@@ -112,6 +114,7 @@ class game(ct.CTkFrame):
 class mainApp(ct.CTk):
     def __init__(self):
         super().__init__(fg_color=FELT_GREEN)
+        fontStyle = ("Arial", 20)
         self.title("Solitaire Bot")
         self.home = ct.CTkFrame(self, width=315, height=315, fg_color="transparent")
         self.geometry("600x600")
@@ -122,9 +125,8 @@ class mainApp(ct.CTk):
         self.home.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
 
         self.home.grid_columnconfigure(0, weight=1)
-        self.home.grid_rowconfigure(0, weight=1)
-        self.home.grid_rowconfigure(1, weight=1)
-        self.home.grid_rowconfigure(2, weight=1)  #
+        for i in range(3):
+            self.home.grid_rowconfigure(i, weight=1)
 
         self.btn1 = ct.CTkButton(self.home, text="Homming", command=self.GoToZero)
         self.btn1.grid(row=0, column=0, padx=20, pady=10, sticky="nsew")
@@ -134,6 +136,28 @@ class mainApp(ct.CTk):
 
         self.btn3 = ct.CTkButton(self.home, text="Play", command=self.play)
         self.btn3.grid(row=2, column=0, padx=20, pady=10, sticky="nsew")
+
+        self.bottomFrame = ct.CTkFrame(self.home, height=30)
+        self.bottomFrame.grid(row=3, column=0, padx=20, pady=5)
+        self.bottomFrame.grid_rowconfigure(0, weight=1)
+        for i in range(4):
+            self.bottomFrame.grid_columnconfigure(i, weight=1)
+
+        self.X = tkinter.Spinbox(
+            self.bottomFrame, from_=0, to=423, font=("Arial", 20), width=5
+        )
+        self.Y = tkinter.Spinbox(
+            self.bottomFrame, from_=0, to=423, font=("Arial", 20), width=5
+        )
+        textA = ct.CTkLabel(self.bottomFrame, text="X:", font=fontStyle)
+        textB = ct.CTkLabel(self.bottomFrame, text="Y:", font=fontStyle)
+        submitBtn = ct.CTkButton(self.bottomFrame)
+        textA.grid(row=0, column=0, pady=5, padx=5, sticky="ew")
+        self.X.grid(row=0, column=1, pady=5, padx=5)
+        textB.grid(row=0, column=2, pady=5, padx=5, sticky="ew")
+        self.Y.grid(row=0, column=3, pady=5, padx=5)
+        submitBtn.grid(row=0, column=4, pady=5, padx=5, sticky="ew")
+
         self.gameFrame = game(self, self.retFunc)
         self.gameFrame.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
         self.framse = [self.home, self.gameFrame]
