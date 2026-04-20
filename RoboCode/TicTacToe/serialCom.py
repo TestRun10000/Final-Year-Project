@@ -23,7 +23,7 @@ class falseCom:
         pass
 
     def readText(self):
-        return " "
+        return "done"
 
     def sendText(self, message):
         if message[-1] != "\n":

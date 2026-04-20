@@ -361,6 +361,7 @@ void placePoint(int x,int y,int player){
   else if(player==2){
 
   }
+  Serial.println("done");
 }
 
 void drawGrid(){
@@ -403,11 +404,21 @@ void drawGrid(){
 
 void gameLoop(){
   drawGrid();
+  player=1;
   while(true){
     if(Serial.available()){
-       String input = Serial.readStringUntil('\n');
-       if(input=="done") return;
-
+      String input = Serial.readStringUntil('\n');
+      if(input=="done") return;
+      else{
+        input = input.substring(1, input.length() - 1);
+        int commaIndex = input.indexOf(','); 
+        double x = input.substring(0, commaIndex).toDouble(); 
+        String yS = input.substring(commaIndex + 1);
+        commaIndex = yS.indexOf(','); 
+        double y = yS.substring(0,commaIndex).toDouble();
+        placePoint(x,y,player);
+        player=player==1? 2:1;
+      }
     }
   }
 
@@ -447,37 +458,33 @@ void loop() {
   if (Serial.available()) {
     String input = Serial.readStringUntil('\n');  // Read until newline
     Serial.print("You entered: ");
-    input = input.substring(1, input.length() - 1);
-    int commaIndex = input.indexOf(','); 
-    double x = input.substring(0, commaIndex).toDouble(); 
-    String yS = input.substring(commaIndex + 1);
-    commaIndex = yS.indexOf(','); 
-    double y = yS.substring(0,commaIndex).toDouble();
-    double z = yS.substring(commaIndex + 1).toDouble();
-
-    if(x==0 && y==0 && z==0 ){
-      Serial.print("Error");
+    if(input=="home"){
+      moveToPos(0,0,47);
+      Serial.println("done");
     }
-    else{
-      Serial.print(x);
-      Serial.print(" , ");
-      Serial.print(y);
-      Serial.print(" , ");
-      Serial.print(z);
-      Serial.print("\n");
-      // moveToPos(160,150,47.34);
-      // drawGrid();
-      // placePoint(0,0,1);
-      // placePoint(0,1,1);
-      // placePoint(0,2,1);
-      // Serial.println("Done"); 
-      // writeEssex(); 
-      // moveToPos(60,80,47.34);
-      // writeCSEE();
-      // drawX();
-      // moveToPos(0,0,47);
+    else if(input=="pos"){
+      String input = Serial.readStringUntil('\n');  // Read until newline
+      input = input.substring(1, input.length() - 1);
+      int commaIndex = input.indexOf(','); 
+      double x = input.substring(0, commaIndex).toDouble(); 
+      String yS = input.substring(commaIndex + 1);
+      commaIndex = yS.indexOf(','); 
+      double y = yS.substring(0,commaIndex).toDouble();
+      double z = yS.substring(commaIndex + 1).toDouble();
       moveToPos(x,y,z);
+      Serial.println("done");
     }
+    else if(input=="write"){
+      moveToPos(160,150,47.34);
+      writeEssex(); 
+      moveToPos(60,80,47.34);
+      writeCSEE();
+      Serial.println("done");
+      
+    }
+    else if(input=="game"){
+      gameLoop();
+    }      
   }
   // put your main code here, to run repeatedly:
 

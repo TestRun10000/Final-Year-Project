@@ -74,8 +74,15 @@ class game(ct.CTkFrame):
 
     def updateAfterAi(self, pos):
         self.buttons[pos.x * 3 + pos.y].configure(text=self.naught, text_color="blue")
-        self.HumansGo = True
+        serial.sendText(f"({pos.x},{pos.y})")
+        self.hold()
         self.text.configure(text="Players Turn ❌")
+
+    def hold(self):
+        if serial.readText() != "done":
+            self.after(100, self.hold)
+        else:
+            self.HumansGo = True
 
     def on_resize(self, event):
         # Get current window width
@@ -109,7 +116,6 @@ class game(ct.CTkFrame):
         self.game = ticTacToe.ticTacToeGame()
         for i in self.buttons:
             i.configure(text="")
-        print(self.game.board.board)
         self.retFunc()
 
 
@@ -154,7 +160,9 @@ class mainApp(ct.CTk):
         )
         textA = ct.CTkLabel(self.bottomFrame, text="X:", font=fontStyle)
         textB = ct.CTkLabel(self.bottomFrame, text="Y:", font=fontStyle)
-        submitBtn = ct.CTkButton(self.bottomFrame)
+        self.submitBtn = ct.CTkButton(
+            self.bottomFrame, text="Submit", command=self.submit
+        )
         textA.grid(row=0, column=0, pady=5, padx=5, sticky="ew")
         self.X.grid(row=0, column=1, pady=5, padx=5)
         textB.grid(row=0, column=2, pady=5, padx=5, sticky="ew")
@@ -162,33 +170,74 @@ class mainApp(ct.CTk):
         self.penUP = ct.CTkCheckBox(self.bottomFrame, text="PenUp")
         self.penUP.select()
         self.penUP.grid(row=0, column=4, pady=5, padx=5, sticky="ew")
-        submitBtn.grid(row=0, column=5, pady=5, padx=5, sticky="ew")
+        self.submitBtn.grid(row=0, column=5, pady=5, padx=5, sticky="ew")
 
         # endregion bottomFrame
         self.gameFrame = game(self, self.retFunc)
         self.gameFrame.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
         self.framse = [self.home, self.gameFrame]
         self.home.tkraise()
+        self.ignore = False
 
     def GoToZero(self):
-        print("Homming")
+        if self.ignore:
+            return
+        serial.sendText("home")
+        # self.disableButtons()
+        self.tillDone()
 
     def Write(self):
-        print("Writing")
+        if self.ignore:
+            return
+        serial.sendText("write")
+        # self.disableButtons()
+        self.tillDone()
 
     def play(self):
-        print("Game")
+        if self.ignore:
+            return
+
+        serial.sendText("game")
         self.framse[1].tkraise()
         self.update()
 
     def retFunc(self):
         self.framse[0].tkraise()
         self.update()
-        print("return")
+        # self.disableButtons()
+        self.tillDone()
+        self.penUP.select()
 
     def submit(self):
+        if self.ignore:
+            return
         z = "47.34" if self.penUP.get() == 1 else "5.26"
-        print(f"{self.X.get()},{self.Y.get()},{z}")
+        serial.sendText("pos")
+        serial.sendText(f"({self.X.get()},{self.Y.get()},{z})")
+        # self.disableButtons()
+        self.tillDone()
+
+    def disableButtons(self):
+        self.ignore = True
+        self.btn1.configure(state="disabled")
+        self.btn2.configure(state="disabled")
+        self.btn3.configure(state="disabled")
+        self.submitBtn.configure(state="disabled")
+        self.update()
+
+    def enableButtons(self):
+        self.btn1.configure(state="normal")
+        self.btn2.configure(state="normal")
+        self.btn3.configure(state="normal")
+        self.submitBtn.configure(state="normal")
+        self.ignore = False
+        self.update()
+
+    def tillDone(self):
+        if serial.readText() != "done":
+            self.after(100, self.tillDone)
+        else:
+            self.enableButtons()
 
 
 if __name__ == "__main__":
