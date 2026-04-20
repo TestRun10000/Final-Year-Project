@@ -13,5 +13,19 @@ class com:
         return self.port.readline().decode()
 
     def sendText(self, message):
-        message = message + "\n"
+        if message[-1] != "\n":
+            message = message + "\n"
         self.port.write(message.encode("utf-8"))
+
+
+class falseCom:
+    def __init__(self):
+        pass
+
+    def readText(self):
+        return " "
+
+    def sendText(self, message):
+        if message[-1] != "\n":
+            message = message + "\n"
+        print(message.encode("utf-8"))

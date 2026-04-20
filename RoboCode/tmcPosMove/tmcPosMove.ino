@@ -24,6 +24,10 @@ float maxX=427.5;
 float maxZ=47.34;
 float maxDeckHeight=13.85;
 
+float gridStartX=0.0;
+float gridStartY=0.0;
+
+
 Servo centreArm; 
 
 
@@ -126,7 +130,7 @@ void penUp(){
   centreArm.write(20);
 }
 void penDown(){
-  centreArm.write(115);
+  centreArm.write(114);
 }
 
 void drawC(){
@@ -163,7 +167,7 @@ void drawE(){
   delay(200);
   penUp();
   delay(100);
-  moveDistance(-2,-82);
+  moveDistance(-2,-84);
   delay(100);
   penDown();
   delay(100);
@@ -282,7 +286,7 @@ void writeCSEE(){
   drawC(); 
   delay(100);
   penUp(); 
-  moveToPos(startX+35,startY+105,0);
+  moveToPos(startX+35,startY+118,0);
   delay(100);
   drawS(); 
   delay(100);
@@ -299,6 +303,116 @@ void writeCSEE(){
   delay(100);
 }
 
+void drawCross(){
+  delay(200);
+  penDown();
+  delay(200);
+  for(int i=0;i<41;i++){
+      moveDistance(1,2);
+  }
+  delay(100);
+  penUp();
+  delay(100);
+  moveDistance(0,-70);
+  delay(100);
+  penDown();
+  delay(100);
+  for(int i=0;i<41;i++){
+      moveDistance(-1,2);
+  }
+  delay(100);
+  penUp();
+
+}
+
+void drawNaught(){
+  float centerX = currentX + 20;
+  float centerY = currentY + 40;
+  moveToPos(centerX, centerX, 47.34);
+  // penDown();
+  // delay(200);
+  for (float angle = 0; angle <= 2*PI; angle += 0.1) {
+    float targetX = centerX + 20 * sin(angle);
+    float targetY = centerY + 40 * cos(angle);
+    moveToPos(targetX, targetY, 17.095);
+    delay(50);
+  }
+  
+  for (float angle = 0; angle <= 0.5; angle += 0.1) {
+    float targetX = centerX + 20 * sin(angle);
+    float targetY = centerY + 40 * cos(angle);
+    moveToPos(targetX, targetY, 17.095);
+    delay(50);
+  }
+  
+  penUp();
+  delay(100);
+  moveToPos(centerX, centerX, 47.34);
+
+}
+
+void placePoint(int x,int y,int player){
+  if(player==1){
+    Serial.print(gridStartX+x*45);Serial.print(",");Serial.println(gridStartY+y*90);
+    moveToPos(gridStartX+x*45,gridStartY+y*90,47.54);
+    delay(200);
+    drawNaught();
+  }
+  else if(player==2){
+
+  }
+}
+
+void drawGrid(){
+  penDown();
+  delay(200);
+  moveDistance(0,300);
+  delay(200);
+  penUp();
+  delay(100);
+  moveDistance(45,20);
+  delay(100);
+  penDown();
+  delay(100);
+  moveDistance(0,-300);
+  delay(100);
+  penUp();
+  delay(100);
+  moveDistance(-90,100);
+  delay(100);
+  penDown();
+  delay(100);
+  moveDistance(130,0);
+  delay(100);
+  penUp();
+  delay(100);
+  moveDistance(0,90);
+  delay(100);
+  penDown();
+  delay(100);
+  moveDistance(-130,0);
+  delay(100);
+  penUp();
+  delay(100);
+  moveDistance(70,-50);
+  delay(100);
+  gridStartX=currentX+15;
+  gridStartY=currentY-130;
+  Serial.print(gridStartX);Serial.print(",");Serial.println(gridStartY);
+}
+
+void gameLoop(){
+  drawGrid();
+  while(true){
+    if(Serial.available()){
+       String input = Serial.readStringUntil('\n');
+       if(input=="done") return;
+
+    }
+  }
+
+}
+
 void setup() {
     pinMode(microsPin, OUTPUT);
     pinMode(stepPinX, OUTPUT);
@@ -309,7 +423,7 @@ void setup() {
     centreArm.attach(3);
     centreArm.write(0);
     Serial.begin(9600);
-    // savePos();
+    savePos();
 
     Serial.print("\nX: ");Serial.print(currentX);
     Serial.print(" , Y: ");Serial.println(currentY);
@@ -321,11 +435,13 @@ void setup() {
     Serial.print("X: ");Serial.print(currentX);
     Serial.print(" , Y: ");Serial.print(currentY);
     Serial.print(" , Z: ");Serial.println(currentZ);
-    Serial.println("Done"); 
+    
  
 
   // put your setup code here, to run once:
 }
+
+
 
 void loop() {
   if (Serial.available()) {
@@ -349,13 +465,18 @@ void loop() {
       Serial.print(" , ");
       Serial.print(z);
       Serial.print("\n");
-      moveToPos(160,60,47.34);
-      writeEssex(); 
-      moveToPos(60,65,47.34);
-      writeCSEE();
+      // moveToPos(160,150,47.34);
+      // drawGrid();
+      // placePoint(0,0,1);
+      // placePoint(0,1,1);
+      // placePoint(0,2,1);
+      // Serial.println("Done"); 
+      // writeEssex(); 
+      // moveToPos(60,80,47.34);
+      // writeCSEE();
       // drawX();
-      moveToPos(0,0,47);
-      // moveToPos(x,y,z);
+      // moveToPos(0,0,47);
+      moveToPos(x,y,z);
     }
   }
   // put your main code here, to run repeatedly:

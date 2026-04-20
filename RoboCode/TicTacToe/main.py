@@ -3,9 +3,10 @@ import customtkinter as ct
 import ticTacToe
 import threading
 import serialCom
+import sys
 
 FELT_GREEN = "#2D5A27"
-serial = serialCom.com("COM4")
+serial = serialCom.falseCom()
 
 
 class game(ct.CTkFrame):
@@ -55,6 +56,7 @@ class game(ct.CTkFrame):
         if self.HumansGo and not self.game.isGameOver():
             if self.game.place(row, col, 1):
                 self.buttons[row * 3 + col].configure(text="❌", text_color="red")
+                serial.sendText(f"({row},{col})")
                 self.update()
                 self.HumansGo = False
                 if not self.game.isGameOver():
@@ -137,10 +139,11 @@ class mainApp(ct.CTk):
         self.btn3 = ct.CTkButton(self.home, text="Play", command=self.play)
         self.btn3.grid(row=2, column=0, padx=20, pady=10, sticky="nsew")
 
+        # region bottomFrame
         self.bottomFrame = ct.CTkFrame(self.home, height=30)
         self.bottomFrame.grid(row=3, column=0, padx=20, pady=5)
         self.bottomFrame.grid_rowconfigure(0, weight=1)
-        for i in range(4):
+        for i in range(5):
             self.bottomFrame.grid_columnconfigure(i, weight=1)
 
         self.X = tkinter.Spinbox(
@@ -156,8 +159,12 @@ class mainApp(ct.CTk):
         self.X.grid(row=0, column=1, pady=5, padx=5)
         textB.grid(row=0, column=2, pady=5, padx=5, sticky="ew")
         self.Y.grid(row=0, column=3, pady=5, padx=5)
-        submitBtn.grid(row=0, column=4, pady=5, padx=5, sticky="ew")
+        self.penUP = ct.CTkCheckBox(self.bottomFrame, text="PenUp")
+        self.penUP.select()
+        self.penUP.grid(row=0, column=4, pady=5, padx=5, sticky="ew")
+        submitBtn.grid(row=0, column=5, pady=5, padx=5, sticky="ew")
 
+        # endregion bottomFrame
         self.gameFrame = game(self, self.retFunc)
         self.gameFrame.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
         self.framse = [self.home, self.gameFrame]
@@ -179,6 +186,16 @@ class mainApp(ct.CTk):
         self.update()
         print("return")
 
+    def submit(self):
+        z = "47.34" if self.penUP.get() == 1 else "5.26"
+        print(f"{self.X.get()},{self.Y.get()},{z}")
 
-app = mainApp()
-app.mainloop()
+
+if __name__ == "__main__":
+    comPort = sys.argv[1]
+    print(comPort[:3])
+    if len(comPort) == 4 and comPort[:3] == "COM" and comPort[3].isdigit():
+        print(comPort)
+        serial = serialCom.com(comPort)
+    app = mainApp()
+    app.mainloop()
