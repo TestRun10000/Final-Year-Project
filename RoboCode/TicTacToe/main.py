@@ -6,6 +6,7 @@ import serialCom
 import sys
 
 FELT_GREEN = "#2D5A27"
+DARK_RED = "#B30202"
 serial = serialCom.falseCom()
 
 
@@ -107,6 +108,7 @@ class game(ct.CTkFrame):
             text="return",
             command=self.exitGame,
             font=("Arial", self.winfo_width() / 25),
+            fg_color=DARK_RED,
         )
         button.grid(row=1, column=0, sticky="ns")
 
@@ -133,21 +135,42 @@ class mainApp(ct.CTk):
         self.home.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
 
         self.home.grid_columnconfigure(0, weight=1)
-        for i in range(3):
+        for i in range(4):
             self.home.grid_rowconfigure(i, weight=1)
+        self.topText = ct.CTkLabel(
+            self.home, text="Welcome", font=("Arial", 70), text_color="black"
+        )
+        self.topText.grid(row=0, column=0, padx=10, pady=5, sticky="nsew")
+        self.btn1 = ct.CTkButton(
+            self.home,
+            text="Home",
+            command=self.GoToZero,
+            fg_color=DARK_RED,
+            font=("Arial", 40),
+        )
+        self.btn1.grid(row=1, column=0, padx=20, pady=10, sticky="nsew")
 
-        self.btn1 = ct.CTkButton(self.home, text="Homming", command=self.GoToZero)
-        self.btn1.grid(row=0, column=0, padx=20, pady=10, sticky="nsew")
+        self.btn2 = ct.CTkButton(
+            self.home,
+            text="Write",
+            command=self.Write,
+            fg_color="black",
+            font=("Arial", 40),
+        )
+        self.btn2.grid(row=2, column=0, padx=20, pady=10, sticky="nsew")
 
-        self.btn2 = ct.CTkButton(self.home, text="Write", command=self.Write)
-        self.btn2.grid(row=1, column=0, padx=20, pady=10, sticky="nsew")
-
-        self.btn3 = ct.CTkButton(self.home, text="Play", command=self.play)
-        self.btn3.grid(row=2, column=0, padx=20, pady=10, sticky="nsew")
+        self.btn3 = ct.CTkButton(
+            self.home,
+            text="Play",
+            command=self.play,
+            fg_color=DARK_RED,
+            font=("Arial", 40),
+        )
+        self.btn3.grid(row=3, column=0, padx=20, pady=10, sticky="nsew")
 
         # region bottomFrame
-        self.bottomFrame = ct.CTkFrame(self.home, height=30)
-        self.bottomFrame.grid(row=3, column=0, padx=20, pady=5)
+        self.bottomFrame = ct.CTkFrame(self.home, height=30, fg_color="black")
+        self.bottomFrame.grid(row=4, column=0, padx=20, pady=5)
         self.bottomFrame.grid_rowconfigure(0, weight=1)
         for i in range(5):
             self.bottomFrame.grid_columnconfigure(i, weight=1)
@@ -161,13 +184,13 @@ class mainApp(ct.CTk):
         textA = ct.CTkLabel(self.bottomFrame, text="X:", font=fontStyle)
         textB = ct.CTkLabel(self.bottomFrame, text="Y:", font=fontStyle)
         self.submitBtn = ct.CTkButton(
-            self.bottomFrame, text="Submit", command=self.submit
+            self.bottomFrame, text="Submit", command=self.submit, fg_color=DARK_RED
         )
         textA.grid(row=0, column=0, pady=5, padx=5, sticky="ew")
         self.X.grid(row=0, column=1, pady=5, padx=5)
         textB.grid(row=0, column=2, pady=5, padx=5, sticky="ew")
         self.Y.grid(row=0, column=3, pady=5, padx=5)
-        self.penUP = ct.CTkCheckBox(self.bottomFrame, text="PenUp")
+        self.penUP = ct.CTkCheckBox(self.bottomFrame, text="PenUp", fg_color=DARK_RED)
         self.penUP.select()
         self.penUP.grid(row=0, column=4, pady=5, padx=5, sticky="ew")
         self.submitBtn.grid(row=0, column=5, pady=5, padx=5, sticky="ew")
@@ -211,7 +234,7 @@ class mainApp(ct.CTk):
     def submit(self):
         if self.ignore:
             return
-        z = "47.34" if self.penUP.get() == 1 else "5.26"
+        z = "47.34" if self.penUP.get() == 1 else "18.8"
         serial.sendText("pos")
         serial.sendText(f"({self.X.get()},{self.Y.get()},{z})")
         # self.disableButtons()
@@ -223,6 +246,7 @@ class mainApp(ct.CTk):
         self.btn2.configure(state="disabled")
         self.btn3.configure(state="disabled")
         self.submitBtn.configure(state="disabled")
+        self.topText.configure(text="Processing...")
         self.update()
 
     def enableButtons(self):
@@ -231,11 +255,15 @@ class mainApp(ct.CTk):
         self.btn3.configure(state="normal")
         self.submitBtn.configure(state="normal")
         self.ignore = False
+        print("done")
+        self.topText.configure(text="Welcome")
         self.update()
 
     def tillDone(self):
+        self.topText.configure(text="Processing...")
+        self.update()
         if serial.readText() != "done":
-            self.after(100, self.tillDone)
+            self.after(500, self.tillDone)
         else:
             self.enableButtons()
 

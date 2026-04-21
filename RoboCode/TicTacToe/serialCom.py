@@ -1,4 +1,5 @@
 import serial
+import time
 
 
 class com:
@@ -8,13 +9,14 @@ class com:
         self.port.baudrate = baudrate
         self.port.timeout = 1
         self.port.open()
+        time.sleep(2)
 
     def readText(self):
-        return self.port.readline().decode()
+        return self.port.readline().decode().strip()
 
     def sendText(self, message):
         if message[-1] != "\n":
-            message = message + "\n"
+            message = message + "\r\n"
         self.port.write(message.encode("utf-8"))
 
 

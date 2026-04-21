@@ -130,7 +130,7 @@ void penUp(){
   centreArm.write(20);
 }
 void penDown(){
-  centreArm.write(114);
+  centreArm.write(108);
 }
 
 void drawC(){
@@ -142,7 +142,7 @@ void drawC(){
   delay(200);
   float targetX = centerX + 36 * sin(1.6 * PI);
   float targetY = centerY + 80 * cos(1.6 * PI);
-  moveToPos(targetX, targetY, 17.095);
+  moveToPos(targetX, targetY, 18.81);
   // moveToPos(centerX - radius, centerY + 15, 0); 
   delay(200);
   penDown();
@@ -151,7 +151,7 @@ void drawC(){
   for (float angle = 1.6 * PI; angle > 0.4 * PI; angle -= 0.1) {
     float targetX = centerX + 36 * sin(angle);
     float targetY = centerY + 80 * cos(angle);
-    moveToPos(targetX, targetY, 17.095);
+    moveToPos(targetX, targetY, 18.81);
     delay(50);
   }
   delay(200);
@@ -195,7 +195,7 @@ void drawS(){
   delay(200);
   float targetX = centerX + 20 * sin(0 * PI);
   float targetY = centerY + 40 * cos(0 * PI);
-  moveToPos(targetX, targetY, 17.095);
+  moveToPos(targetX, targetY, 18.81);
   // moveToPos(centerX - radius, centerY + 15, 0); 
   delay(200);
   penDown();
@@ -204,7 +204,7 @@ void drawS(){
   for (float angle = 0 * PI; angle < 1.5 * PI; angle += 0.1) {
     float targetX = centerX + 20 * sin(angle);
     float targetY = centerY + 40 * cos(angle);
-    moveToPos(targetX, targetY, 17.095);
+    moveToPos(targetX, targetY, 18.81);
     delay(50);
   }
   centerX = currentX - 20;
@@ -212,13 +212,13 @@ void drawS(){
   for (float angle = 0.5 * PI; angle > 0; angle -= 0.1) {
     float targetX = centerX + 20 * sin(angle);
     float targetY = centerY + 40 * cos(angle);
-    moveToPos(targetX, targetY, 17.095);
+    moveToPos(targetX, targetY, 18.81);
     delay(50);
   }
   for (float angle = 2*PI; angle > 1*PI; angle -= 0.1) {
     float targetX = centerX + 20 * sin(angle);
     float targetY = centerY + 40 * cos(angle);
-    moveToPos(targetX, targetY, 17.095);
+    moveToPos(targetX, targetY, 18.81);
     delay(50);
   }
   delay(200);
@@ -313,7 +313,7 @@ void drawCross(){
   delay(100);
   penUp();
   delay(100);
-  moveDistance(0,-70);
+  moveDistance(-10,-70);
   delay(100);
   penDown();
   delay(100);
@@ -328,38 +328,39 @@ void drawCross(){
 void drawNaught(){
   float centerX = currentX + 20;
   float centerY = currentY + 40;
-  moveToPos(centerX, centerX, 47.34);
+  moveToPos(centerX, centerY, 47.34);
   // penDown();
   // delay(200);
   for (float angle = 0; angle <= 2*PI; angle += 0.1) {
     float targetX = centerX + 20 * sin(angle);
     float targetY = centerY + 40 * cos(angle);
-    moveToPos(targetX, targetY, 17.095);
+    moveToPos(targetX, targetY, 18.81);
     delay(50);
   }
   
   for (float angle = 0; angle <= 0.5; angle += 0.1) {
     float targetX = centerX + 20 * sin(angle);
     float targetY = centerY + 40 * cos(angle);
-    moveToPos(targetX, targetY, 17.095);
+    moveToPos(targetX, targetY, 18.81);
     delay(50);
   }
   
   penUp();
   delay(100);
-  moveToPos(centerX, centerX, 47.34);
 
 }
 
 void placePoint(int x,int y,int player){
   if(player==1){
-    Serial.print(gridStartX+x*45);Serial.print(",");Serial.println(gridStartY+y*90);
-    moveToPos(gridStartX+x*45,gridStartY+y*90,47.54);
+    moveToPos(gridStartX-x*45,gridStartY+y*90,47.54);
     delay(200);
     drawNaught();
   }
   else if(player==2){
-
+    moveToPos(gridStartX-x*40,gridStartY+y*90,47.54);
+    moveDistance(0,0);
+    delay(200);
+    drawCross();
   }
   Serial.println("done");
 }
@@ -379,7 +380,7 @@ void drawGrid(){
   delay(100);
   penUp();
   delay(100);
-  moveDistance(-90,100);
+  moveDistance(-80,70);
   delay(100);
   penDown();
   delay(100);
@@ -397,20 +398,22 @@ void drawGrid(){
   delay(100);
   moveDistance(70,-50);
   delay(100);
-  gridStartX=currentX+15;
-  gridStartY=currentY-130;
-  Serial.print(gridStartX);Serial.print(",");Serial.println(gridStartY);
+  gridStartX=currentX+20;
+  gridStartY=currentY-150;
+  // Serial.print(gridStartX);Serial.print(",");Serial.println(gridStartY);
 }
 
 void gameLoop(){
+  Serial.println("Drawing Grid");
   drawGrid();
-  player=1;
+  int player=1;
   while(true){
     if(Serial.available()){
       String input = Serial.readStringUntil('\n');
-      if(input=="done") return;
+      input = input.substring(0, input.length() - 1);
+      if(input=="done") break;
       else{
-        input = input.substring(1, input.length() - 1);
+        input=input.substring(1,input.length());
         int commaIndex = input.indexOf(','); 
         double x = input.substring(0, commaIndex).toDouble(); 
         String yS = input.substring(commaIndex + 1);
@@ -421,7 +424,7 @@ void gameLoop(){
       }
     }
   }
-
+  moveToPos(0,0,47.34);
 }
 
 void setup() {
@@ -435,17 +438,11 @@ void setup() {
     centreArm.write(0);
     Serial.begin(9600);
     savePos();
-
-    Serial.print("\nX: ");Serial.print(currentX);
-    Serial.print(" , Y: ");Serial.println(currentY);
     // Enable the driver
     digitalWrite(microsPin, HIGH);
     digitalWrite(enablePin, LOW);
 
     loadPos();
-    Serial.print("X: ");Serial.print(currentX);
-    Serial.print(" , Y: ");Serial.print(currentY);
-    Serial.print(" , Z: ");Serial.println(currentZ);
     
  
 
@@ -455,14 +452,20 @@ void setup() {
 
 
 void loop() {
+   moveDistance(-130,100);
   if (Serial.available()) {
-    String input = Serial.readStringUntil('\n');  // Read until newline
-    Serial.print("You entered: ");
+    String input = Serial.readStringUntil('\n');
+    input=input.substring(0,input.length()-1);  // Read until newline
     if(input=="home"){
       moveToPos(0,0,47);
       Serial.println("done");
     }
     else if(input=="pos"){
+      while(true){
+        if(Serial.available()){
+          break;
+        }
+      }
       String input = Serial.readStringUntil('\n');  // Read until newline
       input = input.substring(1, input.length() - 1);
       int commaIndex = input.indexOf(','); 
@@ -479,10 +482,12 @@ void loop() {
       writeEssex(); 
       moveToPos(60,80,47.34);
       writeCSEE();
+      moveToPos(0,0,47.34);
       Serial.println("done");
       
     }
     else if(input=="game"){
+      moveToPos(160,150,47.34);
       gameLoop();
     }      
   }
