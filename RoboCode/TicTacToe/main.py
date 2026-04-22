@@ -118,6 +118,7 @@ class game(ct.CTkFrame):
         self.game = ticTacToe.ticTacToeGame()
         for i in self.buttons:
             i.configure(text="")
+        serial.sendText("done")
         self.retFunc()
 
 
@@ -138,9 +139,13 @@ class mainApp(ct.CTk):
         for i in range(4):
             self.home.grid_rowconfigure(i, weight=1)
         self.topText = ct.CTkLabel(
-            self.home, text="Welcome", font=("Arial", 70), text_color="black"
+            self.home,
+            text="Welcome",
+            font=("Arial", 70),
+            text_color="black",
+            fg_color="white",
         )
-        self.topText.grid(row=0, column=0, padx=10, pady=5, sticky="nsew")
+        self.topText.grid(row=0, column=0, padx=80, pady=5, sticky="nsew")
         self.btn1 = ct.CTkButton(
             self.home,
             text="Home",

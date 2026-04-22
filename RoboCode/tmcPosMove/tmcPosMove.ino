@@ -11,7 +11,7 @@ const int enablePin = 2;
 
 
 float distPerStep=0.4;
-float distPerStepY=1.65;
+float distPerStepY=0.8;
 float distPerDegZ=0.263;
 float heightPerCard=0.266;
 
@@ -352,13 +352,13 @@ void drawNaught(){
 
 void placePoint(int x,int y,int player){
   if(player==1){
-    moveToPos(gridStartX-x*45,gridStartY+y*90,47.54);
+    moveToPos(gridStartX-x*40,gridStartY+y*90,47.54);
     delay(200);
     drawNaught();
   }
   else if(player==2){
     moveToPos(gridStartX-x*40,gridStartY+y*90,47.54);
-    moveDistance(0,0);
+    moveDistance(5,10);
     delay(200);
     drawCross();
   }
@@ -380,7 +380,7 @@ void drawGrid(){
   delay(100);
   penUp();
   delay(100);
-  moveDistance(-80,70);
+  moveDistance(-90,80);
   delay(100);
   penDown();
   delay(100);
@@ -398,15 +398,15 @@ void drawGrid(){
   delay(100);
   moveDistance(70,-50);
   delay(100);
-  gridStartX=currentX+20;
-  gridStartY=currentY-150;
+  gridStartX=currentX+18;
+  gridStartY=currentY-135;
   // Serial.print(gridStartX);Serial.print(",");Serial.println(gridStartY);
 }
 
 void gameLoop(){
   Serial.println("Drawing Grid");
   drawGrid();
-  int player=1;
+  int player=2;
   while(true){
     if(Serial.available()){
       String input = Serial.readStringUntil('\n');
@@ -452,7 +452,8 @@ void setup() {
 
 
 void loop() {
-   moveDistance(-130,100);
+  // rotateMotorY(BACKWARD);
+  //  moveDistance(-100,100);
   if (Serial.available()) {
     String input = Serial.readStringUntil('\n');
     input=input.substring(0,input.length()-1);  // Read until newline
@@ -487,7 +488,7 @@ void loop() {
       
     }
     else if(input=="game"){
-      moveToPos(160,150,47.34);
+      moveToPos(160,100,47.34);
       gameLoop();
     }      
   }
