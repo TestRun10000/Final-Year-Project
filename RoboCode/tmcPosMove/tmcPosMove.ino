@@ -130,7 +130,7 @@ void penUp(){
   centreArm.write(20);
 }
 void penDown(){
-  centreArm.write(108);
+  centreArm.write(107);
 }
 
 void drawC(){
@@ -254,22 +254,22 @@ void writeEssex(){
   drawE(); 
   delay(100);
   penUp(); 
-  moveToPos(startX+35,startY+25,0);
+  moveToPos(startX+35,startY+30,0);
   delay(100);
   drawS(); 
   delay(100);
   penUp();
   delay(200);
-  moveToPos(startX+35,startY+115,0);
+  moveToPos(startX+35,startY+120,0);
   delay(100);
   drawS(); delay(100);
-  moveToPos(startX,startY+220,0);
+  moveToPos(startX,startY+225,0);
   penUp();
   delay(100);
   drawE();
   penUp();
   delay(100);
-  moveToPos(startX,startY+310,0);
+  moveToPos(startX,startY+315,0);
   penUp();
   delay(100);
   drawX();
