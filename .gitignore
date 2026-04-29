@@ -1,8 +1,10 @@
 ﻿.vs
 SolitairCPPCM
-
+RoboCode.pyc
 MainProjectCode/.vs
 MainProjectCode/out
 MainProjectCode/External
 C++SolitareCode
 pythonCode
+/RoboCode/TicTacToe/__pycache__/game.cpython-313.pyc
+/RoboCode/TicTacToe/__pycache__
